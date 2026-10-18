@@ -12,91 +12,36 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-    /* =========================================================
-       EFECTOS Y ANIMACIONES INTERACTIVAS PARA LOS BOTONES
-    ========================================================= */
+    button, select, input { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
 
-    /* Transición global para todos los botones interactivos */
-    button, select, input {
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    /* Botón Principal WhatsApp */
     .btn-whatsapp {
       background: linear-gradient(135deg, #059669 0%, #047857 100%);
       box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35);
       position: relative;
       overflow: hidden;
     }
-
     .btn-whatsapp:hover {
       background: linear-gradient(135deg, #10b981 0%, #059669 100%);
       transform: translateY(-2px);
       box-shadow: 0 8px 20px rgba(5, 150, 105, 0.45);
     }
+    .btn-whatsapp:active { transform: translateY(1px); box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3); }
 
-    .btn-whatsapp:active {
-      transform: translateY(1px);
-      box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3);
-    }
+    @keyframes pulse-subtle { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+    .btn-pulse { animation: pulse-subtle 3s infinite ease-in-out; }
+    .btn-pulse:hover { animation: none; }
 
-    /* Pulso suave continuo para el botón de pedido */
-    @keyframes pulse-subtle {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.02); }
-    }
-    .btn-pulse {
-      animation: pulse-subtle 3s infinite ease-in-out;
-    }
-    .btn-pulse:hover {
-      animation: none;
-    }
+    .btn-qty-plus { background-color: #059669; color: white; box-shadow: 0 2px 5px rgba(5, 150, 105, 0.25); }
+    .btn-qty-plus:hover { background-color: #047857; transform: scale(1.12); box-shadow: 0 4px 10px rgba(5, 150, 105, 0.4); }
+    .btn-qty-plus:active { transform: scale(0.92); }
 
-    /* Botones de Cantidad + y - */
-    .btn-qty-plus {
-      background-color: #059669;
-      color: white;
-      box-shadow: 0 2px 5px rgba(5, 150, 105, 0.25);
-    }
+    .btn-qty-minus { background-color: #f3f4f6; color: #374151; border: 1px solid #e5e7eb; }
+    .btn-qty-minus:hover { background-color: #e5e7eb; color: #111827; transform: scale(1.12); }
+    .btn-qty-minus:active { transform: scale(0.92); }
 
-    .btn-qty-plus:hover {
-      background-color: #047857;
-      transform: scale(1.12);
-      box-shadow: 0 4px 10px rgba(5, 150, 105, 0.4);
-    }
+    .card-producto { transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
+    .card-producto:hover { transform: translateY(-4px); box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.08); border-color: #a7f3d0; }
 
-    .btn-qty-plus:active {
-      transform: scale(0.92);
-    }
-
-    .btn-qty-minus {
-      background-color: #f3f4f6;
-      color: #374151;
-      border: 1px solid #e5e7eb;
-    }
-
-    .btn-qty-minus:hover {
-      background-color: #e5e7eb;
-      color: #111827;
-      transform: scale(1.12);
-    }
-
-    .btn-qty-minus:active {
-      transform: scale(0.92);
-    }
-
-    /* Tarjetas de Producto */
-    .card-producto {
-      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-    }
-
-    .card-producto:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.08);
-      border-color: #a7f3d0;
-    }
-
-    /* Select de Presentación */
     .select-custom {
       cursor: pointer;
       background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%6b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
@@ -106,31 +51,12 @@
       padding-right: 1.8rem;
       appearance: none;
     }
+    .select-custom:hover { border-color: #10b981; background-color: #ffffff; }
 
-    .select-custom:hover {
-      border-color: #10b981;
-      background-color: #ffffff;
-    }
+    .btn-cat-active { background-color: #065f46 !important; color: #ffffff !important; box-shadow: 0 4px 10px rgba(6, 95, 70, 0.25); transform: translateY(-1px); }
+    .btn-cat-inactive:hover { background-color: #f0fdf4 !important; border-color: #a7f3d0 !important; color: #065f46 !important; transform: translateY(-1px); }
 
-    /* Botón Ver Todo / Categorías */
-    .btn-cat-active {
-      background-color: #065f46 !important;
-      color: #ffffff !important;
-      box-shadow: 0 4px 10px rgba(6, 95, 70, 0.25);
-      transform: translateY(-1px);
-    }
-
-    .btn-cat-inactive:hover {
-      background-color: #f0fdf4 !important;
-      border-color: #a7f3d0 !important;
-      color: #065f46 !important;
-      transform: translateY(-1px);
-    }
-
-    /* Entrada de texto al enfocar */
-    input:focus {
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-    }
+    input:focus { box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2); }
   </style>
 </head>
 <body class="bg-gray-50 min-h-screen pb-12">
@@ -140,7 +66,7 @@
     <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
       <div class="flex items-center gap-3 w-full md:w-auto justify-between">
         <div class="flex items-center gap-2">
-          <img src="imagenes/logo.png" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-emerald-600 bg-white" onerror="this.src='imagenes/logo.jpg'">
+          <img src="imágenes/logo.png" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-emerald-600 bg-white" onerror="this.onerror=null; this.src='imágenes/logo.jpg';">
           <div>
             <span class="text-xs tracking-wider text-emerald-300 font-semibold uppercase">Catálogo Digital</span>
             <h1 class="text-lg font-bold leading-tight">KMVegetales</h1>
@@ -293,43 +219,9 @@
 
         let rutaFoto = `imágenes/${nombre}.png`;
         if (fotoCol && fotoCol !== 'OK' && fotoCol !== '') {
-          rutaFoto = fotoCol;
+          rutaFoto = `imágenes/${fotoCol}`;
         }
-        }
-    function intentarFormatosAlternativos(imgElement, nombreProducto) {
-     if (!imgElement.dataset.intento) imgElement.dataset.intento = '1';
 
-     const intentos = parseInt(imgElement.dataset.intento);
-     // Codificamos el nombre para soportar espacios y caracteres especiales en la URL
-     const nombreCodificado = encodeURIComponent(nombreProducto);
-
-     switch (intentos) {
-        case 1:
-            imgElement.src = `imágenes/${nombreCodificado}.jpg`;
-            imgElement.dataset.intento = '2';
-            break;
-        case 2:
-            imgElement.src = `imágenes/${nombreCodificado}.jpeg`;
-            imgElement.dataset.intento = '3';
-            break;
-        case 3:
-            imgElement.src = `imágenes/${nombreCodificado}.PNG`;
-            imgElement.dataset.intento = '4';
-            break;
-        case 4:
-            imgElement.src = `imágenes/${nombreCodificado}.JPG`;
-            imgElement.dataset.intento = '5';
-            break;
-        case 5:
-            imgElement.src = `imágenes/${nombreCodificado}.JPEG`;
-            imgElement.dataset.intento = '6';
-            break;
-        default:
-            imgElement.src = 'imágenes/logo.jpg';
-            imgElement.onerror = null; // Evita bucle infinito si el logo no existe
-            break;
-    }
-}
         const descripcion = descCol && descCol !== '' ? descCol : `${nombre} fresco de alta calidad.`;
 
         if (!mapaProductos[id]) {
@@ -382,7 +274,7 @@
           <div class="card-producto bg-white rounded-2xl p-2.5 shadow-sm border border-gray-100 flex flex-col justify-between">
             <div>
               <div class="relative h-28 rounded-xl overflow-hidden mb-2 bg-gray-100">
-                <img src="${p.foto}" alt="${p.nombre}" class="w-full h-full object-cover" onerror="intentarFormatosAlternativos(this, '${p.foto}')">
+                <img src="${p.foto}" alt="${p.nombre}" class="w-full h-full object-cover" onerror="intentarFormatosAlternativos(this, '${p.nombre}')">
                 <span class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-emerald-800 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase shadow-sm">${p.categoria}</span>
               </div>
               <h3 class="font-bold text-gray-800 text-xs mb-0.5 truncate">${p.nombre}</h3>
@@ -414,20 +306,38 @@
       });
     }
 
-    function intentarFormatosAlternativos(imgElement, rutaOriginal) {
+    // FUNCIÓN DE RESPALDO DE FORMATOS DE IMAGEN (FUERA DE PARSEARCSV)
+    function intentarFormatosAlternativos(imgElement, nombreProducto) {
       if (!imgElement.dataset.intento) imgElement.dataset.intento = '1';
 
-      if (imgElement.dataset.intento === '1') {
-        imgElement.src = rutaOriginal.replace('.png', '.webp');
-        imgElement.dataset.intento = '2';
-      } else if (imgElement.dataset.intento === '2') {
-        imgElement.src = rutaOriginal.replace('.png', '.jpg');
-        imgElement.dataset.intento = '3';
-      } else if (imgElement.dataset.intento === '3') {
-        imgElement.src = rutaOriginal.replace('.png', '.jpeg');
-        imgElement.dataset.intento = '4';
-      } else {
-        imgElement.src = 'imagenes/logo.png';
+      const intentos = parseInt(imgElement.dataset.intento);
+      const nombreCodificado = encodeURIComponent(nombreProducto);
+
+      switch (intentos) {
+        case 1:
+          imgElement.src = `imágenes/${nombreCodificado}.jpg`;
+          imgElement.dataset.intento = '2';
+          break;
+        case 2:
+          imgElement.src = `imágenes/${nombreCodificado}.jpeg`;
+          imgElement.dataset.intento = '3';
+          break;
+        case 3:
+          imgElement.src = `imágenes/${nombreCodificado}.PNG`;
+          imgElement.dataset.intento = '4';
+          break;
+        case 4:
+          imgElement.src = `imágenes/${nombreCodificado}.JPG`;
+          imgElement.dataset.intento = '5';
+          break;
+        case 5:
+          imgElement.src = `imágenes/${nombreCodificado}.JPEG`;
+          imgElement.dataset.intento = '6';
+          break;
+        default:
+          imgElement.src = 'imágenes/logo.jpg';
+          imgElement.onerror = null;
+          break;
       }
     }
 
