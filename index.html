@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KMVegetales - Catálogo en Línea</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* =========================================================
+       EFECTOS Y ANIMACIONES INTERACTIVAS PARA LOS BOTONES
+    ========================================================= */
+
+    /* Transición global para todos los botones interactivos */
+    button, select, input {
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Botón Principal WhatsApp */
+    .btn-whatsapp {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-whatsapp:hover {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(5, 150, 105, 0.45);
+    }
+
+    .btn-whatsapp:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3);
+    }
+
+    /* Pulso suave continuo para el botón de pedido */
+    @keyframes pulse-subtle {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+    .btn-pulse {
+      animation: pulse-subtle 3s infinite ease-in-out;
+    }
+    .btn-pulse:hover {
+      animation: none;
+    }
+
+    /* Botones de Cantidad + y - */
+    .btn-qty-plus {
+      background-color: #059669;
+      color: white;
+      box-shadow: 0 2px 5px rgba(5, 150, 105, 0.25);
+    }
+
+    .btn-qty-plus:hover {
+      background-color: #047857;
+      transform: scale(1.12);
+      box-shadow: 0 4px 10px rgba(5, 150, 105, 0.4);
+    }
+
+    .btn-qty-plus:active {
+      transform: scale(0.92);
+    }
+
+    .btn-qty-minus {
+      background-color: #f3f4f6;
+      color: #374151;
+      border: 1px solid #e5e7eb;
+    }
+
+    .btn-qty-minus:hover {
+      background-color: #e5e7eb;
+      color: #111827;
+      transform: scale(1.12);
+    }
+
+    .btn-qty-minus:active {
+      transform: scale(0.92);
+    }
+
+    /* Tarjetas de Producto */
+    .card-producto {
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+
+    .card-producto:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.08);
+      border-color: #a7f3d0;
+    }
+
+    /* Select de Presentación */
+    .select-custom {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%6b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 0.4rem center;
+      background-repeat: no-repeat;
+      background-size: 1.2em 1.2em;
+      padding-right: 1.8rem;
+      appearance: none;
+    }
+
+    .select-custom:hover {
+      border-color: #10b981;
+      background-color: #ffffff;
+    }
+
+    /* Botón Ver Todo / Categorías */
+    .btn-cat-active {
+      background-color: #065f46 !important;
+      color: #ffffff !important;
+      box-shadow: 0 4px 10px rgba(6, 95, 70, 0.25);
+      transform: translateY(-1px);
+    }
+
+    .btn-cat-inactive:hover {
+      background-color: #f0fdf4 !important;
+      border-color: #a7f3d0 !important;
+      color: #065f46 !important;
+      transform: translateY(-1px);
+    }
+
+    /* Entrada de texto al enfocar */
+    input:focus {
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen pb-12">
+
+  <!-- NAVBAR SUPERIOR -->
+  <header class="bg-[#064e3b] text-white shadow-md sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-3 w-full md:w-auto justify-between">
+        <div class="flex items-center gap-2">
+          <img src="imagenes/logo.png" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-emerald-600 bg-white" onerror="this.src='imagenes/logo.jpg'">
+          <div>
+            <span class="text-xs tracking-wider text-emerald-300 font-semibold uppercase">Catálogo Digital</span>
+            <h1 class="text-lg font-bold leading-tight">KMVegetales</h1>
+          </div>
+        </div>
+        <button onclick="toggleCarritoMovil()" class="md:hidden relative bg-emerald-700 hover:bg-emerald-600 active:scale-95 p-2.5 rounded-xl border border-emerald-600 transition shadow-md">
+          <i class="fas fa-shopping-cart text-lg"></i>
+          <span id="cart-count-mobile" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">0</span>
+        </button>
+      </div>
+
+      <div class="w-full md:w-96 relative">
+        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+          <i class="fas fa-search"></i>
+        </span>
+        <input type="text" id="input-buscar" oninput="filtrarProductos()" placeholder="Buscar frutas, verduras, sacos, cajas..." class="w-full pl-10 pr-4 py-2 bg-emerald-900/50 border border-emerald-700/60 rounded-xl text-sm text-white placeholder-emerald-300/70 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:bg-emerald-900/80 transition">
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENEDOR PRINCIPAL -->
+  <main class="max-w-7xl mx-auto px-4 mt-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
+
+    <!-- COLUMNA IZQUIERDA: BANNER Y PRODUCTOS -->
+    <div class="lg:col-span-3 space-y-5">
+      <div class="relative bg-gradient-to-r from-emerald-900 to-emerald-700 rounded-3xl p-6 text-white shadow-lg overflow-hidden flex flex-col justify-center min-h-[150px]">
+        <div class="absolute right-0 bottom-0 opacity-15 transform translate-x-4 translate-y-4">
+          <i class="fas fa-seedling text-8xl"></i>
+        </div>
+        <span class="bg-emerald-600/60 text-emerald-200 text-xs font-semibold px-3 py-1 rounded-full w-max mb-1.5 backdrop-blur-sm">Frescura Garantizada</span>
+        <h2 class="text-xl md:text-2xl font-bold mb-1">Frescura y Calidad a Domicilio</h2>
+        <p class="text-emerald-100 text-xs max-w-md mb-3">Selecciona el producto y elige tu presentación ideal (Libra, Unidad, Caja, Saco, Etc..).</p>
+        <div>
+          <button onclick="filtrarCategoria('TODOS')" class="bg-white text-emerald-900 font-bold px-4 py-2 rounded-xl text-xs shadow-md hover:bg-emerald-50 hover:shadow-lg active:scale-95 transition flex items-center gap-1.5">
+            <i class="fas fa-th-large text-emerald-700"></i> Ver Todo
+          </button>
+        </div>
+      </div>
+
+      <!-- FILTROS DE CATEGORÍAS -->
+      <div class="flex overflow-x-auto gap-2 py-1 no-scrollbar">
+        <button onclick="filtrarCategoria('TODOS')" id="btn-cat-todos" class="btn-cat-active px-4 py-2 bg-emerald-800 text-white rounded-xl font-semibold text-xs transition whitespace-nowrap active:scale-95">Todos</button>
+        <button onclick="filtrarCategoria('VERDURAS')" id="btn-cat-verduras" class="btn-cat-inactive px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-xl font-semibold text-xs shadow-sm transition whitespace-nowrap active:scale-95"><i class="fas fa-carrot text-amber-600 mr-1"></i> Verduras</button>
+        <button onclick="filtrarCategoria('FRUTAS')" id="btn-cat-frutas" class="btn-cat-inactive px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-xl font-semibold text-xs shadow-sm transition whitespace-nowrap active:scale-95"><i class="fas fa-apple-alt text-red-500 mr-1"></i> Frutas</button>
+      </div>
+
+      <!-- GRILLA DE PRODUCTOS -->
+      <div id="grid-productos" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"></div>
+    </div>
+
+    <!-- COLUMNA DERECHA: CARRITO -->
+    <div class="hidden lg:block">
+      <div class="bg-white rounded-3xl p-5 shadow-xl border border-gray-100 sticky top-24 space-y-4">
+        <div class="flex items-center justify-between border-b pb-3">
+          <h3 class="font-bold text-base text-gray-800 flex items-center gap-2">
+            <span class="bg-emerald-100 text-emerald-800 p-1.5 rounded-xl"><i class="fas fa-shopping-basket"></i></span> Tu Pedido
+          </h3>
+          <span id="cart-count-badge" class="bg-emerald-600 text-white font-bold text-xs px-2.5 py-0.5 rounded-full shadow-sm">0 items</span>
+        </div>
+
+        <div id="lista-carrito-desktop" class="divide-y max-h-[32vh] overflow-y-auto pr-1 space-y-2">
+          <p class="text-gray-400 text-xs text-center py-6">Tu carrito está vacío</p>
+        </div>
+
+        <div class="border-t pt-3 space-y-3">
+          <div class="flex justify-between items-center text-base font-bold text-gray-800">
+            <span>Total a Pagar:</span>
+            <span id="total-precio-desktop" class="text-emerald-700 text-lg font-extrabold">$0.00</span>
+          </div>
+
+          <div class="space-y-2 pt-1">
+            <input type="text" id="input-nombre" placeholder="Nombre de tu negocio o cliente" class="w-full bg-gray-50 border border-gray-200 p-2.5 rounded-xl text-xs focus:outline-none focus:border-emerald-500 transition">
+            <input type="text" id="input-direccion" placeholder="Dirección exacta o referencia" class="w-full bg-gray-50 border border-gray-200 p-2.5 rounded-xl text-xs focus:outline-none focus:border-emerald-500 transition">
+          </div>
+
+          <button onclick="enviarPedido()" class="btn-whatsapp btn-pulse w-full text-white font-bold py-3.5 rounded-xl shadow-lg flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
+            <i class="fab fa-whatsapp text-lg"></i> Enviar Pedido por WhatsApp
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL CARRITO MÓVIL -->
+  <div id="modal-carrito-movil" class="fixed inset-0 bg-black/60 z-50 hidden flex justify-end backdrop-blur-sm">
+    <div class="bg-white w-full max-w-md h-full p-5 flex flex-col justify-between shadow-2xl overflow-y-auto">
+      <div>
+        <div class="flex justify-between items-center border-b pb-4">
+          <h3 class="font-bold text-base text-gray-800 flex items-center gap-2">
+            <i class="fas fa-shopping-basket text-emerald-600"></i> Tu Pedido
+          </h3>
+          <button onclick="toggleCarritoMovil()" class="text-gray-400 hover:text-gray-600 text-2xl font-bold p-1 active:scale-90 transition">&times;</button>
+        </div>
+        <div id="lista-carrito-mobile" class="divide-y my-4 space-y-2"></div>
+      </div>
+
+      <div class="border-t pt-4 space-y-3">
+        <div class="flex justify-between items-center text-base font-bold">
+          <span>Total:</span>
+          <span id="total-precio-mobile" class="text-emerald-700 text-lg font-extrabold">$0.00</span>
+        </div>
+        <input type="text" id="input-nombre-m" placeholder="Nombre de tu negocio o cliente" class="w-full bg-gray-50 border border-gray-200 p-2.5 rounded-xl text-xs focus:outline-none focus:border-emerald-500 transition">
+        <input type="text" id="input-direccion-m" placeholder="Dirección / Referencia de entrega" class="w-full bg-gray-50 border border-gray-200 p-2.5 rounded-xl text-xs focus:outline-none focus:border-emerald-500 transition">
+        <button onclick="enviarPedido()" class="btn-whatsapp btn-pulse w-full text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
+          <i class="fab fa-whatsapp text-lg"></i> Enviar Pedido por WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 🔗 ENLACE DE CONEXIÓN CON GOOGLE SHEETS
+    const URL_GOOGLE_SHEETS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR5GQG7EYouJss52fNj0HhbLq-8kjTwDn4b7lA7AmDPS4xSpq8fYjC3zv8BmcU6xpdsGmWflf2AU85c/pub?output=csv";
+
+    let productos = [];
+    let carrito = {};
+    let categoriaActual = 'TODOS';
+    let seleccionPresentacion = {};
+
+    // Cargar datos dinámicamente desde Google Sheets
+    async function cargarProductosDesdeSheets() {
+      try {
+        const response = await fetch(URL_GOOGLE_SHEETS);
+        const dataText = await response.text();
+        productos = parsearCSV(dataText);
+        renderProductos();
+      } catch (error) {
+        console.error("Error al cargar datos desde Google Sheets:", error);
+      }
+    }
+
+    // Convierte el texto CSV de Google Sheets en objetos legibles para la web
+    function parsearCSV(csvText) {
+      const lineas = csvText.trim().split('\n');
+      const mapaProductos = {};
+
+      for (let i = 1; i < lineas.length; i++) {
+        const col = lineas[i].split(',').map(c => c.replace(/^"|"$/g, '').trim());
+        if (col.length < 5) continue;
+
+        const id = col[0];
+        const nombre = col[1];
+        const categoria = col[2];
+        const unidad = col[3];
+        const precioRaw = col[4] || "0";
+        const fotoCol = col[5];
+        const descCol = col[6];
+
+        if (!id || !nombre) continue;
+
+        let rutaFoto = `imagenes/${nombre}.png`;
+        if (fotoCol && fotoCol !== 'OK' && fotoCol !== '') {
+          rutaFoto = fotoCol;
+        }
+
+        const descripcion = descCol && descCol !== '' ? descCol : `${nombre} fresco de alta calidad.`;
+
+        if (!mapaProductos[id]) {
+          mapaProductos[id] = {
+            id,
+            nombre,
+            categoria,
+            foto: rutaFoto,
+            descripcion,
+            presentaciones: []
+          };
+        }
+
+        const precioLimpio = parseFloat(precioRaw.replace('$', '').trim()) || 0.00;
+
+        mapaProductos[id].presentaciones.push({
+          unidad: unidad,
+          precio: precioLimpio
+        });
+      }
+
+      return Object.values(mapaProductos);
+    }
+
+    function renderProductos(listaACargar = productos) {
+      const grid = document.getElementById('grid-productos');
+      grid.innerHTML = '';
+
+      if (listaACargar.length === 0) {
+        grid.innerHTML = '<p class="col-span-full text-center text-gray-400 py-12 text-xs">Cargando productos o catálogo vacío...</p>';
+        return;
+      }
+
+      listaACargar.forEach(p => {
+        if (!seleccionPresentacion[p.id]) {
+          seleccionPresentacion[p.id] = 0;
+        }
+
+        const indexPres = seleccionPresentacion[p.id];
+        const presActual = p.presentaciones[indexPres] || { unidad: 'N/A', precio: 0.00 };
+        const itemKey = `${p.id}_${presActual.unidad}`;
+        const cant = carrito[itemKey] ? carrito[itemKey].cantidad : 0;
+
+        let opcionesHTML = '';
+        p.presentaciones.forEach((pres, idx) => {
+          opcionesHTML += `<option value="${idx}" ${idx === indexPres ? 'selected' : ''}>${pres.unidad} ($${pres.precio.toFixed(2)})</option>`;
+        });
+
+        grid.innerHTML += `
+          <div class="card-producto bg-white rounded-2xl p-2.5 shadow-sm border border-gray-100 flex flex-col justify-between">
+            <div>
+              <div class="relative h-28 rounded-xl overflow-hidden mb-2 bg-gray-100">
+                <img src="${p.foto}" alt="${p.nombre}" class="w-full h-full object-cover" onerror="intentarFormatosAlternativos(this, '${p.foto}')">
+                <span class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-emerald-800 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase shadow-sm">${p.categoria}</span>
+              </div>
+              <h3 class="font-bold text-gray-800 text-xs mb-0.5 truncate">${p.nombre}</h3>
+              <p class="text-[10px] text-gray-400 line-clamp-1 mb-2">${p.descripcion}</p>
+            </div>
+
+            <div class="space-y-2 pt-1 border-t">
+              <div>
+                <label class="text-[9px] text-gray-400 font-semibold block mb-0.5">PRESENTACIÓN:</label>
+                <select onchange="cambiarPresentacion('${p.id}', this.value)" class="select-custom w-full bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold rounded-lg p-1 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition">
+                  ${opcionesHTML}
+                </select>
+              </div>
+
+              <div class="flex items-center justify-between pt-1">
+                <div>
+                  <p class="font-bold text-emerald-700 text-sm">$${presActual.precio.toFixed(2)}</p>
+                </div>
+
+                <div class="flex items-center gap-1.5">
+                  <button onclick="cambiarCantidad('${p.id}', -1)" class="btn-qty-minus w-6 h-6 rounded-lg font-bold text-xs flex items-center justify-center">-</button>
+                  <span class="font-bold text-xs w-4 text-center">${cant}</span>
+                  <button onclick="cambiarCantidad('${p.id}', 1)" class="btn-qty-plus w-6 h-6 rounded-lg font-bold text-xs flex items-center justify-center">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function intentarFormatosAlternativos(imgElement, rutaOriginal) {
+      if (!imgElement.dataset.intento) imgElement.dataset.intento = '1';
+
+      if (imgElement.dataset.intento === '1') {
+        imgElement.src = rutaOriginal.replace('.png', '.webp');
+        imgElement.dataset.intento = '2';
+      } else if (imgElement.dataset.intento === '2') {
+        imgElement.src = rutaOriginal.replace('.png', '.jpg');
+        imgElement.dataset.intento = '3';
+      } else if (imgElement.dataset.intento === '3') {
+        imgElement.src = rutaOriginal.replace('.png', '.jpeg');
+        imgElement.dataset.intento = '4';
+      } else {
+        imgElement.src = 'imagenes/logo.png';
+      }
+    }
+
+    function cambiarPresentacion(prodId, nuevoIdx) {
+      seleccionPresentacion[prodId] = parseInt(nuevoIdx);
+      renderProductos(obtenerProductosFiltrados());
+    }
+
+    function cambiarCantidad(prodId, cambio) {
+      const prod = productos.find(p => p.id === prodId);
+      const indexPres = seleccionPresentacion[prodId] || 0;
+      const pres = prod.presentaciones[indexPres];
+      const itemKey = `${prod.id}_${pres.unidad}`;
+
+      if (!carrito[itemKey]) {
+        if (cambio > 0) {
+          carrito[itemKey] = {
+            id: prod.id,
+            nombre: prod.nombre,
+            unidad: pres.unidad,
+            precio: pres.precio,
+            cantidad: 1
+          };
+        }
+      } else {
+        carrito[itemKey].cantidad += cambio;
+        if (carrito[itemKey].cantidad <= 0) delete carrito[itemKey];
+      }
+
+      actualizarInterfazCarrito();
+      renderProductos(obtenerProductosFiltrados());
+    }
+
+    function actualizarInterfazCarrito() {
+      let totalItems = 0;
+      let totalMonto = 0;
+      let htmlItems = '';
+
+      Object.values(carrito).forEach(item => {
+        totalItems += item.cantidad;
+        const subtotal = item.cantidad * item.precio;
+        totalMonto += subtotal;
+
+        htmlItems += `
+          <div class="py-2 flex justify-between items-center text-xs">
+            <div>
+              <p class="font-bold text-gray-800">${item.nombre} <span class="text-emerald-700 font-normal">(${item.unidad})</span></p>
+              <p class="text-[10px] text-gray-400">${item.cantidad} x $${item.precio.toFixed(2)}</p>
+            </div>
+            <span class="font-bold text-emerald-700">$${subtotal.toFixed(2)}</span>
+          </div>
+        `;
+      });
+
+      if (Object.keys(carrito).length === 0) {
+        htmlItems = '<p class="text-gray-400 text-xs text-center py-6">Tu carrito está vacío</p>';
+      }
+
+      document.getElementById('lista-carrito-desktop').innerHTML = htmlItems;
+      document.getElementById('total-precio-desktop').innerText = `$${totalMonto.toFixed(2)}`;
+      document.getElementById('cart-count-badge').innerText = `${totalItems} items`;
+
+      document.getElementById('lista-carrito-mobile').innerHTML = htmlItems;
+      document.getElementById('total-precio-mobile').innerText = `$${totalMonto.toFixed(2)}`;
+      document.getElementById('cart-count-mobile').innerText = totalItems;
+    }
+
+    function filtrarCategoria(cat) {
+      categoriaActual = cat.toUpperCase();
+      ['todos', 'verduras', 'frutas'].forEach(c => {
+        const btn = document.getElementById(`btn-cat-${c}`);
+        if(btn) {
+          if(c.toUpperCase() === categoriaActual) {
+            btn.className = "btn-cat-active px-4 py-2 bg-emerald-800 text-white rounded-xl font-semibold text-xs transition whitespace-nowrap active:scale-95";
+          } else {
+            btn.className = "btn-cat-inactive px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-xl font-semibold text-xs shadow-sm transition whitespace-nowrap active:scale-95";
+          }
+        }
+      });
+      renderProductos(obtenerProductosFiltrados());
+    }
+
+    function obtenerProductosFiltrados() {
+      const texto = document.getElementById('input-buscar').value.toLowerCase();
+      return productos.filter(p => {
+        const catProd = p.categoria.toUpperCase();
+        const coincideCat = (categoriaActual === 'TODOS' || catProd.includes(categoriaActual));
+        const coincideTexto = p.nombre.toLowerCase().includes(texto) || p.descripcion.toLowerCase().includes(texto);
+        return coincideCat && coincideTexto;
+      });
+    }
+
+    function filtrarProductos() {
+      renderProductos(obtenerProductosFiltrados());
+    }
+
+    function toggleCarritoMovil() {
+      document.getElementById('modal-carrito-movil').classList.toggle('hidden');
+    }
+
+    function enviarPedido() {
+      const nombre = (document.getElementById('input-nombre').value || document.getElementById('input-nombre-m').value).trim();
+      const direccion = (document.getElementById('input-direccion').value || document.getElementById('input-direccion-m').value).trim();
+
+      if (Object.keys(carrito).length === 0) {
+        alert("Por favor selecciona al menos un producto.");
+        return;
+      }
+      if (!nombre || !direccion) {
+        alert("Por favor ingresa tu nombre y dirección de entrega.");
+        return;
+      }
+
+      let mensaje = "*NUEVO PEDIDO - KMVegetales*\n";
+      mensaje += `👤 *Cliente:* ${nombre}\n`;
+      mensaje += `📍 *Entrega:* ${direccion}\n\n`;
+      mensaje += "*DETALLE DEL CARRITO:*\n";
+
+      let total = 0;
+      Object.values(carrito).forEach(i => {
+        const sub = i.cantidad * i.precio;
+        total += sub;
+        mensaje += `• ${i.cantidad} ${i.unidad}(s) - ${i.nombre} ($${sub.toFixed(2)})\n`;
+      });
+
+      mensaje += `\n*TOTAL A PAGAR: $${total.toFixed(2)}*`;
+
+      const telefonoVendedor = "50374670712";
+      const url = `https://wa.me/${telefonoVendedor}?text=${encodeURIComponent(mensaje)}`;
+      window.open(url, '_blank');
+    }
+
+    // Iniciar la carga dinámica al abrir la página
+    cargarProductosDesdeSheets();
+  </script>
+</body>
+</html>
