@@ -295,7 +295,41 @@
         if (fotoCol && fotoCol !== 'OK' && fotoCol !== '') {
           rutaFoto = fotoCol;
         }
+        }
+    function intentarFormatosAlternativos(imgElement, nombreProducto) {
+     if (!imgElement.dataset.intento) imgElement.dataset.intento = '1';
 
+     const intentos = parseInt(imgElement.dataset.intento);
+     // Codificamos el nombre para soportar espacios y caracteres especiales en la URL
+     const nombreCodificado = encodeURIComponent(nombreProducto);
+
+     switch (intentos) {
+        case 1:
+            imgElement.src = `imágenes/${nombreCodificado}.jpg`;
+            imgElement.dataset.intento = '2';
+            break;
+        case 2:
+            imgElement.src = `imágenes/${nombreCodificado}.jpeg`;
+            imgElement.dataset.intento = '3';
+            break;
+        case 3:
+            imgElement.src = `imágenes/${nombreCodificado}.PNG`;
+            imgElement.dataset.intento = '4';
+            break;
+        case 4:
+            imgElement.src = `imágenes/${nombreCodificado}.JPG`;
+            imgElement.dataset.intento = '5';
+            break;
+        case 5:
+            imgElement.src = `imágenes/${nombreCodificado}.JPEG`;
+            imgElement.dataset.intento = '6';
+            break;
+        default:
+            imgElement.src = 'imágenes/logo.jpg';
+            imgElement.onerror = null; // Evita bucle infinito si el logo no existe
+            break;
+    }
+}
         const descripcion = descCol && descCol !== '' ? descCol : `${nombre} fresco de alta calidad.`;
 
         if (!mapaProductos[id]) {
