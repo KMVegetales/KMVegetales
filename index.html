@@ -217,7 +217,7 @@
 
         if (!id || !nombre) continue;
 
-        let rutaFoto = `imágenes/${nombre}.png`;
+        let rutaFoto = `imágenes/${nombre}.jpg`;
         if (fotoCol && fotoCol !== 'OK' && fotoCol !== '') {
           rutaFoto = `imágenes/${fotoCol}`;
         }
@@ -306,7 +306,7 @@
       });
     }
 
-    // FUNCIÓN DE RESPALDO DE FORMATOS DE IMAGEN (FUERA DE PARSEARCSV)
+    // FUNCIÓN DE RESPALDO DE FORMATOS DE IMAGEN
     function intentarFormatosAlternativos(imgElement, nombreProducto) {
       if (!imgElement.dataset.intento) imgElement.dataset.intento = '1';
 
@@ -315,7 +315,7 @@
 
       switch (intentos) {
         case 1:
-          imgElement.src = `imágenes/${nombreCodificado}.jpg`;
+          imgElement.src = `imágenes/${nombreCodificado}.png`;
           imgElement.dataset.intento = '2';
           break;
         case 2:
@@ -470,7 +470,6 @@
       window.open(url, '_blank');
     }
 
-    // Iniciar la carga dinámica al abrir la página
     cargarProductosDesdeSheets();
   </script>
 </body>
