@@ -50,7 +50,7 @@
     .btn-modo-active { background-color: #059669 !important; color: white !important; }
     .btn-modo-inactive { background-color: #e5e7eb !important; color: #4b5563 !important; }
 
-    /* Estilos de la Tabla tipo Excel con Encabezado Fijo */
+    /* Estilos de la Tabla tipo Excel */
     .tabla-excel {
       border-collapse: collapse;
       width: 100%;
@@ -69,8 +69,8 @@
       text-transform: uppercase;
       letter-spacing: 0.05em;
       position: sticky;
-      top: 65px;
-      z-index: 20;
+      top: 57px; /* Altura exacta ajustada para que no flote en medio */
+      z-index: 10;
     }
     .tabla-excel td {
       border-bottom: 1px solid #e5e7eb;
@@ -325,7 +325,6 @@
         return;
       }
 
-      // Agrupar y ordenar productos por categorías (común para ambas vistas)
       const grupos = {};
       listaACargar.forEach(p => {
         const cat = p.categoria || 'OTROS';
@@ -342,11 +341,9 @@
       });
 
       if (modoVista === 'fotos') {
-        // --- VISTA TARJETAS CON FOTOS (SEPARADAS POR CATEGORÍA) ---
         categoriasOrdenadas.forEach(cat => {
           const prodsCat = grupos[cat];
 
-          // Título de la categoría
           const tituloSeccion = document.createElement('div');
           tituloSeccion.className = "bg-[#064e3b] text-white px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider mb-3 mt-4 flex items-center gap-2 shadow-sm";
           
@@ -423,7 +420,6 @@
         });
 
       } else {
-        // --- VISTA HOJA DE EXCEL ---
         let globalIndex = 0;
 
         categoriasOrdenadas.forEach(cat => {
