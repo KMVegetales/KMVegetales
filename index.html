@@ -712,7 +712,7 @@
       Object.values(carrito).forEach(i => {
         const sub = i.cantidad * i.precio;
         total += sub;
-        mensaje += `• ${i.cantidad} ${i.unidad}(s) - ${i.nombre} ($${sub.toFixed(2)})\n`;
+        mensaje += `• ${i.cantidad} ${i.unidad} - ${i.nombre} ($${sub.toFixed(2)})\n`;
       });
 
       mensaje += `\n*TOTAL A PAGAR: $${total.toFixed(2)}*`;
