@@ -50,7 +50,7 @@
     .btn-modo-active { background-color: #059669 !important; color: white !important; }
     .btn-modo-inactive { background-color: #e5e7eb !important; color: #4b5563 !important; }
 
-    /* Estilos de la Tabla tipo Excel */
+    /* Estilos de la Tabla tipo Excel con Encabezado Fijo */
     .tabla-excel {
       border-collapse: collapse;
       width: 100%;
@@ -68,6 +68,9 @@
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
+      position: sticky;
+      top: 65px;
+      z-index: 20;
     }
     .tabla-excel td {
       border-bottom: 1px solid #e5e7eb;
@@ -234,9 +237,8 @@
     let carrito = {};
     let categoriaActual = 'TODOS';
     let seleccionPresentacion = {};
-    let modoVista = 'fotos'; // 'fotos' o 'excel'
+    let modoVista = 'fotos';
 
-    // Orden prioritario en el que quieres que aparezcan las categorías
     const ORDEN_CATEGORIAS = ['VERDURAS', 'FRUTAS', 'ESPECIES', 'OTROS'];
 
     async function cargarProductosDesdeSheets() {
@@ -323,97 +325,110 @@
         return;
       }
 
+      // Agrupar y ordenar productos por categorías (común para ambas vistas)
+      const grupos = {};
+      listaACargar.forEach(p => {
+        const cat = p.categoria || 'OTROS';
+        if (!grupos[cat]) grupos[cat] = [];
+        grupos[cat].push(p);
+      });
+
+      const categoriasOrdenadas = Object.keys(grupos).sort((a, b) => {
+        let idxA = ORDEN_CATEGORIAS.indexOf(a);
+        let idxB = ORDEN_CATEGORIAS.indexOf(b);
+        if (idxA === -1) idxA = 99;
+        if (idxB === -1) idxB = 99;
+        return idxA - idxB;
+      });
+
       if (modoVista === 'fotos') {
-        // --- VISTA TARJETA CON FOTO (GRID) ---
-        const grid = document.createElement('div');
-        grid.className = 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3';
+        // --- VISTA TARJETAS CON FOTOS (SEPARADAS POR CATEGORÍA) ---
+        categoriasOrdenadas.forEach(cat => {
+          const prodsCat = grupos[cat];
 
-        listaACargar.forEach(p => {
-          if (!seleccionPresentacion[p.id]) seleccionPresentacion[p.id] = 0;
+          // Título de la categoría
+          const tituloSeccion = document.createElement('div');
+          tituloSeccion.className = "bg-[#064e3b] text-white px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider mb-3 mt-4 flex items-center gap-2 shadow-sm";
+          
+          let iconoCat = "fa-seedling";
+          if (cat.includes('VERDURA')) iconoCat = "fa-carrot";
+          else if (cat.includes('FRUTA')) iconoCat = "fa-apple-alt";
+          else if (cat.includes('ESPECIE')) iconoCat = "fa-pepper-hot";
 
-          const indexPres = seleccionPresentacion[p.id];
-          const presActual = p.presentaciones[indexPres] || { unidad: 'N/A', precio: 0.00 };
-          const itemKey = `${p.id}_${presActual.unidad}`;
-          const cant = carrito[itemKey] ? carrito[itemKey].cantidad : 0;
+          tituloSeccion.innerHTML = `<i class="fas ${iconoCat}"></i> ${cat}`;
+          contenedor.appendChild(tituloSeccion);
 
-          let opcionesHTML = '';
-          p.presentaciones.forEach((pres, idx) => {
-            opcionesHTML += `<option value="${idx}" ${idx === indexPres ? 'selected' : ''}>${pres.unidad} ($${pres.precio.toFixed(2)})</option>`;
-          });
+          const grid = document.createElement('div');
+          grid.className = 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3';
 
-          const nombreEscapado = p.nombre.replace(/'/g, "\\'");
+          prodsCat.forEach(p => {
+            if (!seleccionPresentacion[p.id]) seleccionPresentacion[p.id] = 0;
 
-          const card = document.createElement('div');
-          card.className = 'card-producto bg-white rounded-2xl p-2.5 shadow-sm border border-gray-100 flex flex-col justify-between';
-          card.innerHTML = `
-            <div>
-              <div class="relative h-28 rounded-xl overflow-hidden mb-2 bg-gray-100">
-                <img src="${p.foto}" alt="${p.nombre}" loading="lazy" class="w-full h-full object-cover" onerror="intentarFormatosAlternativos(this, '${nombreEscapado}')">
-                <span class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-emerald-800 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase shadow-sm">${p.categoria}</span>
-              </div>
-              <h3 class="font-bold text-gray-800 text-xs mb-0.5 truncate">${p.nombre}</h3>
-              <p class="text-[10px] text-gray-400 line-clamp-1 mb-2">${p.descripcion}</p>
-            </div>
+            const indexPres = seleccionPresentacion[p.id];
+            const presActual = p.presentaciones[indexPres] || { unidad: 'N/A', precio: 0.00 };
+            const itemKey = `${p.id}_${presActual.unidad}`;
+            const cant = carrito[itemKey] ? carrito[itemKey].cantidad : 0;
 
-            <div class="space-y-2 pt-1 border-t">
+            let opcionesHTML = '';
+            p.presentaciones.forEach((pres, idx) => {
+              opcionesHTML += `<option value="${idx}" ${idx === indexPres ? 'selected' : ''}>${pres.unidad} ($${pres.precio.toFixed(2)})</option>`;
+            });
+
+            const nombreEscapado = p.nombre.replace(/'/g, "\\'");
+
+            const card = document.createElement('div');
+            card.className = 'card-producto bg-white rounded-2xl p-2.5 shadow-sm border border-gray-100 flex flex-col justify-between';
+            card.innerHTML = `
               <div>
-                <label class="text-[9px] text-gray-400 font-semibold block mb-0.5">PRESENTACIÓN:</label>
-                <select onchange="cambiarPresentacion('${p.id}', this.value)" class="select-custom w-full bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold rounded-lg p-1 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition">
-                  ${opcionesHTML}
-                </select>
+                <div class="relative h-28 rounded-xl overflow-hidden mb-2 bg-gray-100">
+                  <img src="${p.foto}" alt="${p.nombre}" loading="lazy" class="w-full h-full object-cover" onerror="intentarFormatosAlternativos(this, '${nombreEscapado}')">
+                  <span class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-emerald-800 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase shadow-sm">${p.categoria}</span>
+                </div>
+                <h3 class="font-bold text-gray-800 text-xs mb-0.5 truncate">${p.nombre}</h3>
+                <p class="text-[10px] text-gray-400 line-clamp-1 mb-2">${p.descripcion}</p>
               </div>
 
-              <div class="pt-1 space-y-1.5">
-                <div class="flex items-center justify-between">
-                  <p id="precio-${p.id}" class="font-bold text-emerald-700 text-sm">$${presActual.precio.toFixed(2)}</p>
-                  
-                  <div class="flex items-center gap-1">
-                    <button onclick="cambiarCantidad('${p.id}', -1)" class="btn-qty-minus w-6 h-6 rounded-lg font-bold text-xs flex items-center justify-center">-</button>
-                    <input type="number" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" class="w-12 h-6 text-center text-xs font-bold bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500">
-                    <button onclick="cambiarCantidad('${p.id}', 1)" class="btn-qty-plus w-6 h-6 rounded-lg font-bold text-xs flex items-center justify-center">+</button>
+              <div class="space-y-2 pt-1 border-t">
+                <div>
+                  <label class="text-[9px] text-gray-400 font-semibold block mb-0.5">PRESENTACIÓN:</label>
+                  <select onchange="cambiarPresentacion('${p.id}', this.value)" class="select-custom w-full bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold rounded-lg p-1 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition">
+                    ${opcionesHTML}
+                  </select>
+                </div>
+
+                <div class="pt-1 space-y-1.5">
+                  <div class="flex items-center justify-between">
+                    <p id="precio-${p.id}" class="font-bold text-emerald-700 text-sm">$${presActual.precio.toFixed(2)}</p>
+                    
+                    <div class="flex items-center gap-1">
+                      <button onclick="cambiarCantidad('${p.id}', -1)" class="btn-qty-minus w-6 h-6 rounded-lg font-bold text-xs flex items-center justify-center">-</button>
+                      <input type="number" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" class="w-12 h-6 text-center text-xs font-bold bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                      <button onclick="cambiarCantidad('${p.id}', 1)" class="btn-qty-plus w-6 h-6 rounded-lg font-bold text-xs flex items-center justify-center">+</button>
+                    </div>
+                  </div>
+
+                  <div class="flex justify-end gap-1 pt-1 border-t border-gray-100">
+                    <button onclick="cambiarCantidad('${p.id}', 10)" class="text-[9px] font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-1 py-0.5 rounded border border-emerald-200 transition">+10</button>
+                    <button onclick="cambiarCantidad('${p.id}', 25)" class="text-[9px] font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-1 py-0.5 rounded border border-emerald-200 transition">+25</button>
+                    <button onclick="cambiarCantidad('${p.id}', 50)" class="text-[9px] font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-1 py-0.5 rounded border border-emerald-200 transition">+50</button>
+                    <button onclick="cambiarCantidad('${p.id}', 100)" class="text-[9px] font-bold bg-emerald-600 text-white hover:bg-emerald-700 px-1.5 py-0.5 rounded transition shadow-sm">+100</button>
                   </div>
                 </div>
-
-                <div class="flex justify-end gap-1 pt-1 border-t border-gray-100">
-                  <button onclick="cambiarCantidad('${p.id}', 10)" class="text-[9px] font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-1 py-0.5 rounded border border-emerald-200 transition">+10</button>
-                  <button onclick="cambiarCantidad('${p.id}', 25)" class="text-[9px] font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-1 py-0.5 rounded border border-emerald-200 transition">+25</button>
-                  <button onclick="cambiarCantidad('${p.id}', 50)" class="text-[9px] font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-1 py-0.5 rounded border border-emerald-200 transition">+50</button>
-                  <button onclick="cambiarCantidad('${p.id}', 100)" class="text-[9px] font-bold bg-emerald-600 text-white hover:bg-emerald-700 px-1.5 py-0.5 rounded transition shadow-sm">+100</button>
-                </div>
               </div>
-            </div>
-          `;
-          grid.appendChild(card);
-        });
+            `;
+            grid.appendChild(card);
+          });
 
-        contenedor.appendChild(grid);
+          contenedor.appendChild(grid);
+        });
 
       } else {
-        // --- VISTA HOJA DE EXCEL / AGRUPADA POR CATEGORÍAS ORDENADAS ---
-        
-        // Agrupar productos por categoría
-        const grupos = {};
-        listaACargar.forEach(p => {
-          const cat = p.categoria || 'OTROS';
-          if (!grupos[cat]) grupos[cat] = [];
-          grupos[cat].push(p);
-        });
-
-        // Ordenar las categorías según el orden deseado (Verduras, Frutas, Especies...)
-        const categoriasOrdenadas = Object.keys(grupos).sort((a, b) => {
-          let idxA = ORDEN_CATEGORIAS.indexOf(a);
-          let idxB = ORDEN_CATEGORIAS.indexOf(b);
-          if (idxA === -1) idxA = 99;
-          if (idxB === -1) idxB = 99;
-          return idxA - idxB;
-        });
-
+        // --- VISTA HOJA DE EXCEL ---
         let globalIndex = 0;
 
         categoriasOrdenadas.forEach(cat => {
           const prodsCat = grupos[cat];
 
-          // Crear título de sección separado por categoría
           const tituloSeccion = document.createElement('div');
           tituloSeccion.className = "bg-[#064e3b] text-white px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider mb-2 mt-4 flex items-center gap-2 shadow-sm";
           
@@ -425,7 +440,6 @@
           tituloSeccion.innerHTML = `<i class="fas ${iconoCat}"></i> ${cat}`;
           contenedor.appendChild(tituloSeccion);
 
-          // Crear tabla para esta categoría
           const wrapperTabla = document.createElement('div');
           wrapperTabla.className = 'overflow-x-auto';
 
@@ -493,7 +507,6 @@
       }
     }
 
-    // Navegación con teclado tipo Excel (Flecha Abajo / Enter / Flecha Arriba)
     function navegarTecladoExcel(event, indexActual) {
       if (event.key === 'Enter' || event.key === 'ArrowDown') {
         event.preventDefault();
