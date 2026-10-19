@@ -46,6 +46,53 @@
 
     .btn-cat-active { background-color: #065f46 !important; color: #ffffff !important; }
     .btn-cat-inactive:hover { background-color: #f0fdf4 !important; border-color: #a7f3d0 !important; color: #065f46 !important; }
+    
+    .btn-modo-active { background-color: #059669 !important; color: white !important; }
+    .btn-modo-inactive { background-color: #e5e7eb !important; color: #4b5563 !important; }
+
+    /* Estilos de la Tabla tipo Excel */
+    .tabla-excel {
+      border-collapse: collapse;
+      width: 100%;
+      background-color: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .tabla-excel th {
+      background-color: #064e3b;
+      color: white;
+      text-align: left;
+      padding: 10px 12px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .tabla-excel td {
+      border-bottom: 1px solid #e5e7eb;
+      padding: 8px 12px;
+      font-size: 12px;
+    }
+    .tabla-excel tr:hover {
+      background-color: #f0fdf4;
+    }
+    .input-excel {
+      width: 80px;
+      text-align: center;
+      font-weight: 700;
+      background-color: #f9fafb;
+      border: 1.5px solid #d1d5db;
+      border-radius: 6px;
+      padding: 4px 6px;
+      font-size: 13px;
+      color: #111827;
+    }
+    .input-excel:focus {
+      outline: none;
+      border-color: #059669;
+      background-color: #ffffff;
+      box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.2);
+    }
   </style>
 </head>
 <body class="bg-gray-50 min-h-screen pb-12">
@@ -95,15 +142,28 @@
         </div>
       </div>
 
-      <!-- FILTROS DE CATEGORÍAS -->
-      <div class="flex overflow-x-auto gap-2 py-1 no-scrollbar">
-        <button onclick="filtrarCategoria('TODOS')" id="btn-cat-todos" class="btn-cat-active px-4 py-2 bg-emerald-800 text-white rounded-xl font-semibold text-xs transition whitespace-nowrap active:scale-95">Todos</button>
-        <button onclick="filtrarCategoria('VERDURAS')" id="btn-cat-verduras" class="btn-cat-inactive px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-xl font-semibold text-xs shadow-sm transition whitespace-nowrap active:scale-95"><i class="fas fa-carrot text-amber-600 mr-1"></i> Verduras</button>
-        <button onclick="filtrarCategoria('FRUTAS')" id="btn-cat-frutas" class="btn-cat-inactive px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-xl font-semibold text-xs shadow-sm transition whitespace-nowrap active:scale-95"><i class="fas fa-apple-alt text-red-500 mr-1"></i> Frutas</button>
+      <!-- FILTROS Y SELECTOR DE VISTA -->
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <!-- CATEGORÍAS -->
+        <div class="flex overflow-x-auto gap-2 py-1 no-scrollbar w-full sm:w-auto">
+          <button onclick="filtrarCategoria('TODOS')" id="btn-cat-todos" class="btn-cat-active px-4 py-2 bg-emerald-800 text-white rounded-xl font-semibold text-xs transition whitespace-nowrap active:scale-95">Todos</button>
+          <button onclick="filtrarCategoria('VERDURAS')" id="btn-cat-verduras" class="btn-cat-inactive px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-xl font-semibold text-xs shadow-sm transition whitespace-nowrap active:scale-95"><i class="fas fa-carrot text-amber-600 mr-1"></i> Verduras</button>
+          <button onclick="filtrarCategoria('FRUTAS')" id="btn-cat-frutas" class="btn-cat-inactive px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-xl font-semibold text-xs shadow-sm transition whitespace-nowrap active:scale-95"><i class="fas fa-apple-alt text-red-500 mr-1"></i> Frutas</button>
+        </div>
+
+        <!-- CAMBIO DE VISTA -->
+        <div class="flex items-center gap-1 bg-gray-200 p-1 rounded-xl text-xs self-end sm:self-auto">
+          <button onclick="cambiarModoVista('fotos')" id="btn-vista-fotos" class="btn-modo-active px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 shadow-sm transition">
+            <i class="fas fa-th-large"></i> Fotos
+          </button>
+          <button onclick="cambiarModoVista('excel')" id="btn-vista-excel" class="btn-modo-inactive px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition">
+            <i class="fas fa-file-excel"></i> Hoja Excel (Rápido)
+          </button>
+        </div>
       </div>
 
-      <!-- GRILLA DE PRODUCTOS -->
-      <div id="grid-productos" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"></div>
+      <!-- CONTENEDOR DINÁMICO DE PRODUCTOS -->
+      <div id="contenedor-productos"></div>
     </div>
 
     <!-- COLUMNA DERECHA: CARRITO -->
@@ -173,6 +233,7 @@
     let carrito = {};
     let categoriaActual = 'TODOS';
     let seleccionPresentacion = {};
+    let modoVista = 'fotos'; // 'fotos' o 'excel'
 
     async function cargarProductosDesdeSheets() {
       try {
@@ -233,80 +294,181 @@
       return Object.values(mapaProductos);
     }
 
+    function cambiarModoVista(modo) {
+      modoVista = modo;
+      const btnFotos = document.getElementById('btn-vista-fotos');
+      const btnExcel = document.getElementById('btn-vista-excel');
+
+      if (modo === 'fotos') {
+        btnFotos.className = "btn-modo-active px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 shadow-sm transition";
+        btnExcel.className = "btn-modo-inactive px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition";
+      } else {
+        btnExcel.className = "btn-modo-active px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 shadow-sm transition";
+        btnFotos.className = "btn-modo-inactive px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition";
+      }
+
+      renderProductos(obtenerProductosFiltrados());
+    }
+
     function renderProductos(listaACargar = productos) {
-      const grid = document.getElementById('grid-productos');
-      grid.innerHTML = '';
+      const contenedor = document.getElementById('contenedor-productos');
+      contenedor.innerHTML = '';
 
       if (listaACargar.length === 0) {
-        grid.innerHTML = '<p class="col-span-full text-center text-gray-400 py-12 text-xs">Cargando productos...</p>';
+        contenedor.innerHTML = '<p class="text-center text-gray-400 py-12 text-xs">Cargando productos...</p>';
         return;
       }
 
-      const fragmento = document.createDocumentFragment();
+      if (modoVista === 'fotos') {
+        // --- VISTA TARJETA CON FOTO ---
+        const grid = document.createElement('div');
+        grid.className = 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3';
 
-      listaACargar.forEach(p => {
-        if (!seleccionPresentacion[p.id]) {
-          seleccionPresentacion[p.id] = 0;
-        }
+        listaACargar.forEach(p => {
+          if (!seleccionPresentacion[p.id]) seleccionPresentacion[p.id] = 0;
 
-        const indexPres = seleccionPresentacion[p.id];
-        const presActual = p.presentaciones[indexPres] || { unidad: 'N/A', precio: 0.00 };
-        const itemKey = `${p.id}_${presActual.unidad}`;
-        const cant = carrito[itemKey] ? carrito[itemKey].cantidad : 0;
+          const indexPres = seleccionPresentacion[p.id];
+          const presActual = p.presentaciones[indexPres] || { unidad: 'N/A', precio: 0.00 };
+          const itemKey = `${p.id}_${presActual.unidad}`;
+          const cant = carrito[itemKey] ? carrito[itemKey].cantidad : 0;
 
-        let opcionesHTML = '';
-        p.presentaciones.forEach((pres, idx) => {
-          opcionesHTML += `<option value="${idx}" ${idx === indexPres ? 'selected' : ''}>${pres.unidad} ($${pres.precio.toFixed(2)})</option>`;
-        });
+          let opcionesHTML = '';
+          p.presentaciones.forEach((pres, idx) => {
+            opcionesHTML += `<option value="${idx}" ${idx === indexPres ? 'selected' : ''}>${pres.unidad} ($${pres.precio.toFixed(2)})</option>`;
+          });
 
-        const nombreEscapado = p.nombre.replace(/'/g, "\\'");
+          const nombreEscapado = p.nombre.replace(/'/g, "\\'");
 
-        const card = document.createElement('div');
-        card.className = 'card-producto bg-white rounded-2xl p-2.5 shadow-sm border border-gray-100 flex flex-col justify-between';
-        card.innerHTML = `
-          <div>
-            <div class="relative h-28 rounded-xl overflow-hidden mb-2 bg-gray-100">
-              <img src="${p.foto}" alt="${p.nombre}" loading="lazy" class="w-full h-full object-cover" onerror="intentarFormatosAlternativos(this, '${nombreEscapado}')">
-              <span class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-emerald-800 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase shadow-sm">${p.categoria}</span>
-            </div>
-            <h3 class="font-bold text-gray-800 text-xs mb-0.5 truncate">${p.nombre}</h3>
-            <p class="text-[10px] text-gray-400 line-clamp-1 mb-2">${p.descripcion}</p>
-          </div>
-
-          <div class="space-y-2 pt-1 border-t">
+          const card = document.createElement('div');
+          card.className = 'card-producto bg-white rounded-2xl p-2.5 shadow-sm border border-gray-100 flex flex-col justify-between';
+          card.innerHTML = `
             <div>
-              <label class="text-[9px] text-gray-400 font-semibold block mb-0.5">PRESENTACIÓN:</label>
-              <select onchange="cambiarPresentacion('${p.id}', this.value)" class="select-custom w-full bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold rounded-lg p-1 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition">
-                ${opcionesHTML}
-              </select>
+              <div class="relative h-28 rounded-xl overflow-hidden mb-2 bg-gray-100">
+                <img src="${p.foto}" alt="${p.nombre}" loading="lazy" class="w-full h-full object-cover" onerror="intentarFormatosAlternativos(this, '${nombreEscapado}')">
+                <span class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-emerald-800 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase shadow-sm">${p.categoria}</span>
+              </div>
+              <h3 class="font-bold text-gray-800 text-xs mb-0.5 truncate">${p.nombre}</h3>
+              <p class="text-[10px] text-gray-400 line-clamp-1 mb-2">${p.descripcion}</p>
             </div>
 
-            <div class="pt-1 space-y-1.5">
-              <div class="flex items-center justify-between">
-                <p id="precio-${p.id}" class="font-bold text-emerald-700 text-sm">$${presActual.precio.toFixed(2)}</p>
-                
-                <!-- INPUT DE TEXTO EDITABLE DIRECTAMENTE -->
-                <div class="flex items-center gap-1">
-                  <button onclick="cambiarCantidad('${p.id}', -1)" class="btn-qty-minus w-6 h-6 rounded-lg font-bold text-xs flex items-center justify-center">-</button>
-                  <input type="number" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" class="w-12 h-6 text-center text-xs font-bold bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500">
-                  <button onclick="cambiarCantidad('${p.id}', 1)" class="btn-qty-plus w-6 h-6 rounded-lg font-bold text-xs flex items-center justify-center">+</button>
+            <div class="space-y-2 pt-1 border-t">
+              <div>
+                <label class="text-[9px] text-gray-400 font-semibold block mb-0.5">PRESENTACIÓN:</label>
+                <select onchange="cambiarPresentacion('${p.id}', this.value)" class="select-custom w-full bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold rounded-lg p-1 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition">
+                  ${opcionesHTML}
+                </select>
+              </div>
+
+              <div class="pt-1 space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <p id="precio-${p.id}" class="font-bold text-emerald-700 text-sm">$${presActual.precio.toFixed(2)}</p>
+                  
+                  <div class="flex items-center gap-1">
+                    <button onclick="cambiarCantidad('${p.id}', -1)" class="btn-qty-minus w-6 h-6 rounded-lg font-bold text-xs flex items-center justify-center">-</button>
+                    <input type="number" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" class="w-12 h-6 text-center text-xs font-bold bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                    <button onclick="cambiarCantidad('${p.id}', 1)" class="btn-qty-plus w-6 h-6 rounded-lg font-bold text-xs flex items-center justify-center">+</button>
+                  </div>
+                </div>
+
+                <div class="flex justify-end gap-1 pt-1 border-t border-gray-100">
+                  <button onclick="cambiarCantidad('${p.id}', 10)" class="text-[9px] font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-1 py-0.5 rounded border border-emerald-200 transition">+10</button>
+                  <button onclick="cambiarCantidad('${p.id}', 25)" class="text-[9px] font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-1 py-0.5 rounded border border-emerald-200 transition">+25</button>
+                  <button onclick="cambiarCantidad('${p.id}', 50)" class="text-[9px] font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-1 py-0.5 rounded border border-emerald-200 transition">+50</button>
+                  <button onclick="cambiarCantidad('${p.id}', 100)" class="text-[9px] font-bold bg-emerald-600 text-white hover:bg-emerald-700 px-1.5 py-0.5 rounded transition shadow-sm">+100</button>
                 </div>
               </div>
-
-              <!-- BOTONES RÁPIDOS MAYORISTAS (+10, +25, +50, +100) -->
-              <div class="flex justify-end gap-1 pt-1 border-t border-gray-100">
-                <button onclick="cambiarCantidad('${p.id}', 10)" class="text-[9px] font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-1 py-0.5 rounded border border-emerald-200 transition">+10</button>
-                <button onclick="cambiarCantidad('${p.id}', 25)" class="text-[9px] font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-1 py-0.5 rounded border border-emerald-200 transition">+25</button>
-                <button onclick="cambiarCantidad('${p.id}', 50)" class="text-[9px] font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-1 py-0.5 rounded border border-emerald-200 transition">+50</button>
-                <button onclick="cambiarCantidad('${p.id}', 100)" class="text-[9px] font-bold bg-emerald-600 text-white hover:bg-emerald-700 px-1.5 py-0.5 rounded transition shadow-sm">+100</button>
-              </div>
             </div>
-          </div>
-        `;
-        fragmento.appendChild(card);
-      });
+          `;
+          grid.appendChild(card);
+        });
 
-      grid.appendChild(fragmento);
+        contenedor.appendChild(grid);
+
+      } else {
+        // --- VISTA HOJA DE EXCEL / PEDIDO RÁPIDO ---
+        const wrapperTabla = document.createElement('div');
+        wrapperTabla.className = 'overflow-x-auto';
+
+        let filasHTML = '';
+        listaACargar.forEach((p, idx) => {
+          if (!seleccionPresentacion[p.id]) seleccionPresentacion[p.id] = 0;
+
+          const indexPres = seleccionPresentacion[p.id];
+          const presActual = p.presentaciones[indexPres] || { unidad: 'N/A', precio: 0.00 };
+          const itemKey = `${p.id}_${presActual.unidad}`;
+          const cant = carrito[itemKey] ? carrito[itemKey].cantidad : 0;
+          const subtotalLinea = cant * presActual.precio;
+
+          let opcionesHTML = '';
+          p.presentaciones.forEach((pres, i) => {
+            opcionesHTML += `<option value="${i}" ${i === indexPres ? 'selected' : ''}>${pres.unidad}</option>`;
+          });
+
+          filasHTML += `
+            <tr>
+              <td class="font-semibold text-gray-800">${p.nombre}</td>
+              <td class="text-gray-500 font-medium text-[11px]">${p.categoria}</td>
+              <td class="w-36">
+                <select onchange="cambiarPresentacion('${p.id}', this.value)" class="select-custom w-full bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold rounded p-1 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                  ${opcionesHTML}
+                </select>
+              </td>
+              <td id="precio-${p.id}" class="font-bold text-gray-700 text-right">$${presActual.precio.toFixed(2)}</td>
+              <td class="text-center w-28">
+                <input type="number" 
+                       id="cant-${p.id}" 
+                       value="${cant}" 
+                       min="0" 
+                       onfocus="this.select()" 
+                       oninput="fijarCantidadDirecta('${p.id}', this.value)"
+                       onkeydown="navegarTecladoExcel(event, ${idx})" 
+                       class="input-excel input-fila-excel" 
+                       data-index="${idx}">
+              </td>
+              <td id="subtotal-${p.id}" class="font-bold text-emerald-700 text-right">$${subtotalLinea.toFixed(2)}</td>
+            </tr>
+          `;
+        });
+
+        wrapperTabla.innerHTML = `
+          <table class="tabla-excel">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Categoría</th>
+                <th>Presentación</th>
+                <th class="text-right">Precio U.</th>
+                <th class="text-center">Cantidad</th>
+                <th class="text-right">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${filasHTML}
+            </tbody>
+          </table>
+        `;
+
+        contenedor.appendChild(wrapperTabla);
+      }
+    }
+
+    // Navegación con teclado tipo Excel (Flecha Abajo / Enter / Flecha Arriba)
+    function navegarTecladoExcel(event, indexActual) {
+      if (event.key === 'Enter' || event.key === 'ArrowDown') {
+        event.preventDefault();
+        const siguiente = document.querySelector(`.input-fila-excel[data-index="${indexActual + 1}"]`);
+        if (siguiente) {
+          siguiente.focus();
+          siguiente.select();
+        }
+      } else if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        const anterior = document.querySelector(`.input-fila-excel[data-index="${indexActual - 1}"]`);
+        if (anterior) {
+          anterior.focus();
+          anterior.select();
+        }
+      }
     }
 
     function intentarFormatosAlternativos(imgElement, nombreProducto) {
@@ -350,12 +512,18 @@
       seleccionPresentacion[prodId] = parseInt(nuevoIdx);
       const prod = productos.find(p => p.id === prodId);
       const pres = prod.presentaciones[nuevoIdx];
+      
       const precioElem = document.getElementById(`precio-${prodId}`);
       if (precioElem) precioElem.innerText = `$${pres.precio.toFixed(2)}`;
 
       const itemKey = `${prod.id}_${pres.unidad}`;
       const cantInput = document.getElementById(`cant-${prodId}`);
-      if (cantInput) cantInput.value = carrito[itemKey] ? carrito[itemKey].cantidad : 0;
+      const cant = carrito[itemKey] ? carrito[itemKey].cantidad : 0;
+      
+      if (cantInput) cantInput.value = cant;
+
+      const subtotalElem = document.getElementById(`subtotal-${prodId}`);
+      if (subtotalElem) subtotalElem.innerText = `$${(cant * pres.precio).toFixed(2)}`;
     }
 
     function cambiarCantidad(prodId, cambio) {
@@ -370,9 +538,10 @@
       actualizarCarritoPorKey(itemKey, prod, pres, nuevaCantidad);
 
       const cantInput = document.getElementById(`cant-${prodId}`);
-      if (cantInput) {
-        cantInput.value = carrito[itemKey] ? carrito[itemKey].cantidad : 0;
-      }
+      if (cantInput) cantInput.value = carrito[itemKey] ? carrito[itemKey].cantidad : 0;
+
+      const subtotalElem = document.getElementById(`subtotal-${prodId}`);
+      if (subtotalElem) subtotalElem.innerText = `$${((carrito[itemKey] ? carrito[itemKey].cantidad : 0) * pres.precio).toFixed(2)}`;
 
       actualizarInterfazCarrito();
     }
@@ -385,6 +554,10 @@
 
       let nuevaCantidad = parseInt(valorTexto) || 0;
       actualizarCarritoPorKey(itemKey, prod, pres, nuevaCantidad);
+
+      const subtotalElem = document.getElementById(`subtotal-${prodId}`);
+      if (subtotalElem) subtotalElem.innerText = `$${(nuevaCantidad * pres.precio).toFixed(2)}`;
+
       actualizarInterfazCarrito();
     }
 
