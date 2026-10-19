@@ -58,6 +58,7 @@
       border-radius: 12px;
       overflow: hidden;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      margin-bottom: 1.5rem;
     }
     .tabla-excel th {
       background-color: #064e3b;
@@ -235,6 +236,9 @@
     let seleccionPresentacion = {};
     let modoVista = 'fotos'; // 'fotos' o 'excel'
 
+    // Orden prioritario en el que quieres que aparezcan las categorías
+    const ORDEN_CATEGORIAS = ['VERDURAS', 'FRUTAS', 'ESPECIES', 'OTROS'];
+
     async function cargarProductosDesdeSheets() {
       try {
         const response = await fetch(URL_GOOGLE_SHEETS);
@@ -256,7 +260,7 @@
 
         const id = col[0];
         const nombre = col[1];
-        const categoria = col[2];
+        const categoria = col[2] ? col[2].toUpperCase() : 'OTROS';
         const unidad = col[3];
         const precioRaw = col[4] || "0";
         const fotoCol = col[5];
@@ -320,7 +324,7 @@
       }
 
       if (modoVista === 'fotos') {
-        // --- VISTA TARJETA CON FOTO ---
+        // --- VISTA TARJETA CON FOTO (GRID) ---
         const grid = document.createElement('div');
         grid.className = 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3';
 
@@ -385,70 +389,107 @@
         contenedor.appendChild(grid);
 
       } else {
-        // --- VISTA HOJA DE EXCEL / PEDIDO RÁPIDO ---
-        const wrapperTabla = document.createElement('div');
-        wrapperTabla.className = 'overflow-x-auto';
-
-        let filasHTML = '';
-        listaACargar.forEach((p, idx) => {
-          if (!seleccionPresentacion[p.id]) seleccionPresentacion[p.id] = 0;
-
-          const indexPres = seleccionPresentacion[p.id];
-          const presActual = p.presentaciones[indexPres] || { unidad: 'N/A', precio: 0.00 };
-          const itemKey = `${p.id}_${presActual.unidad}`;
-          const cant = carrito[itemKey] ? carrito[itemKey].cantidad : 0;
-          const subtotalLinea = cant * presActual.precio;
-
-          let opcionesHTML = '';
-          p.presentaciones.forEach((pres, i) => {
-            opcionesHTML += `<option value="${i}" ${i === indexPres ? 'selected' : ''}>${pres.unidad}</option>`;
-          });
-
-          filasHTML += `
-            <tr>
-              <td class="font-semibold text-gray-800">${p.nombre}</td>
-              <td class="text-gray-500 font-medium text-[11px]">${p.categoria}</td>
-              <td class="w-36">
-                <select onchange="cambiarPresentacion('${p.id}', this.value)" class="select-custom w-full bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold rounded p-1 focus:outline-none focus:ring-1 focus:ring-emerald-500">
-                  ${opcionesHTML}
-                </select>
-              </td>
-              <td id="precio-${p.id}" class="font-bold text-gray-700 text-right">$${presActual.precio.toFixed(2)}</td>
-              <td class="text-center w-28">
-                <input type="number" 
-                       id="cant-${p.id}" 
-                       value="${cant}" 
-                       min="0" 
-                       onfocus="this.select()" 
-                       oninput="fijarCantidadDirecta('${p.id}', this.value)"
-                       onkeydown="navegarTecladoExcel(event, ${idx})" 
-                       class="input-excel input-fila-excel" 
-                       data-index="${idx}">
-              </td>
-              <td id="subtotal-${p.id}" class="font-bold text-emerald-700 text-right">$${subtotalLinea.toFixed(2)}</td>
-            </tr>
-          `;
+        // --- VISTA HOJA DE EXCEL / AGRUPADA POR CATEGORÍAS ORDENADAS ---
+        
+        // Agrupar productos por categoría
+        const grupos = {};
+        listaACargar.forEach(p => {
+          const cat = p.categoria || 'OTROS';
+          if (!grupos[cat]) grupos[cat] = [];
+          grupos[cat].push(p);
         });
 
-        wrapperTabla.innerHTML = `
-          <table class="tabla-excel">
-            <thead>
-              <tr>
-                <th>Producto</th>
-                <th>Categoría</th>
-                <th>Presentación</th>
-                <th class="text-right">Precio U.</th>
-                <th class="text-center">Cantidad</th>
-                <th class="text-right">Subtotal</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${filasHTML}
-            </tbody>
-          </table>
-        `;
+        // Ordenar las categorías según el orden deseado (Verduras, Frutas, Especies...)
+        const categoriasOrdenadas = Object.keys(grupos).sort((a, b) => {
+          let idxA = ORDEN_CATEGORIAS.indexOf(a);
+          let idxB = ORDEN_CATEGORIAS.indexOf(b);
+          if (idxA === -1) idxA = 99;
+          if (idxB === -1) idxB = 99;
+          return idxA - idxB;
+        });
 
-        contenedor.appendChild(wrapperTabla);
+        let globalIndex = 0;
+
+        categoriasOrdenadas.forEach(cat => {
+          const prodsCat = grupos[cat];
+
+          // Crear título de sección separado por categoría
+          const tituloSeccion = document.createElement('div');
+          tituloSeccion.className = "bg-[#064e3b] text-white px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider mb-2 mt-4 flex items-center gap-2 shadow-sm";
+          
+          let iconoCat = "fa-seedling";
+          if (cat.includes('VERDURA')) iconoCat = "fa-carrot";
+          else if (cat.includes('FRUTA')) iconoCat = "fa-apple-alt";
+          else if (cat.includes('ESPECIE')) iconoCat = "fa-pepper-hot";
+
+          tituloSeccion.innerHTML = `<i class="fas ${iconoCat}"></i> ${cat}`;
+          contenedor.appendChild(tituloSeccion);
+
+          // Crear tabla para esta categoría
+          const wrapperTabla = document.createElement('div');
+          wrapperTabla.className = 'overflow-x-auto';
+
+          let filasHTML = '';
+          prodsCat.forEach(p => {
+            if (!seleccionPresentacion[p.id]) seleccionPresentacion[p.id] = 0;
+
+            const indexPres = seleccionPresentacion[p.id];
+            const presActual = p.presentaciones[indexPres] || { unidad: 'N/A', precio: 0.00 };
+            const itemKey = `${p.id}_${presActual.unidad}`;
+            const cant = carrito[itemKey] ? carrito[itemKey].cantidad : 0;
+            const subtotalLinea = cant * presActual.precio;
+
+            let opcionesHTML = '';
+            p.presentaciones.forEach((pres, i) => {
+              opcionesHTML += `<option value="${i}" ${i === indexPres ? 'selected' : ''}>${pres.unidad}</option>`;
+            });
+
+            filasHTML += `
+              <tr>
+                <td class="font-semibold text-gray-800">${p.nombre}</td>
+                <td class="w-36">
+                  <select onchange="cambiarPresentacion('${p.id}', this.value)" class="select-custom w-full bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold rounded p-1 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                    ${opcionesHTML}
+                  </select>
+                </td>
+                <td id="precio-${p.id}" class="font-bold text-gray-700 text-right">$${presActual.precio.toFixed(2)}</td>
+                <td class="text-center w-28">
+                  <input type="number" 
+                         id="cant-${p.id}" 
+                         value="${cant}" 
+                         min="0" 
+                         onfocus="this.select()" 
+                         oninput="fijarCantidadDirecta('${p.id}', this.value)"
+                         onkeydown="navegarTecladoExcel(event, ${globalIndex})" 
+                         class="input-excel input-fila-excel" 
+                         data-index="${globalIndex}">
+                </td>
+                <td id="subtotal-${p.id}" class="font-bold text-emerald-700 text-right">$${subtotalLinea.toFixed(2)}</td>
+              </tr>
+            `;
+
+            globalIndex++;
+          });
+
+          wrapperTabla.innerHTML = `
+            <table class="tabla-excel">
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th>Presentación</th>
+                  <th class="text-right">Precio U.</th>
+                  <th class="text-center">Cantidad</th>
+                  <th class="text-right">Subtotal</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${filasHTML}
+              </tbody>
+            </table>
+          `;
+
+          contenedor.appendChild(wrapperTabla);
+        });
       }
     }
 
