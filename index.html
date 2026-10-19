@@ -174,10 +174,11 @@
           <h3 class="font-bold text-base text-gray-800 flex items-center gap-2">
             <span class="bg-emerald-100 text-emerald-800 p-1.5 rounded-xl"><i class="fas fa-shopping-basket"></i></span> Tu Pedido
           </h3>
-          <span id="cart-count-badge" class="bg-emerald-600 text-white font-bold text-xs px-2.5 py-0.5 rounded-full shadow-sm">0 items</span>
+          <span id="cart-count-badge" class="bg-emerald-600 text-white font-bold text-xs px-2.5 py-0.5 rounded-full shadow-sm">0 productos</span>
         </div>
 
-        <div id="lista-carrito-desktop" class="divide-y max-h-[32vh] overflow-y-auto pr-1 space-y-2">
+        <!-- Lista del carrito con scroll ajustable para revisión -->
+        <div id="lista-carrito-desktop" class="divide-y max-h-[40vh] overflow-y-auto pr-1 space-y-2">
           <p class="text-gray-400 text-xs text-center py-6">Tu carrito está vacío</p>
         </div>
 
@@ -210,7 +211,7 @@
           </h3>
           <button onclick="toggleCarritoMovil()" class="text-gray-400 hover:text-gray-600 text-2xl font-bold p-1 active:scale-90 transition">&times;</button>
         </div>
-        <div id="lista-carrito-mobile" class="divide-y my-4 space-y-2"></div>
+        <div id="lista-carrito-mobile" class="divide-y my-4 max-h-[50vh] overflow-y-auto pr-1 space-y-2"></div>
       </div>
 
       <div class="border-t pt-4 space-y-3">
@@ -608,6 +609,30 @@
       actualizarInterfazCarrito();
     }
 
+    // Funciones de modificación rápida desde el carrito lateral
+    function cambiarCantidadDesdeCarrito(itemKey, cambio) {
+      if (!carrito[itemKey]) return;
+      let nuevaCantidad = carrito[itemKey].cantidad + cambio;
+      
+      if (nuevaCantidad <= 0) {
+        delete carrito[itemKey];
+      } else {
+        carrito[itemKey].cantidad = nuevaCantidad;
+      }
+
+      // Sincronizar input en la vista principal si el producto está visible
+      const prod = productos.find(p => p.id === carrito[itemKey]?.id || Object.values(productos).find(p => p.id === itemKey.split('_')[0]));
+      // Sincronización general
+      renderProductos(obtenerProductosFiltrados());
+      actualizarInterfazCarrito();
+    }
+
+    function eliminarItemCarrito(itemKey) {
+      delete carrito[itemKey];
+      renderProductos(obtenerProductosFiltrados());
+      actualizarInterfazCarrito();
+    }
+
     function actualizarCarritoPorKey(itemKey, prod, pres, cantidad) {
       if (cantidad <= 0) {
         delete carrito[itemKey];
@@ -623,37 +648,47 @@
     }
 
     function actualizarInterfazCarrito() {
-      let totalItems = 0;
       let totalMonto = 0;
       let htmlItems = '';
+      const totalProductosDiferentes = Object.keys(carrito).length;
 
-      Object.values(carrito).forEach(item => {
-        totalItems += item.cantidad;
+      Object.entries(carrito).forEach(([itemKey, item]) => {
         const subtotal = item.cantidad * item.precio;
         totalMonto += subtotal;
 
         htmlItems += `
-          <div class="py-2 flex justify-between items-center text-xs">
-            <div>
-              <p class="font-bold text-gray-800">${item.nombre} <span class="text-emerald-700 font-normal">(${item.unidad})</span></p>
-              <p class="text-[10px] text-gray-400">${item.cantidad} x $${item.precio.toFixed(2)}</p>
+          <div class="py-2.5 flex flex-col gap-1.5">
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="font-bold text-gray-800 text-xs">${item.nombre}</p>
+                <p class="text-[10px] text-emerald-700 font-semibold">${item.unidad} ($${item.precio.toFixed(2)} c/u)</p>
+              </div>
+              <button onclick="eliminarItemCarrito('${itemKey}')" class="text-red-400 hover:text-red-600 font-bold text-sm px-1.5 transition" title="Eliminar producto">&times;</button>
             </div>
-            <span class="font-bold text-emerald-700">$${subtotal.toFixed(2)}</span>
+            
+            <div class="flex justify-between items-center">
+              <div class="flex items-center gap-1">
+                <button onclick="cambiarCantidadDesdeCarrito('${itemKey}', -1)" class="w-5 h-5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded text-xs flex items-center justify-center">-</button>
+                <span class="text-xs font-bold px-2 text-gray-800">${item.cantidad}</span>
+                <button onclick="cambiarCantidadDesdeCarrito('${itemKey}', 1)" class="w-5 h-5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded text-xs flex items-center justify-center">+</button>
+              </div>
+              <span class="font-bold text-emerald-700 text-xs">$${subtotal.toFixed(2)}</span>
+            </div>
           </div>
         `;
       });
 
-      if (Object.keys(carrito).length === 0) {
+      if (totalProductosDiferentes === 0) {
         htmlItems = '<p class="text-gray-400 text-xs text-center py-6">Tu carrito está vacío</p>';
       }
 
       document.getElementById('lista-carrito-desktop').innerHTML = htmlItems;
       document.getElementById('total-precio-desktop').innerText = `$${totalMonto.toFixed(2)}`;
-      document.getElementById('cart-count-badge').innerText = `${totalItems} items`;
+      document.getElementById('cart-count-badge').innerText = `${totalProductosDiferentes} productos`;
 
       document.getElementById('lista-carrito-mobile').innerHTML = htmlItems;
       document.getElementById('total-precio-mobile').innerText = `$${totalMonto.toFixed(2)}`;
-      document.getElementById('cart-count-mobile').innerText = totalItems;
+      document.getElementById('cart-count-mobile').innerText = totalProductosDiferentes;
     }
 
     function filtrarCategoria(cat) {
@@ -671,7 +706,6 @@
       renderProductos(obtenerProductosFiltrados());
     }
 
-    // Corregimos la búsqueda para que busque dentro de la propiedad correcta
     function obtenerProductosFiltrados() {
       const texto = document.getElementById('input-buscar').value.toLowerCase();
       return productos.filter(p => {
