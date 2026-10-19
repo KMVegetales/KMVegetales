@@ -50,7 +50,7 @@
     .btn-modo-active { background-color: #059669 !important; color: white !important; }
     .btn-modo-inactive { background-color: #e5e7eb !important; color: #4b5563 !important; }
 
-    /* Estilos de la Tabla tipo Excel con Encabezado Fijo Corregido */
+    /* Estilos de la Tabla tipo Excel Limpia */
     .tabla-excel {
       border-collapse: collapse;
       width: 100%;
@@ -68,9 +68,6 @@
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      position: sticky;
-      top: 68px; /* Ajuste perfecto para quedar debajo de la barra superior sin tapar texto */
-      z-index: 10;
     }
     .tabla-excel td {
       border-bottom: 1px solid #e5e7eb;
@@ -674,6 +671,7 @@
       renderProductos(obtenerProductosFiltrados());
     }
 
+    // Corregimos la búsqueda para que busque dentro de la propiedad correcta
     function obtenerProductosFiltrados() {
       const texto = document.getElementById('input-buscar').value.toLowerCase();
       return productos.filter(p => {
