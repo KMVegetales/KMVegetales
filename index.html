@@ -66,7 +66,7 @@
     <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
       <div class="flex items-center gap-3 w-full md:w-auto justify-between">
         <div class="flex items-center gap-2">
-          <img src="imágenes/logo.png" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-emerald-600 bg-white" onerror="this.onerror=null; this.src='imágenes/logo.jpg';">
+          <img src="im%C3%A1genes/logo.png" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-emerald-600 bg-white" onerror="this.onerror=null; this.src='im%C3%A1genes/logo.jpg';">
           <div>
             <span class="text-xs tracking-wider text-emerald-300 font-semibold uppercase">Catálogo Digital</span>
             <h1 class="text-lg font-bold leading-tight">KMVegetales</h1>
@@ -217,9 +217,11 @@
 
         if (!id || !nombre) continue;
 
-        let rutaFoto = `imágenes/${nombre}.jpg`;
+        const nombreCod = encodeURIComponent(nombre);
+        let rutaFoto = `im%C3%A1genes/${nombreCod}.png`;
+        
         if (fotoCol && fotoCol !== 'OK' && fotoCol !== '') {
-          rutaFoto = `imágenes/${fotoCol}`;
+          rutaFoto = `im%C3%A1genes/${encodeURIComponent(fotoCol)}`;
         }
 
         const descripcion = descCol && descCol !== '' ? descCol : `${nombre} fresco de alta calidad.`;
@@ -270,11 +272,13 @@
           opcionesHTML += `<option value="${idx}" ${idx === indexPres ? 'selected' : ''}>${pres.unidad} ($${pres.precio.toFixed(2)})</option>`;
         });
 
+        const nombreEscapado = p.nombre.replace(/'/g, "\\'");
+
         grid.innerHTML += `
           <div class="card-producto bg-white rounded-2xl p-2.5 shadow-sm border border-gray-100 flex flex-col justify-between">
             <div>
               <div class="relative h-28 rounded-xl overflow-hidden mb-2 bg-gray-100">
-                <img src="${p.foto}" alt="${p.nombre}" class="w-full h-full object-cover" onerror="intentarFormatosAlternativos(this, '${p.nombre}')">
+                <img src="${p.foto}" alt="${p.nombre}" class="w-full h-full object-cover" onerror="intentarFormatosAlternativos(this, '${nombreEscapado}')">
                 <span class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-emerald-800 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase shadow-sm">${p.categoria}</span>
               </div>
               <h3 class="font-bold text-gray-800 text-xs mb-0.5 truncate">${p.nombre}</h3>
@@ -311,32 +315,35 @@
       if (!imgElement.dataset.intento) imgElement.dataset.intento = '1';
 
       const intentos = parseInt(imgElement.dataset.intento);
-      const nombreCodificado = encodeURIComponent(nombreProducto);
+      const nombreCod = encodeURIComponent(nombreProducto);
 
       switch (intentos) {
         case 1:
-          imgElement.src = `imágenes/${nombreCodificado}.png`;
+          imgElement.src = `im%C3%A1genes/${nombreCod}.jpg`;
           imgElement.dataset.intento = '2';
           break;
         case 2:
-          imgElement.src = `imágenes/${nombreCodificado}.jpeg`;
+          imgElement.src = `im%C3%A1genes/${nombreCod}.jpeg`;
           imgElement.dataset.intento = '3';
           break;
         case 3:
-          imgElement.src = `imágenes/${nombreCodificado}.PNG`;
+          imgElement.src = `im%C3%A1genes/${nombreCod}.PNG`;
           imgElement.dataset.intento = '4';
           break;
         case 4:
-          imgElement.src = `imágenes/${nombreCodificado}.JPG`;
+          imgElement.src = `im%C3%A1genes/${nombreCod}.JPG`;
           imgElement.dataset.intento = '5';
           break;
         case 5:
-          imgElement.src = `imágenes/${nombreCodificado}.JPEG`;
+          imgElement.src = `im%C3%A1genes/${nombreCod}.JPEG`;
           imgElement.dataset.intento = '6';
           break;
         default:
-          imgElement.src = 'imágenes/logo.jpg';
-          imgElement.onerror = null;
+          imgElement.src = 'im%C3%A1genes/logo.png';
+          imgElement.onerror = function() {
+            this.src = 'im%C3%A1genes/logo.jpg';
+            this.onerror = null;
+          };
           break;
       }
     }
