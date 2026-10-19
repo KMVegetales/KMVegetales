@@ -12,35 +12,27 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-    button, select, input { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+    button, select, input { transition: all 0.15s ease-in-out; }
 
     .btn-whatsapp {
       background: linear-gradient(135deg, #059669 0%, #047857 100%);
       box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35);
-      position: relative;
-      overflow: hidden;
     }
     .btn-whatsapp:hover {
       background: linear-gradient(135deg, #10b981 0%, #059669 100%);
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(5, 150, 105, 0.45);
     }
-    .btn-whatsapp:active { transform: translateY(1px); box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3); }
 
-    @keyframes pulse-subtle { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
-    .btn-pulse { animation: pulse-subtle 3s infinite ease-in-out; }
-    .btn-pulse:hover { animation: none; }
-
-    .btn-qty-plus { background-color: #059669; color: white; box-shadow: 0 2px 5px rgba(5, 150, 105, 0.25); }
-    .btn-qty-plus:hover { background-color: #047857; transform: scale(1.12); box-shadow: 0 4px 10px rgba(5, 150, 105, 0.4); }
+    .btn-qty-plus { background-color: #059669; color: white; }
+    .btn-qty-plus:hover { background-color: #047857; }
     .btn-qty-plus:active { transform: scale(0.92); }
 
     .btn-qty-minus { background-color: #f3f4f6; color: #374151; border: 1px solid #e5e7eb; }
-    .btn-qty-minus:hover { background-color: #e5e7eb; color: #111827; transform: scale(1.12); }
+    .btn-qty-minus:hover { background-color: #e5e7eb; }
     .btn-qty-minus:active { transform: scale(0.92); }
 
-    .card-producto { transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
-    .card-producto:hover { transform: translateY(-4px); box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.08); border-color: #a7f3d0; }
+    .card-producto { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .card-producto:hover { transform: translateY(-2px); box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.08); }
 
     .select-custom {
       cursor: pointer;
@@ -51,12 +43,9 @@
       padding-right: 1.8rem;
       appearance: none;
     }
-    .select-custom:hover { border-color: #10b981; background-color: #ffffff; }
 
-    .btn-cat-active { background-color: #065f46 !important; color: #ffffff !important; box-shadow: 0 4px 10px rgba(6, 95, 70, 0.25); transform: translateY(-1px); }
-    .btn-cat-inactive:hover { background-color: #f0fdf4 !important; border-color: #a7f3d0 !important; color: #065f46 !important; transform: translateY(-1px); }
-
-    input:focus { box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2); }
+    .btn-cat-active { background-color: #065f46 !important; color: #ffffff !important; }
+    .btn-cat-inactive:hover { background-color: #f0fdf4 !important; border-color: #a7f3d0 !important; color: #065f46 !important; }
   </style>
 </head>
 <body class="bg-gray-50 min-h-screen pb-12">
@@ -74,7 +63,7 @@
         </div>
         <button onclick="toggleCarritoMovil()" class="md:hidden relative bg-emerald-700 hover:bg-emerald-600 active:scale-95 p-2.5 rounded-xl border border-emerald-600 transition shadow-md">
           <i class="fas fa-shopping-cart text-lg"></i>
-          <span id="cart-count-mobile" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">0</span>
+          <span id="cart-count-mobile" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
         </button>
       </div>
 
@@ -92,15 +81,15 @@
 
     <!-- COLUMNA IZQUIERDA: BANNER Y PRODUCTOS -->
     <div class="lg:col-span-3 space-y-5">
-      <div class="relative bg-gradient-to-r from-emerald-900 to-emerald-700 rounded-3xl p-6 text-white shadow-lg overflow-hidden flex flex-col justify-center min-h-[150px]">
+      <div class="relative bg-gradient-to-r from-emerald-900 to-emerald-700 rounded-3xl p-6 text-white shadow-lg overflow-hidden flex flex-col justify-center min-h-[140px]">
         <div class="absolute right-0 bottom-0 opacity-15 transform translate-x-4 translate-y-4">
           <i class="fas fa-seedling text-8xl"></i>
         </div>
         <span class="bg-emerald-600/60 text-emerald-200 text-xs font-semibold px-3 py-1 rounded-full w-max mb-1.5 backdrop-blur-sm">Frescura Garantizada</span>
         <h2 class="text-xl md:text-2xl font-bold mb-1">Frescura y Calidad a Domicilio</h2>
-        <p class="text-emerald-100 text-xs max-w-md mb-3">Selecciona el producto y elige tu presentación ideal (Libra, Unidad, Caja, Saco, Etc..).</p>
+        <p class="text-emerald-100 text-xs max-w-md mb-3">Selecciona el producto y elige tu presentación ideal.</p>
         <div>
-          <button onclick="filtrarCategoria('TODOS')" class="bg-white text-emerald-900 font-bold px-4 py-2 rounded-xl text-xs shadow-md hover:bg-emerald-50 hover:shadow-lg active:scale-95 transition flex items-center gap-1.5">
+          <button onclick="filtrarCategoria('TODOS')" class="bg-white text-emerald-900 font-bold px-4 py-2 rounded-xl text-xs shadow-md hover:bg-emerald-50 active:scale-95 transition flex items-center gap-1.5">
             <i class="fas fa-th-large text-emerald-700"></i> Ver Todo
           </button>
         </div>
@@ -142,7 +131,7 @@
             <input type="text" id="input-direccion" placeholder="Dirección exacta o referencia" class="w-full bg-gray-50 border border-gray-200 p-2.5 rounded-xl text-xs focus:outline-none focus:border-emerald-500 transition">
           </div>
 
-          <button onclick="enviarPedido()" class="btn-whatsapp btn-pulse w-full text-white font-bold py-3.5 rounded-xl shadow-lg flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
+          <button onclick="enviarPedido()" class="btn-whatsapp w-full text-white font-bold py-3.5 rounded-xl shadow-lg flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
             <i class="fab fa-whatsapp text-lg"></i> Enviar Pedido por WhatsApp
           </button>
         </div>
@@ -170,7 +159,7 @@
         </div>
         <input type="text" id="input-nombre-m" placeholder="Nombre de tu negocio o cliente" class="w-full bg-gray-50 border border-gray-200 p-2.5 rounded-xl text-xs focus:outline-none focus:border-emerald-500 transition">
         <input type="text" id="input-direccion-m" placeholder="Dirección / Referencia de entrega" class="w-full bg-gray-50 border border-gray-200 p-2.5 rounded-xl text-xs focus:outline-none focus:border-emerald-500 transition">
-        <button onclick="enviarPedido()" class="btn-whatsapp btn-pulse w-full text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
+        <button onclick="enviarPedido()" class="btn-whatsapp w-full text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
           <i class="fab fa-whatsapp text-lg"></i> Enviar Pedido por WhatsApp
         </button>
       </div>
@@ -178,7 +167,6 @@
   </div>
 
   <script>
-    // 🔗 ENLACE DE CONEXIÓN CON GOOGLE SHEETS
     const URL_GOOGLE_SHEETS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR5GQG7EYouJss52fNj0HhbLq-8kjTwDn4b7lA7AmDPS4xSpq8fYjC3zv8BmcU6xpdsGmWflf2AU85c/pub?output=csv";
 
     let productos = [];
@@ -186,7 +174,6 @@
     let categoriaActual = 'TODOS';
     let seleccionPresentacion = {};
 
-    // Cargar datos dinámicamente desde Google Sheets
     async function cargarProductosDesdeSheets() {
       try {
         const response = await fetch(URL_GOOGLE_SHEETS);
@@ -198,7 +185,6 @@
       }
     }
 
-    // Convierte el texto CSV de Google Sheets en objetos legibles para la web
     function parsearCSV(csvText) {
       const lineas = csvText.trim().split('\n');
       const mapaProductos = {};
@@ -218,8 +204,6 @@
         if (!id || !nombre) continue;
 
         const nombreCod = encodeURIComponent(nombre);
-        
-        // Si el CSV especifica la foto exacta la usa, de lo contrario prueba directamente en la raíz con .png primero
         let rutaFoto = `${nombreCod}.png`;
         if (fotoCol && fotoCol !== 'OK' && fotoCol !== '') {
           rutaFoto = encodeURIComponent(fotoCol);
@@ -254,9 +238,11 @@
       grid.innerHTML = '';
 
       if (listaACargar.length === 0) {
-        grid.innerHTML = '<p class="col-span-full text-center text-gray-400 py-12 text-xs">Cargando productos o catálogo vacío...</p>';
+        grid.innerHTML = '<p class="col-span-full text-center text-gray-400 py-12 text-xs">Cargando productos...</p>';
         return;
       }
+
+      const fragmento = document.createDocumentFragment();
 
       listaACargar.forEach(p => {
         if (!seleccionPresentacion[p.id]) {
@@ -275,43 +261,54 @@
 
         const nombreEscapado = p.nombre.replace(/'/g, "\\'");
 
-        grid.innerHTML += `
-          <div class="card-producto bg-white rounded-2xl p-2.5 shadow-sm border border-gray-100 flex flex-col justify-between">
+        const card = document.createElement('div');
+        card.className = 'card-producto bg-white rounded-2xl p-2.5 shadow-sm border border-gray-100 flex flex-col justify-between';
+        card.innerHTML = `
+          <div>
+            <div class="relative h-28 rounded-xl overflow-hidden mb-2 bg-gray-100">
+              <img src="${p.foto}" alt="${p.nombre}" loading="lazy" class="w-full h-full object-cover" onerror="intentarFormatosAlternativos(this, '${nombreEscapado}')">
+              <span class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-emerald-800 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase shadow-sm">${p.categoria}</span>
+            </div>
+            <h3 class="font-bold text-gray-800 text-xs mb-0.5 truncate">${p.nombre}</h3>
+            <p class="text-[10px] text-gray-400 line-clamp-1 mb-2">${p.descripcion}</p>
+          </div>
+
+          <div class="space-y-2 pt-1 border-t">
             <div>
-              <div class="relative h-28 rounded-xl overflow-hidden mb-2 bg-gray-100">
-                <img src="${p.foto}" alt="${p.nombre}" class="w-full h-full object-cover" onerror="intentarFormatosAlternativos(this, '${nombreEscapado}')">
-                <span class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-emerald-800 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase shadow-sm">${p.categoria}</span>
-              </div>
-              <h3 class="font-bold text-gray-800 text-xs mb-0.5 truncate">${p.nombre}</h3>
-              <p class="text-[10px] text-gray-400 line-clamp-1 mb-2">${p.descripcion}</p>
+              <label class="text-[9px] text-gray-400 font-semibold block mb-0.5">PRESENTACIÓN:</label>
+              <select onchange="cambiarPresentacion('${p.id}', this.value)" class="select-custom w-full bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold rounded-lg p-1 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition">
+                ${opcionesHTML}
+              </select>
             </div>
 
-            <div class="space-y-2 pt-1 border-t">
-              <div>
-                <label class="text-[9px] text-gray-400 font-semibold block mb-0.5">PRESENTACIÓN:</label>
-                <select onchange="cambiarPresentacion('${p.id}', this.value)" class="select-custom w-full bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold rounded-lg p-1 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition">
-                  ${opcionesHTML}
-                </select>
-              </div>
-
-              <div class="flex items-center justify-between pt-1">
-                <div>
-                  <p class="font-bold text-emerald-700 text-sm">$${presActual.precio.toFixed(2)}</p>
-                </div>
-
-                <div class="flex items-center gap-1.5">
+            <div class="pt-1 space-y-1.5">
+              <div class="flex items-center justify-between">
+                <p id="precio-${p.id}" class="font-bold text-emerald-700 text-sm">$${presActual.precio.toFixed(2)}</p>
+                
+                <!-- INPUT DE TEXTO EDITABLE DIRECTAMENTE -->
+                <div class="flex items-center gap-1">
                   <button onclick="cambiarCantidad('${p.id}', -1)" class="btn-qty-minus w-6 h-6 rounded-lg font-bold text-xs flex items-center justify-center">-</button>
-                  <span class="font-bold text-xs w-4 text-center">${cant}</span>
+                  <input type="number" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" class="w-12 h-6 text-center text-xs font-bold bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500">
                   <button onclick="cambiarCantidad('${p.id}', 1)" class="btn-qty-plus w-6 h-6 rounded-lg font-bold text-xs flex items-center justify-center">+</button>
                 </div>
+              </div>
+
+              <!-- BOTONES RÁPIDOS MAYORISTAS (+10, +25, +50, +100) -->
+              <div class="flex justify-end gap-1 pt-1 border-t border-gray-100">
+                <button onclick="cambiarCantidad('${p.id}', 10)" class="text-[9px] font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-1 py-0.5 rounded border border-emerald-200 transition">+10</button>
+                <button onclick="cambiarCantidad('${p.id}', 25)" class="text-[9px] font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-1 py-0.5 rounded border border-emerald-200 transition">+25</button>
+                <button onclick="cambiarCantidad('${p.id}', 50)" class="text-[9px] font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-1 py-0.5 rounded border border-emerald-200 transition">+50</button>
+                <button onclick="cambiarCantidad('${p.id}', 100)" class="text-[9px] font-bold bg-emerald-600 text-white hover:bg-emerald-700 px-1.5 py-0.5 rounded transition shadow-sm">+100</button>
               </div>
             </div>
           </div>
         `;
+        fragmento.appendChild(card);
       });
+
+      grid.appendChild(fragmento);
     }
 
-    // FUNCIÓN DE RESPALDO DIRECTA EN LA RAÍZ
     function intentarFormatosAlternativos(imgElement, nombreProducto) {
       if (!imgElement.dataset.intento) imgElement.dataset.intento = '1';
 
@@ -351,7 +348,14 @@
 
     function cambiarPresentacion(prodId, nuevoIdx) {
       seleccionPresentacion[prodId] = parseInt(nuevoIdx);
-      renderProductos(obtenerProductosFiltrados());
+      const prod = productos.find(p => p.id === prodId);
+      const pres = prod.presentaciones[nuevoIdx];
+      const precioElem = document.getElementById(`precio-${prodId}`);
+      if (precioElem) precioElem.innerText = `$${pres.precio.toFixed(2)}`;
+
+      const itemKey = `${prod.id}_${pres.unidad}`;
+      const cantInput = document.getElementById(`cant-${prodId}`);
+      if (cantInput) cantInput.value = carrito[itemKey] ? carrito[itemKey].cantidad : 0;
     }
 
     function cambiarCantidad(prodId, cambio) {
@@ -360,23 +364,42 @@
       const pres = prod.presentaciones[indexPres];
       const itemKey = `${prod.id}_${pres.unidad}`;
 
-      if (!carrito[itemKey]) {
-        if (cambio > 0) {
-          carrito[itemKey] = {
-            id: prod.id,
-            nombre: prod.nombre,
-            unidad: pres.unidad,
-            precio: pres.precio,
-            cantidad: 1
-          };
-        }
-      } else {
-        carrito[itemKey].cantidad += cambio;
-        if (carrito[itemKey].cantidad <= 0) delete carrito[itemKey];
+      let cantidadActual = carrito[itemKey] ? carrito[itemKey].cantidad : 0;
+      let nuevaCantidad = cantidadActual + cambio;
+
+      actualizarCarritoPorKey(itemKey, prod, pres, nuevaCantidad);
+
+      const cantInput = document.getElementById(`cant-${prodId}`);
+      if (cantInput) {
+        cantInput.value = carrito[itemKey] ? carrito[itemKey].cantidad : 0;
       }
 
       actualizarInterfazCarrito();
-      renderProductos(obtenerProductosFiltrados());
+    }
+
+    function fijarCantidadDirecta(prodId, valorTexto) {
+      const prod = productos.find(p => p.id === prodId);
+      const indexPres = seleccionPresentacion[prodId] || 0;
+      const pres = prod.presentaciones[indexPres];
+      const itemKey = `${prod.id}_${pres.unidad}`;
+
+      let nuevaCantidad = parseInt(valorTexto) || 0;
+      actualizarCarritoPorKey(itemKey, prod, pres, nuevaCantidad);
+      actualizarInterfazCarrito();
+    }
+
+    function actualizarCarritoPorKey(itemKey, prod, pres, cantidad) {
+      if (cantidad <= 0) {
+        delete carrito[itemKey];
+      } else {
+        carrito[itemKey] = {
+          id: prod.id,
+          nombre: prod.nombre,
+          unidad: pres.unidad,
+          precio: pres.precio,
+          cantidad: cantidad
+        };
+      }
     }
 
     function actualizarInterfazCarrito() {
