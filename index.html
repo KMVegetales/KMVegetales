@@ -729,7 +729,7 @@
       modal.classList.toggle('hidden');
     }
 
-    // ENVÍO DE PEDIDO A WHATSAPP
+    // ENVÍO DE PEDIDO A WHATSAPP (Formato limpio sin el "(s)")
     function enviarPedido() {
       if (Object.keys(carrito).length === 0) {
         alert("El carrito está vacío. Agrega productos antes de enviar tu pedido.");
@@ -751,8 +751,8 @@
         const subtotal = item.cantidad * item.precio;
         totalPagar += subtotal;
         
-        // Formato con precio unitario incluido
-        detalleTexto += `• ${item.cantidad} ${item.unidad}(s) - ${item.nombre} a $${item.precio.toFixed(2)} c/u ($${subtotal.toFixed(2)})\n`;
+        // Formato sin el (s) para ahorrar espacio
+        detalleTexto += `• ${item.cantidad} ${item.unidad} - ${item.nombre} a $${item.precio.toFixed(2)} c/u ($${subtotal.toFixed(2)})\n`;
       });
 
       let mensaje = `*NUEVO PEDIDO - KMVegetales*\n`;
@@ -762,14 +762,13 @@
       mensaje += detalleTexto;
       mensaje += `\n*TOTAL A PAGAR: $${totalPagar.toFixed(2)}*`;
 
-      // Número de teléfono de destino de WhatsApp
-      const numeroTelefono = "50374670712"; // Sustituye aquí por tu número real con código de país
+      const numeroTelefono = "50370000000"; // Reemplaza por tu número real de WhatsApp
       const url = `https://api.whatsapp.com/send?phone=${numeroTelefono}&text=${encodeURIComponent(mensaje)}`;
 
       window.open(url, '_blank');
     }
 
-    // Inicialización al cargar la página
+    // Inicialización
     window.onload = () => {
       cargarProductosDesdeSheets();
     };
