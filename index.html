@@ -729,7 +729,7 @@
       modal.classList.toggle('hidden');
     }
 
-    // ENVÍO DE PEDIDO A WHATSAPP (Formato limpio sin el "(s)")
+    // ENVÍO DE PEDIDO A WHATSAPP (Limpia automáticamente cualquier "(s)")
     function enviarPedido() {
       if (Object.keys(carrito).length === 0) {
         alert("El carrito está vacío. Agrega productos antes de enviar tu pedido.");
@@ -751,8 +751,10 @@
         const subtotal = item.cantidad * item.precio;
         totalPagar += subtotal;
         
-        // Formato sin el (s) para ahorrar espacio
-        detalleTexto += `• ${item.cantidad} ${item.unidad} - ${item.nombre} a $${item.precio.toFixed(2)} c/u ($${subtotal.toFixed(2)})\n`;
+        // Limpiamos cualquier "(s)" o "(S)" que traiga la unidad desde Google Sheets
+        const unidadLimpia = item.unidad.replace(/\(s\)/gi, '');
+        
+        detalleTexto += `• ${item.cantidad} ${unidadLimpia} - ${item.nombre} a $${item.precio.toFixed(2)} c/u ($${subtotal.toFixed(2)})\n`;
       });
 
       let mensaje = `*NUEVO PEDIDO - KMVegetales*\n`;
