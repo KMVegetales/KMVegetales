@@ -177,7 +177,7 @@
           <span id="cart-count-badge" class="bg-emerald-600 text-white font-bold text-xs px-2.5 py-0.5 rounded-full shadow-sm">0 productos</span>
         </div>
 
-        <!-- Lista del carrito con scroll ajustable para revisión -->
+        <!-- Lista del carrito -->
         <div id="lista-carrito-desktop" class="divide-y max-h-[40vh] overflow-y-auto pr-1 space-y-2">
           <p class="text-gray-400 text-xs text-center py-6">Tu carrito está vacío</p>
         </div>
@@ -609,7 +609,6 @@
       actualizarInterfazCarrito();
     }
 
-    // Funciones de modificación rápida desde el carrito lateral
     function cambiarCantidadDesdeCarrito(itemKey, cambio) {
       if (!carrito[itemKey]) return;
       let nuevaCantidad = carrito[itemKey].cantidad + cambio;
@@ -620,9 +619,6 @@
         carrito[itemKey].cantidad = nuevaCantidad;
       }
 
-      // Sincronizar input en la vista principal si el producto está visible
-      const prod = productos.find(p => p.id === carrito[itemKey]?.id || Object.values(productos).find(p => p.id === itemKey.split('_')[0]));
-      // Sincronización general
       renderProductos(obtenerProductosFiltrados());
       actualizarInterfazCarrito();
     }
@@ -650,11 +646,12 @@
     function actualizarInterfazCarrito() {
       let totalMonto = 0;
       let htmlItems = '';
-      const totalProductosDiferentes = Object.keys(carrito).length;
+      let totalCantProductos = 0;
 
       Object.entries(carrito).forEach(([itemKey, item]) => {
         const subtotal = item.cantidad * item.precio;
         totalMonto += subtotal;
+        totalCantProductos += item.cantidad;
 
         htmlItems += `
           <div class="py-2.5 flex flex-col gap-1.5">
@@ -678,85 +675,104 @@
         `;
       });
 
-      if (totalProductosDiferentes === 0) {
+      if (Object.keys(carrito).length === 0) {
         htmlItems = '<p class="text-gray-400 text-xs text-center py-6">Tu carrito está vacío</p>';
       }
 
       document.getElementById('lista-carrito-desktop').innerHTML = htmlItems;
-      document.getElementById('total-precio-desktop').innerText = `$${totalMonto.toFixed(2)}`;
-      document.getElementById('cart-count-badge').innerText = `${totalProductosDiferentes} productos`;
-
       document.getElementById('lista-carrito-mobile').innerHTML = htmlItems;
+
+      document.getElementById('total-precio-desktop').innerText = `$${totalMonto.toFixed(2)}`;
       document.getElementById('total-precio-mobile').innerText = `$${totalMonto.toFixed(2)}`;
-      document.getElementById('cart-count-mobile').innerText = totalProductosDiferentes;
+
+      const badgeDesktop = document.getElementById('cart-count-badge');
+      if (badgeDesktop) badgeDesktop.innerText = `${Object.keys(carrito).length} productos`;
+
+      const badgeMobile = document.getElementById('cart-count-mobile');
+      if (badgeMobile) badgeMobile.innerText = totalCantProductos;
     }
 
     function filtrarCategoria(cat) {
-      categoriaActual = cat.toUpperCase();
-      ['todos', 'verduras', 'frutas'].forEach(c => {
-        const btn = document.getElementById(`btn-cat-${c}`);
-        if(btn) {
-          if(c.toUpperCase() === categoriaActual) {
-            btn.className = "btn-cat-active px-4 py-2 bg-emerald-800 text-white rounded-xl font-semibold text-xs transition whitespace-nowrap active:scale-95";
-          } else {
-            btn.className = "btn-cat-inactive px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-xl font-semibold text-xs shadow-sm transition whitespace-nowrap active:scale-95";
-          }
-        }
-      });
-      renderProductos(obtenerProductosFiltrados());
-    }
+      categoriaActual = cat;
 
-    function obtenerProductosFiltrados() {
-      const texto = document.getElementById('input-buscar').value.toLowerCase();
-      return productos.filter(p => {
-        const catProd = p.categoria.toUpperCase();
-        const coincideCat = (categoriaActual === 'TODOS' || catProd.includes(categoriaActual));
-        const coincideTexto = p.nombre.toLowerCase().includes(texto) || p.descripcion.toLowerCase().includes(texto);
-        return coincideCat && coincideTexto;
+      const btnTodos = document.getElementById('btn-cat-todos');
+      const btnVerduras = document.getElementById('btn-cat-verduras');
+      const btnFrutas = document.getElementById('btn-cat-frutas');
+
+      [btnTodos, btnVerduras, btnFrutas].forEach(btn => {
+        if (btn) btn.className = "btn-cat-inactive px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-xl font-semibold text-xs shadow-sm transition whitespace-nowrap active:scale-95";
       });
+
+      if (cat === 'TODOS' && btnTodos) btnTodos.className = "btn-cat-active px-4 py-2 bg-emerald-800 text-white rounded-xl font-semibold text-xs transition whitespace-nowrap active:scale-95";
+      if (cat === 'VERDURAS' && btnVerduras) btnVerduras.className = "btn-cat-active px-4 py-2 bg-emerald-800 text-white rounded-xl font-semibold text-xs transition whitespace-nowrap active:scale-95";
+      if (cat === 'FRUTAS' && btnFrutas) btnFrutas.className = "btn-cat-active px-4 py-2 bg-emerald-800 text-white rounded-xl font-semibold text-xs transition whitespace-nowrap active:scale-95";
+
+      renderProductos(obtenerProductosFiltrados());
     }
 
     function filtrarProductos() {
       renderProductos(obtenerProductosFiltrados());
     }
 
-    function toggleCarritoMovil() {
-      document.getElementById('modal-carrito-movil').classList.toggle('hidden');
+    function obtenerProductosFiltrados() {
+      const textoBusqueda = document.getElementById('input-buscar').value.toLowerCase().trim();
+
+      return productos.filter(p => {
+        const coincideCat = (categoriaActual === 'TODOS') || (p.categoria === categoriaActual);
+        const coincideBusqueda = p.nombre.toLowerCase().includes(textoBusqueda) || p.descripcion.toLowerCase().includes(textoBusqueda);
+        return coincideCat && coincideBusqueda;
+      });
     }
 
+    function toggleCarritoMovil() {
+      const modal = document.getElementById('modal-carrito-movil');
+      modal.classList.toggle('hidden');
+    }
+
+    // ENVÍO DE PEDIDO A WHATSAPP
     function enviarPedido() {
-      const nombre = (document.getElementById('input-nombre').value || document.getElementById('input-nombre-m').value).trim();
-      const direccion = (document.getElementById('input-direccion').value || document.getElementById('input-direccion-m').value).trim();
-
       if (Object.keys(carrito).length === 0) {
-        alert("Por favor selecciona al menos un producto.");
-        return;
-      }
-      if (!nombre || !direccion) {
-        alert("Por favor ingresa tu nombre y dirección de entrega.");
+        alert("El carrito está vacío. Agrega productos antes de enviar tu pedido.");
         return;
       }
 
-      let mensaje = "*NUEVO PEDIDO - KMVegetales*\n";
-      mensaje += `👤 *Cliente:* ${nombre}\n`;
-      mensaje += `📍 *Entrega:* ${direccion}\n\n`;
-      mensaje += "*DETALLE DEL CARRITO:*\n";
+      const nombreDesktop = document.getElementById('input-nombre').value.trim();
+      const direccionDesktop = document.getElementById('input-direccion').value.trim();
+      const nombreMobile = document.getElementById('input-nombre-m').value.trim();
+      const direccionMobile = document.getElementById('input-direccion-m').value.trim();
 
-      let total = 0;
-      Object.values(carrito).forEach(i => {
-        const sub = i.cantidad * i.precio;
-        total += sub;
-        mensaje += `• ${i.cantidad} ${i.unidad} - ${i.nombre} ($${sub.toFixed(2)})\n`;
+      const nombre = nombreDesktop || nombreMobile || "No especificado";
+      const direccion = direccionDesktop || direccionMobile || "No especificada";
+
+      let detalleTexto = "";
+      let totalPagar = 0;
+
+      Object.values(carrito).forEach(item => {
+        const subtotal = item.cantidad * item.precio;
+        totalPagar += subtotal;
+        
+        // Formato con precio unitario incluido
+        detalleTexto += `• ${item.cantidad} ${item.unidad}(s) - ${item.nombre} a $${item.precio.toFixed(2)} c/u ($${subtotal.toFixed(2)})\n`;
       });
 
-      mensaje += `\n*TOTAL A PAGAR: $${total.toFixed(2)}*`;
+      let mensaje = `*NUEVO PEDIDO - KMVegetales*\n`;
+      mensaje += `❖ *Cliente:* ${nombre}\n`;
+      mensaje += `❖ *Entrega:* ${direccion}\n\n`;
+      mensaje += `*DETALLE DEL CARRITO:*\n`;
+      mensaje += detalleTexto;
+      mensaje += `\n*TOTAL A PAGAR: $${totalPagar.toFixed(2)}*`;
 
-      const telefonoVendedor = "50374670712";
-      const url = `https://wa.me/${telefonoVendedor}?text=${encodeURIComponent(mensaje)}`;
+      // Número de teléfono de destino de WhatsApp
+      const numeroTelefono = "50370000000"; // Sustituye aquí por tu número real con código de país
+      const url = `https://api.whatsapp.com/send?phone=${numeroTelefono}&text=${encodeURIComponent(mensaje)}`;
+
       window.open(url, '_blank');
     }
 
-    cargarProductosDesdeSheets();
+    // Inicialización al cargar la página
+    window.onload = () => {
+      cargarProductosDesdeSheets();
+    };
   </script>
 </body>
 </html>
