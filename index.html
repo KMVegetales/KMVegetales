@@ -44,27 +44,30 @@
       appearance: none;
     }
 
-    /* ESTILOS DE LOS BOTONES DE CATEGORÍA */
+    /* ESTILOS DE LOS BOTONES DE CATEGORÍA (VERDE LIMÓN SÓLIDO CON TEXTO NEGRO) */
     .btn-cat {
       cursor: pointer;
-      font-weight: 700;
+      font-weight: 800;
       font-size: 11px;
       padding: 8px 14px;
       border-radius: 12px;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
       user-select: none;
-      border: 1px solid rgba(255,255,255,0.15);
+      border: 1px solid rgba(0,0,0,0.1);
       transition: all 0.2s ease;
     }
     .btn-cat-active {
-      background-color: #059669; /* Verde sólido fuerte */
-      color: white;
+      background-color: #bdef00; /* Verde limón sólido exacto */
+      color: #111827; /* Texto negro */
+    }
+    .btn-cat-active i {
+      color: #111827 !important; /* Icono negro */
     }
     .btn-cat-inactive {
-      background-color: #043829; /* Verde oscuro */
+      background-color: #043829; /* Verde oscuro apagado */
       color: #9ca3af;
       border-color: rgba(255,255,255,0.05);
     }
@@ -229,19 +232,19 @@
           <p class="text-emerald-100 text-[11px] sm:text-xs max-w-md">Selecciona las categorías y cambia el modo de visualización.</p>
         </div>
 
-        <!-- CONTENEDOR DE CONTROLES (3 BOTONES DE CATEGORÍA + 1 SWITCH DE VISTA) -->
+        <!-- CONTENEDOR DE CONTROLES -->
         <div class="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-3 pt-2 border-t border-emerald-600/40">
           
-          <!-- BOTONES DE CATEGORÍAS (VERDE SÓLIDO / VERDE OSCURO) -->
+          <!-- BOTONES DE CATEGORÍAS (VERDE LIMÓN SÓLIDO Y TEXTO NEGRO) -->
           <div class="flex flex-wrap gap-2">
             <button onclick="toggleFiltroCategoria('VERDURAS')" id="btn-cat-verduras" class="btn-cat btn-cat-active">
-              <i class="fas fa-carrot text-amber-300 text-xs"></i> Verduras
+              <i class="fas fa-carrot text-xs"></i> Verduras
             </button>
             <button onclick="toggleFiltroCategoria('FRUTAS')" id="btn-cat-frutas" class="btn-cat btn-cat-active">
-              <i class="fas fa-apple-alt text-red-300 text-xs"></i> Frutas
+              <i class="fas fa-apple-alt text-xs"></i> Frutas
             </button>
             <button onclick="toggleFiltroCategoria('ESPECIES')" id="btn-cat-especies" class="btn-cat btn-cat-active">
-              <i class="fas fa-pepper-hot text-emerald-300 text-xs"></i> Especies
+              <i class="fas fa-pepper-hot text-xs"></i> Especies
             </button>
           </div>
 
