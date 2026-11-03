@@ -48,12 +48,12 @@
     .switch-card {
       background-color: #043829;
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      padding: 8px 12px;
+      border-radius: 14px;
+      padding: 6px 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
       cursor: pointer;
       box-shadow: 0 2px 6px rgba(0,0,0,0.15);
       user-select: none;
@@ -63,8 +63,8 @@
     }
 
     .switch-body {
-      width: 56px;
-      height: 28px;
+      width: 52px;
+      height: 26px;
       border-radius: 9999px;
       position: relative;
       transition: background-color 0.2s ease;
@@ -73,8 +73,8 @@
     }
 
     .switch-handle {
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       background: radial-gradient(circle, #333333 0%, #111111 100%);
       border-radius: 50%;
       position: absolute;
@@ -85,24 +85,24 @@
 
     /* Estado ON */
     .switch-on .switch-body {
-      background-color: #bdef00; /* Verde lima brillante solicitado */
+      background-color: #bdef00;
     }
     .switch-on .switch-handle {
-      transform: translateX(30px);
+      transform: translateX(28px);
     }
     .switch-on .switch-text::before {
       content: "ON";
       color: #111827;
       font-weight: 800;
-      font-size: 10px;
+      font-size: 9px;
       position: absolute;
-      left: 8px;
+      left: 7px;
       top: 6px;
     }
 
     /* Estado OFF */
     .switch-off .switch-body {
-      background-color: #b91c1c; /* Rojo oscuro estilo referencia */
+      background-color: #b91c1c;
     }
     .switch-off .switch-handle {
       transform: translateX(4px);
@@ -111,14 +111,11 @@
       content: "OFF";
       color: #ffffff;
       font-weight: 800;
-      font-size: 10px;
+      font-size: 9px;
       position: absolute;
-      right: 7px;
+      right: 6px;
       top: 6px;
     }
-
-    .btn-modo-active { background-color: #059669 !important; color: white !important; }
-    .btn-modo-inactive { background-color: #e5e7eb !important; color: #4b5563 !important; }
 
     /* Estilos de la Tabla tipo Excel Limpia */
     .tabla-excel {
@@ -199,7 +196,7 @@
 
     <!-- COLUMNA IZQUIERDA: BANNER Y PRODUCTOS -->
     <div class="lg:col-span-3 space-y-4">
-      <!-- BANNER INTEGRADO CON INTERRUPTORES TIPO SWITCH -->
+      <!-- BANNER CON 4 INTERRUPTORES TIPO SWITCH -->
       <div class="relative bg-gradient-to-r from-emerald-900 to-emerald-700 rounded-3xl p-4 sm:p-6 text-white shadow-lg overflow-hidden flex flex-col justify-center space-y-3">
         <div class="absolute right-0 bottom-0 opacity-15 transform translate-x-4 translate-y-4">
           <i class="fas fa-seedling text-8xl"></i>
@@ -207,56 +204,48 @@
         <div>
           <span class="bg-emerald-600/60 text-emerald-200 text-[10px] sm:text-xs font-semibold px-2.5 py-0.5 rounded-full w-max mb-1 backdrop-blur-sm">Frescura Garantizada</span>
           <h2 class="text-lg sm:text-2xl font-bold leading-tight mb-0.5">Frescura y Calidad a Domicilio</h2>
-          <p class="text-emerald-100 text-[11px] sm:text-xs max-w-md">Activa o desactiva las categorías mediante los interruptores.</p>
+          <p class="text-emerald-100 text-[11px] sm:text-xs max-w-md">Controla las categorías y el modo de visualización con los interruptores.</p>
         </div>
 
-        <!-- FILTROS (SWITCHES ON/OFF) Y SELECTOR DE VISTA -->
-        <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 pt-2 border-t border-emerald-600/40">
-          <!-- INTERRUPTORES TIPO SWITCH -->
-          <div class="grid grid-cols-1 sm:flex sm:flex-wrap gap-2 w-full sm:w-auto">
-            <!-- Switch Verduras -->
-            <div onclick="toggleFiltroCategoria('VERDURAS')" id="switch-verduras" class="switch-card switch-on">
-              <div class="flex items-center gap-2">
-                <i class="fas fa-carrot text-amber-400 text-sm"></i>
-                <span class="text-xs font-bold text-white">Verduras</span>
-              </div>
-              <div class="switch-body switch-text">
-                <div class="switch-handle"></div>
-              </div>
+        <!-- 4 SWITCHES DE CONTROL (3 CATEGORÍAS + 1 VISTA FOTOS/EXCEL) -->
+        <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2.5 pt-2 border-t border-emerald-600/40">
+          
+          <!-- Switch Verduras -->
+          <div onclick="toggleFiltroCategoria('VERDURAS')" id="switch-verduras" class="switch-card switch-on flex-1 sm:flex-none">
+            <div class="flex items-center gap-1.5">
+              <i class="fas fa-carrot text-amber-400 text-xs"></i>
+              <span class="text-[11px] font-bold text-white">Verduras</span>
             </div>
-
-            <!-- Switch Frutas -->
-            <div onclick="toggleFiltroCategoria('FRUTAS')" id="switch-frutas" class="switch-card switch-on">
-              <div class="flex items-center gap-2">
-                <i class="fas fa-apple-alt text-red-400 text-sm"></i>
-                <span class="text-xs font-bold text-white">Frutas</span>
-              </div>
-              <div class="switch-body switch-text">
-                <div class="switch-handle"></div>
-              </div>
-            </div>
-
-            <!-- Switch Especies -->
-            <div onclick="toggleFiltroCategoria('ESPECIES')" id="switch-especies" class="switch-card switch-on">
-              <div class="flex items-center gap-2">
-                <i class="fas fa-pepper-hot text-emerald-400 text-sm"></i>
-                <span class="text-xs font-bold text-white">Especies</span>
-              </div>
-              <div class="switch-body switch-text">
-                <div class="switch-handle"></div>
-              </div>
-            </div>
+            <div class="switch-body switch-text"><div class="switch-handle"></div></div>
           </div>
 
-          <!-- CAMBIO DE VISTA -->
-          <div class="flex items-center justify-center gap-1 bg-emerald-950/40 p-1 rounded-xl text-xs border border-emerald-600/30">
-            <button onclick="cambiarModoVista('fotos')" id="btn-vista-fotos" class="btn-modo-active flex-1 sm:flex-none px-3 py-1.5 rounded-lg font-bold flex items-center justify-center gap-1.5 shadow-sm transition">
-              <i class="fas fa-th-large"></i> Fotos
-            </button>
-            <button onclick="cambiarModoVista('excel')" id="btn-vista-excel" class="btn-modo-inactive flex-1 sm:flex-none px-3 py-1.5 rounded-lg font-bold flex items-center justify-center gap-1.5 transition">
-              <i class="fas fa-file-excel"></i> Excel (Rápido)
-            </button>
+          <!-- Switch Frutas -->
+          <div onclick="toggleFiltroCategoria('FRUTAS')" id="switch-frutas" class="switch-card switch-on flex-1 sm:flex-none">
+            <div class="flex items-center gap-1.5">
+              <i class="fas fa-apple-alt text-red-400 text-xs"></i>
+              <span class="text-[11px] font-bold text-white">Frutas</span>
+            </div>
+            <div class="switch-body switch-text"><div class="switch-handle"></div></div>
           </div>
+
+          <!-- Switch Especies -->
+          <div onclick="toggleFiltroCategoria('ESPECIES')" id="switch-especies" class="switch-card switch-on flex-1 sm:flex-none">
+            <div class="flex items-center gap-1.5">
+              <i class="fas fa-pepper-hot text-emerald-400 text-xs"></i>
+              <span class="text-[11px] font-bold text-white">Especies</span>
+            </div>
+            <div class="switch-body switch-text"><div class="switch-handle"></div></div>
+          </div>
+
+          <!-- Switch Modo Vista: ON = Fotos | OFF = Excel Rápido -->
+          <div onclick="toggleModoVistaSwitch()" id="switch-modo-vista" class="switch-card switch-on flex-1 sm:flex-none bg-[#022c22]">
+            <div class="flex items-center gap-1.5">
+              <i id="icono-modo-vista" class="fas fa-th-large text-emerald-300 text-xs"></i>
+              <span id="label-modo-vista" class="text-[11px] font-bold text-white">Fotos</span>
+            </div>
+            <div class="switch-body switch-text"><div class="switch-handle"></div></div>
+          </div>
+
         </div>
       </div>
 
@@ -331,9 +320,11 @@
     let productos = [];
     let carrito = {};
     let seleccionPresentacion = {};
-    let modoVista = 'fotos';
+    
+    // Modo vista: true = Fotos (ON), false = Excel Rápido (OFF)
+    let modoFotosActivo = true;
 
-    // Estados de los interruptores (Inician TODOS encendidos por defecto)
+    // Estados de los interruptores de categoría (Inician TODOS encendidos por defecto)
     let filtrosActivos = {
       'VERDURAS': true,
       'FRUTAS': true,
@@ -401,17 +392,20 @@
       return Object.values(mapaProductos);
     }
 
-    function cambiarModoVista(modo) {
-      modoVista = modo;
-      const btnFotos = document.getElementById('btn-vista-fotos');
-      const btnExcel = document.getElementById('btn-vista-excel');
+    function toggleModoVistaSwitch() {
+      modoFotosActivo = !modoFotosActivo;
+      const elSwitch = document.getElementById('switch-modo-vista');
+      const icono = document.getElementById('icono-modo-vista');
+      const label = document.getElementById('label-modo-vista');
 
-      if (modo === 'fotos') {
-        btnFotos.className = "btn-modo-active flex-1 sm:flex-none px-3 py-1.5 rounded-lg font-bold flex items-center justify-center gap-1.5 shadow-sm transition";
-        btnExcel.className = "btn-modo-inactive flex-1 sm:flex-none px-3 py-1.5 rounded-lg font-bold flex items-center justify-center gap-1.5 transition";
+      if (modoFotosActivo) {
+        elSwitch.className = "switch-card switch-on flex-1 sm:flex-none";
+        icono.className = "fas fa-th-large text-emerald-300 text-xs";
+        label.innerText = "Fotos";
       } else {
-        btnExcel.className = "btn-modo-active flex-1 sm:flex-none px-3 py-1.5 rounded-lg font-bold flex items-center justify-center gap-1.5 shadow-sm transition";
-        btnFotos.className = "btn-modo-inactive flex-1 sm:flex-none px-3 py-1.5 rounded-lg font-bold flex items-center justify-center gap-1.5 transition";
+        elSwitch.className = "switch-card switch-off flex-1 sm:flex-none";
+        icono.className = "fas fa-file-excel text-red-300 text-xs";
+        label.innerText = "Excel";
       }
 
       renderProductos(obtenerProductosFiltrados());
@@ -477,7 +471,7 @@
         return idxA - idxB;
       });
 
-      if (modoVista === 'fotos') {
+      if (modoFotosActivo) {
         categoriasOrdenadas.forEach(cat => {
           const prodsCat = grupos[cat];
 
