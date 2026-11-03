@@ -44,27 +44,28 @@
       appearance: none;
     }
 
-    /* ESTILOS DE INTERRUPTORES TIPO SWITCH (ON / OFF) */
+    /* ESTILOS DE INTERRUPTORES TIPO SWITCH (ON / OFF) ADAPTABLES */
     .switch-card {
       background-color: #043829;
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 14px;
-      padding: 6px 10px;
+      padding: 6px 8px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 6px;
       cursor: pointer;
       box-shadow: 0 2px 6px rgba(0,0,0,0.15);
       user-select: none;
+      width: 100%;
     }
     .switch-card:hover {
       border-color: rgba(255, 255, 255, 0.3);
     }
 
     .switch-body {
-      width: 52px;
-      height: 26px;
+      width: 48px;
+      height: 24px;
       border-radius: 9999px;
       position: relative;
       transition: background-color 0.2s ease;
@@ -73,8 +74,8 @@
     }
 
     .switch-handle {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       background: radial-gradient(circle, #333333 0%, #111111 100%);
       border-radius: 50%;
       position: absolute;
@@ -88,16 +89,16 @@
       background-color: #bdef00;
     }
     .switch-on .switch-handle {
-      transform: translateX(28px);
+      transform: translateX(26px);
     }
     .switch-on .switch-text::before {
       content: "ON";
       color: #111827;
       font-weight: 800;
-      font-size: 9px;
+      font-size: 8px;
       position: absolute;
-      left: 7px;
-      top: 6px;
+      left: 6px;
+      top: 5px;
     }
 
     /* Estado OFF */
@@ -111,10 +112,10 @@
       content: "OFF";
       color: #ffffff;
       font-weight: 800;
-      font-size: 9px;
+      font-size: 8px;
       position: absolute;
-      right: 6px;
-      top: 6px;
+      right: 5px;
+      top: 5px;
     }
 
     /* Estilos de la Tabla tipo Excel Limpia */
@@ -196,7 +197,7 @@
 
     <!-- COLUMNA IZQUIERDA: BANNER Y PRODUCTOS -->
     <div class="lg:col-span-3 space-y-4">
-      <!-- BANNER CON DISTRIBUCIÓN EXACTA TIPO CAPTURA 2 -->
+      <!-- BANNER ADAPTABLE PARA CELULAR Y PC -->
       <div class="relative bg-gradient-to-r from-emerald-900 to-emerald-700 rounded-3xl p-4 sm:p-6 text-white shadow-lg overflow-hidden flex flex-col justify-center space-y-3">
         <div class="absolute right-0 bottom-0 opacity-15 transform translate-x-4 translate-y-4">
           <i class="fas fa-seedling text-8xl"></i>
@@ -207,45 +208,45 @@
           <p class="text-emerald-100 text-[11px] sm:text-xs max-w-md">Controla las categorías y el modo de visualización con los interruptores.</p>
         </div>
 
-        <!-- CONTENEDOR INFERIOR DEL BANNER DIVIDIDO EN DOS BLOQUES (CATEGORÍAS A LA IZQ / VISTA A LA DERECHA) -->
+        <!-- CONTENEDOR DE INTERRUPTORES: DISEÑO PERFECTO EN CELULAR Y ESCRITORIO -->
         <div class="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-3 pt-2 border-t border-emerald-600/40">
           
-          <!-- BLOQUE IZQUIERDO: 3 SWITCHES DE CATEGORÍAS -->
-          <div class="grid grid-cols-3 gap-2 w-full md:w-auto">
+          <!-- FILA 1 EN MÓVIL / BLOQUE IZQUIERDO EN PC: 3 CATEGORÍAS -->
+          <div class="grid grid-cols-3 gap-2 w-full md:w-auto md:flex md:items-center">
             <!-- Switch Verduras -->
-            <div onclick="toggleFiltroCategoria('VERDURAS')" id="switch-verduras" class="switch-card switch-on">
-              <div class="flex items-center gap-1.5">
-                <i class="fas fa-carrot text-amber-400 text-xs"></i>
-                <span class="text-[11px] font-bold text-white">Verduras</span>
+            <div onclick="toggleFiltroCategoria('VERDURAS')" id="switch-verduras" class="switch-card switch-on md:w-40">
+              <div class="flex items-center gap-1.5 min-w-0">
+                <i class="fas fa-carrot text-amber-400 text-xs shrink-0"></i>
+                <span class="text-[11px] font-bold text-white truncate">Verduras</span>
               </div>
               <div class="switch-body switch-text"><div class="switch-handle"></div></div>
             </div>
 
             <!-- Switch Frutas -->
-            <div onclick="toggleFiltroCategoria('FRUTAS')" id="switch-frutas" class="switch-card switch-on">
-              <div class="flex items-center gap-1.5">
-                <i class="fas fa-apple-alt text-red-400 text-xs"></i>
-                <span class="text-[11px] font-bold text-white">Frutas</span>
+            <div onclick="toggleFiltroCategoria('FRUTAS')" id="switch-frutas" class="switch-card switch-on md:w-40">
+              <div class="flex items-center gap-1.5 min-w-0">
+                <i class="fas fa-apple-alt text-red-400 text-xs shrink-0"></i>
+                <span class="text-[11px] font-bold text-white truncate">Frutas</span>
               </div>
               <div class="switch-body switch-text"><div class="switch-handle"></div></div>
             </div>
 
             <!-- Switch Especies -->
-            <div onclick="toggleFiltroCategoria('ESPECIES')" id="switch-especies" class="switch-card switch-on">
-              <div class="flex items-center gap-1.5">
-                <i class="fas fa-pepper-hot text-emerald-400 text-xs"></i>
-                <span class="text-[11px] font-bold text-white">Especies</span>
+            <div onclick="toggleFiltroCategoria('ESPECIES')" id="switch-especies" class="switch-card switch-on md:w-40">
+              <div class="flex items-center gap-1.5 min-w-0">
+                <i class="fas fa-pepper-hot text-emerald-400 text-xs shrink-0"></i>
+                <span class="text-[11px] font-bold text-white truncate">Especies</span>
               </div>
               <div class="switch-body switch-text"><div class="switch-handle"></div></div>
             </div>
           </div>
 
-          <!-- BLOQUE DERECHO: SWITCH DE MODO VISTA (FOTOS / EXCEL) -->
+          <!-- FILA 2 EN MÓVIL / BLOQUE DERECHO EN PC: MODO VISTA (FOTOS / EXCEL) -->
           <div class="w-full md:w-auto flex justify-start md:justify-end">
-            <div onclick="toggleModoVistaSwitch()" id="switch-modo-vista" class="switch-card switch-on bg-[#022c22]">
-              <div class="flex items-center gap-1.5">
-                <i id="icono-modo-vista" class="fas fa-th-large text-emerald-300 text-xs"></i>
-                <span id="label-modo-vista" class="text-[11px] font-bold text-white">Fotos</span>
+            <div onclick="toggleModoVistaSwitch()" id="switch-modo-vista" class="switch-card switch-on bg-[#022c22] w-full md:w-44">
+              <div class="flex items-center gap-1.5 min-w-0">
+                <i id="icono-modo-vista" class="fas fa-th-large text-emerald-300 text-xs shrink-0"></i>
+                <span id="label-modo-vista" class="text-[11px] font-bold text-white truncate">Fotos</span>
               </div>
               <div class="switch-body switch-text"><div class="switch-handle"></div></div>
             </div>
@@ -404,12 +405,12 @@
       const label = document.getElementById('label-modo-vista');
 
       if (modoFotosActivo) {
-        elSwitch.className = "switch-card switch-on";
-        icono.className = "fas fa-th-large text-emerald-300 text-xs";
+        elSwitch.className = "switch-card switch-on bg-[#022c22] w-full md:w-44";
+        icono.className = "fas fa-th-large text-emerald-300 text-xs shrink-0";
         label.innerText = "Fotos";
       } else {
-        elSwitch.className = "switch-card switch-off";
-        icono.className = "fas fa-file-excel text-red-300 text-xs";
+        elSwitch.className = "switch-card switch-off bg-[#022c22] w-full md:w-44";
+        icono.className = "fas fa-file-excel text-red-300 text-xs shrink-0";
         label.innerText = "Excel";
       }
 
@@ -421,9 +422,9 @@
       const elSwitch = document.getElementById(`switch-${cat.toLowerCase()}`);
 
       if (filtrosActivos[cat]) {
-        elSwitch.className = "switch-card switch-on";
+        elSwitch.className = "switch-card switch-on md:w-40";
       } else {
-        elSwitch.className = "switch-card switch-off";
+        elSwitch.className = "switch-card switch-off md:w-40";
       }
 
       renderProductos(obtenerProductosFiltrados());
