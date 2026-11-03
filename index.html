@@ -44,7 +44,7 @@
       appearance: none;
     }
 
-    /* ESTILO ACTIVADO: Color Verde Lima Sólido de tu imagen (#bdef00 / #a3e635) */
+    /* ESTILO ACTIVADO: Color Verde Lima Sólido (#bdef00) con texto oscuro */
     .btn-cat-active { 
       background-color: #bdef00 !important; 
       color: #111827 !important; 
@@ -53,7 +53,7 @@
       box-shadow: 0 2px 6px rgba(189, 239, 0, 0.3);
     }
     
-    /* ESTILO DESACTIVADO: Verde oscuro sólido corporativo */
+    /* ESTILO DESACTIVADO: Verde oscuro sólido corporativo sin transparencias */
     .btn-cat-inactive { 
       background-color: #064e3b !important; 
       color: #9ca3af !important; 
@@ -343,10 +343,10 @@
       const check = document.getElementById(`check-${cat.toLowerCase()}`);
 
       if (filtrosActivos[cat]) {
-        btn.className = "btn-cat-active px-3 py-1.5 rounded-xl font-semibold text-xs shadow-sm transition flex items-center gap-1.5";
+        btn.className = "btn-cat-active px-3 py-1.5 rounded-xl text-xs shadow-sm transition flex items-center gap-1.5";
         check.innerHTML = '<i class="fas fa-check text-[10px] ml-0.5"></i>';
       } else {
-        btn.className = "btn-cat-inactive px-3 py-1.5 rounded-xl font-semibold text-xs shadow-sm transition flex items-center gap-1.5";
+        btn.className = "btn-cat-inactive px-3 py-1.5 rounded-xl text-xs shadow-sm transition flex items-center gap-1.5";
         check.innerHTML = '';
       }
 
