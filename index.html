@@ -12,7 +12,7 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-    button, select, input { transition: all 0.15s ease-in-out; }
+    button, select, input { transition: all 0.2s ease-in-out; }
 
     .btn-whatsapp {
       background: linear-gradient(135deg, #059669 0%, #047857 100%);
@@ -44,27 +44,79 @@
       appearance: none;
     }
 
-    /* ESTILO ACTIVADO: Color Verde Lima Sólido (#bdef00) con texto oscuro */
-    .btn-cat-active { 
-      background-color: #bdef00 !important; 
-      color: #111827 !important; 
-      font-weight: 800 !important;
-      border: 1px solid #99cc00 !important; 
-      box-shadow: 0 2px 6px rgba(189, 239, 0, 0.3);
+    /* ESTILOS DE INTERRUPTORES TIPO SWITCH (ON / OFF) */
+    .switch-card {
+      background-color: #043829;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      user-select: none;
     }
-    
-    /* ESTILO DESACTIVADO: Verde oscuro sólido corporativo sin transparencias */
-    .btn-cat-inactive { 
-      background-color: #064e3b !important; 
-      color: #9ca3af !important; 
-      font-weight: 600 !important;
-      border: 1px solid #043829 !important; 
+    .switch-card:hover {
+      border-color: rgba(255, 255, 255, 0.3);
     }
-    .btn-cat-inactive:hover { 
-      background-color: #043829 !important; 
-      color: #ffffff !important; 
+
+    .switch-body {
+      width: 56px;
+      height: 28px;
+      border-radius: 9999px;
+      position: relative;
+      transition: background-color 0.2s ease;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+      flex-shrink: 0;
     }
-    
+
+    .switch-handle {
+      width: 22px;
+      height: 22px;
+      background: radial-gradient(circle, #333333 0%, #111111 100%);
+      border-radius: 50%;
+      position: absolute;
+      top: 3px;
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.2);
+    }
+
+    /* Estado ON */
+    .switch-on .switch-body {
+      background-color: #bdef00; /* Verde lima brillante solicitado */
+    }
+    .switch-on .switch-handle {
+      transform: translateX(30px);
+    }
+    .switch-on .switch-text::before {
+      content: "ON";
+      color: #111827;
+      font-weight: 800;
+      font-size: 10px;
+      position: absolute;
+      left: 8px;
+      top: 6px;
+    }
+
+    /* Estado OFF */
+    .switch-off .switch-body {
+      background-color: #b91c1c; /* Rojo oscuro estilo referencia */
+    }
+    .switch-off .switch-handle {
+      transform: translateX(4px);
+    }
+    .switch-off .switch-text::after {
+      content: "OFF";
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 10px;
+      position: absolute;
+      right: 7px;
+      top: 6px;
+    }
+
     .btn-modo-active { background-color: #059669 !important; color: white !important; }
     .btn-modo-inactive { background-color: #e5e7eb !important; color: #4b5563 !important; }
 
@@ -147,7 +199,7 @@
 
     <!-- COLUMNA IZQUIERDA: BANNER Y PRODUCTOS -->
     <div class="lg:col-span-3 space-y-4">
-      <!-- BANNER INTEGRADO CON INTERRUPTORES DE CATEGORÍAS -->
+      <!-- BANNER INTEGRADO CON INTERRUPTORES TIPO SWITCH -->
       <div class="relative bg-gradient-to-r from-emerald-900 to-emerald-700 rounded-3xl p-4 sm:p-6 text-white shadow-lg overflow-hidden flex flex-col justify-center space-y-3">
         <div class="absolute right-0 bottom-0 opacity-15 transform translate-x-4 translate-y-4">
           <i class="fas fa-seedling text-8xl"></i>
@@ -155,16 +207,45 @@
         <div>
           <span class="bg-emerald-600/60 text-emerald-200 text-[10px] sm:text-xs font-semibold px-2.5 py-0.5 rounded-full w-max mb-1 backdrop-blur-sm">Frescura Garantizada</span>
           <h2 class="text-lg sm:text-2xl font-bold leading-tight mb-0.5">Frescura y Calidad a Domicilio</h2>
-          <p class="text-emerald-100 text-[11px] sm:text-xs max-w-md">Activa o desactiva las categorías que deseas visualizar.</p>
+          <p class="text-emerald-100 text-[11px] sm:text-xs max-w-md">Activa o desactiva las categorías mediante los interruptores.</p>
         </div>
 
-        <!-- FILTROS (INTERRUPTORES ON/OFF) Y SELECTOR DE VISTA -->
-        <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-2.5 pt-2 border-t border-emerald-600/40">
-          <!-- BOTONES / INTERRUPTORES DE CATEGORÍAS -->
-          <div class="flex flex-wrap gap-1.5 py-0.5 w-full sm:w-auto">
-            <button onclick="toggleFiltroCategoria('VERDURAS')" id="btn-cat-verduras" class="btn-cat-active px-3 py-1.5 rounded-xl font-semibold text-xs shadow-sm transition flex items-center gap-1.5"><i class="fas fa-carrot"></i> Verduras <span id="check-verduras"><i class="fas fa-check text-[10px] ml-0.5"></i></span></button>
-            <button onclick="toggleFiltroCategoria('FRUTAS')" id="btn-cat-frutas" class="btn-cat-active px-3 py-1.5 rounded-xl font-semibold text-xs shadow-sm transition flex items-center gap-1.5"><i class="fas fa-apple-alt"></i> Frutas <span id="check-frutas"><i class="fas fa-check text-[10px] ml-0.5"></i></span></button>
-            <button onclick="toggleFiltroCategoria('ESPECIES')" id="btn-cat-especies" class="btn-cat-active px-3 py-1.5 rounded-xl font-semibold text-xs shadow-sm transition flex items-center gap-1.5"><i class="fas fa-pepper-hot"></i> Especies <span id="check-especies"><i class="fas fa-check text-[10px] ml-0.5"></i></span></button>
+        <!-- FILTROS (SWITCHES ON/OFF) Y SELECTOR DE VISTA -->
+        <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 pt-2 border-t border-emerald-600/40">
+          <!-- INTERRUPTORES TIPO SWITCH -->
+          <div class="grid grid-cols-1 sm:flex sm:flex-wrap gap-2 w-full sm:w-auto">
+            <!-- Switch Verduras -->
+            <div onclick="toggleFiltroCategoria('VERDURAS')" id="switch-verduras" class="switch-card switch-on">
+              <div class="flex items-center gap-2">
+                <i class="fas fa-carrot text-amber-400 text-sm"></i>
+                <span class="text-xs font-bold text-white">Verduras</span>
+              </div>
+              <div class="switch-body switch-text">
+                <div class="switch-handle"></div>
+              </div>
+            </div>
+
+            <!-- Switch Frutas -->
+            <div onclick="toggleFiltroCategoria('FRUTAS')" id="switch-frutas" class="switch-card switch-on">
+              <div class="flex items-center gap-2">
+                <i class="fas fa-apple-alt text-red-400 text-sm"></i>
+                <span class="text-xs font-bold text-white">Frutas</span>
+              </div>
+              <div class="switch-body switch-text">
+                <div class="switch-handle"></div>
+              </div>
+            </div>
+
+            <!-- Switch Especies -->
+            <div onclick="toggleFiltroCategoria('ESPECIES')" id="switch-especies" class="switch-card switch-on">
+              <div class="flex items-center gap-2">
+                <i class="fas fa-pepper-hot text-emerald-400 text-sm"></i>
+                <span class="text-xs font-bold text-white">Especies</span>
+              </div>
+              <div class="switch-body switch-text">
+                <div class="switch-handle"></div>
+              </div>
+            </div>
           </div>
 
           <!-- CAMBIO DE VISTA -->
@@ -252,7 +333,7 @@
     let seleccionPresentacion = {};
     let modoVista = 'fotos';
 
-    // Estados de los interruptores de categoría (Inician TODOS ACTIVADOS por defecto)
+    // Estados de los interruptores (Inician TODOS encendidos por defecto)
     let filtrosActivos = {
       'VERDURAS': true,
       'FRUTAS': true,
@@ -338,16 +419,12 @@
 
     function toggleFiltroCategoria(cat) {
       filtrosActivos[cat] = !filtrosActivos[cat];
-
-      const btn = document.getElementById(`btn-cat-${cat.toLowerCase()}`);
-      const check = document.getElementById(`check-${cat.toLowerCase()}`);
+      const elSwitch = document.getElementById(`switch-${cat.toLowerCase()}`);
 
       if (filtrosActivos[cat]) {
-        btn.className = "btn-cat-active px-3 py-1.5 rounded-xl text-xs shadow-sm transition flex items-center gap-1.5";
-        check.innerHTML = '<i class="fas fa-check text-[10px] ml-0.5"></i>';
+        elSwitch.className = "switch-card switch-on";
       } else {
-        btn.className = "btn-cat-inactive px-3 py-1.5 rounded-xl text-xs shadow-sm transition flex items-center gap-1.5";
-        check.innerHTML = '';
+        elSwitch.className = "switch-card switch-off";
       }
 
       renderProductos(obtenerProductosFiltrados());
@@ -359,12 +436,10 @@
       return productos.filter(p => {
         let coincideCat = false;
 
-        // Solo mostramos el producto si su categoría específica está ACTIVADA
         if (p.categoria.includes('VERDURA') && filtrosActivos['VERDURAS']) coincideCat = true;
         if (p.categoria.includes('FRUTA') && filtrosActivos['FRUTAS']) coincideCat = true;
         if (p.categoria.includes('ESPECIE') && filtrosActivos['ESPECIES']) coincideCat = true;
         
-        // Categorías secundarias solo si todo está activo
         if (!p.categoria.includes('VERDURA') && !p.categoria.includes('FRUTA') && !p.categoria.includes('ESPECIE')) {
           if (filtrosActivos['VERDURAS'] && filtrosActivos['FRUTAS'] && filtrosActivos['ESPECIES']) coincideCat = true;
         }
@@ -383,7 +458,7 @@
       contenedor.innerHTML = '';
 
       if (listaACargar.length === 0) {
-        contenedor.innerHTML = '<p class="text-center text-gray-400 py-12 text-xs font-semibold">No hay categorías seleccionadas. Activa al menos un botón arriba para ver los productos.</p>';
+        contenedor.innerHTML = '<p class="text-center text-gray-400 py-12 text-xs font-semibold">No hay categorías seleccionadas. Enciende al menos un interruptor arriba para ver los productos.</p>';
         return;
       }
 
