@@ -44,12 +44,23 @@
       appearance: none;
     }
 
-    /* ESTILO ACTIVO: Color Mostaza / Amarillo Cálido (Winnie Pooh) */
-    .btn-cat-active { background-color: #d97706 !important; color: #ffffff !important; border-color: transparent !important; }
+    /* ESTILO ACTIVADO: Color Winnie Pooh Sólido e Intenso (#d97706) */
+    .btn-cat-active { 
+      background-color: #d97706 !important; 
+      color: #ffffff !important; 
+      border: 1px solid #b45309 !important; 
+    }
     
-    /* ESTILO INACTIVO: Limpio y claro */
-    .btn-cat-inactive { background-color: #ffffff !important; color: #4b5563 !important; border-color: #e5e7eb !important; }
-    .btn-cat-inactive:hover { background-color: #fef3c7 !important; border-color: #fcd34d !important; color: #b45309 !important; }
+    /* ESTILO DESACTIVADO: Verde transparente integrado al banner */
+    .btn-cat-inactive { 
+      background-color: rgba(6, 78, 59, 0.6) !important; 
+      color: #a7f3d0 !important; 
+      border: 1px solid rgba(167, 243, 208, 0.3) !important; 
+    }
+    .btn-cat-inactive:hover { 
+      background-color: rgba(6, 78, 59, 0.8) !important; 
+      color: #ffffff !important; 
+    }
     
     .btn-modo-active { background-color: #059669 !important; color: white !important; }
     .btn-modo-inactive { background-color: #e5e7eb !important; color: #4b5563 !important; }
@@ -148,9 +159,9 @@
         <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-2.5 pt-2 border-t border-emerald-600/40">
           <!-- BOTONES / INTERRUPTORES DE CATEGORÍAS -->
           <div class="flex flex-wrap gap-1.5 py-0.5 w-full sm:w-auto">
-            <button onclick="toggleFiltroCategoria('VERDURAS')" id="btn-cat-verduras" class="btn-cat-active px-3 py-1.5 rounded-xl font-semibold text-xs shadow-sm transition flex items-center gap-1.5"><i class="fas fa-carrot text-amber-500"></i> Verduras <span id="check-verduras"><i class="fas fa-check text-[10px] ml-0.5"></i></span></button>
-            <button onclick="toggleFiltroCategoria('FRUTAS')" id="btn-cat-frutas" class="btn-cat-active px-3 py-1.5 rounded-xl font-semibold text-xs shadow-sm transition flex items-center gap-1.5"><i class="fas fa-apple-alt text-red-500"></i> Frutas <span id="check-frutas"><i class="fas fa-check text-[10px] ml-0.5"></i></span></button>
-            <button onclick="toggleFiltroCategoria('ESPECIES')" id="btn-cat-especies" class="btn-cat-active px-3 py-1.5 rounded-xl font-semibold text-xs shadow-sm transition flex items-center gap-1.5"><i class="fas fa-pepper-hot text-emerald-500"></i> Especies <span id="check-especies"><i class="fas fa-check text-[10px] ml-0.5"></i></span></button>
+            <button onclick="toggleFiltroCategoria('VERDURAS')" id="btn-cat-verduras" class="btn-cat-active px-3 py-1.5 rounded-xl font-semibold text-xs shadow-sm transition flex items-center gap-1.5"><i class="fas fa-carrot"></i> Verduras <span id="check-verduras"><i class="fas fa-check text-[10px] ml-0.5"></i></span></button>
+            <button onclick="toggleFiltroCategoria('FRUTAS')" id="btn-cat-frutas" class="btn-cat-active px-3 py-1.5 rounded-xl font-semibold text-xs shadow-sm transition flex items-center gap-1.5"><i class="fas fa-apple-alt"></i> Frutas <span id="check-frutas"><i class="fas fa-check text-[10px] ml-0.5"></i></span></button>
+            <button onclick="toggleFiltroCategoria('ESPECIES')" id="btn-cat-especies" class="btn-cat-active px-3 py-1.5 rounded-xl font-semibold text-xs shadow-sm transition flex items-center gap-1.5"><i class="fas fa-pepper-hot"></i> Especies <span id="check-especies"><i class="fas fa-check text-[10px] ml-0.5"></i></span></button>
           </div>
 
           <!-- CAMBIO DE VISTA -->
@@ -238,7 +249,7 @@
     let seleccionPresentacion = {};
     let modoVista = 'fotos';
 
-    // Estados de los interruptores de categoría (Inician todos en true/encendidos)
+    // Estados de los interruptores de categoría (Inician TODOS ACTIVADOS por defecto)
     let filtrosActivos = {
       'VERDURAS': true,
       'FRUTAS': true,
@@ -342,15 +353,17 @@
     function obtenerProductosFiltrados() {
       const textoBuscar = document.getElementById('input-buscar').value.toLowerCase().trim();
 
-      const todosApagados = !filtrosActivos['VERDURAS'] && !filtrosActivos['FRUTAS'] && !filtrosActivos['ESPECIES'];
-
       return productos.filter(p => {
-        let coincideCat = todosApagados;
-        if (!todosApagados) {
-          if (p.categoria.includes('VERDURA') && filtrosActivos['VERDURAS']) coincideCat = true;
-          if (p.categoria.includes('FRUTA') && filtrosActivos['FRUTAS']) coincideCat = true;
-          if (p.categoria.includes('ESPECIE') && filtrosActivos['ESPECIES']) coincideCat = true;
-          if (!p.categoria.includes('VERDURA') && !p.categoria.includes('FRUTA') && !p.categoria.includes('ESPECIE')) coincideCat = true;
+        let coincideCat = false;
+
+        // Solo mostramos el producto si su categoría específica está ACTIVADA
+        if (p.categoria.includes('VERDURA') && filtrosActivos['VERDURAS']) coincideCat = true;
+        if (p.categoria.includes('FRUTA') && filtrosActivos['FRUTAS']) coincideCat = true;
+        if (p.categoria.includes('ESPECIE') && filtrosActivos['ESPECIES']) coincideCat = true;
+        
+        // Categorías secundarias solo si todo está activo
+        if (!p.categoria.includes('VERDURA') && !p.categoria.includes('FRUTA') && !p.categoria.includes('ESPECIE')) {
+          if (filtrosActivos['VERDURAS'] && filtrosActivos['FRUTAS'] && filtrosActivos['ESPECIES']) coincideCat = true;
         }
 
         const coincideTexto = p.nombre.toLowerCase().includes(textoBuscar) || p.categoria.toLowerCase().includes(textoBuscar);
@@ -367,7 +380,7 @@
       contenedor.innerHTML = '';
 
       if (listaACargar.length === 0) {
-        contenedor.innerHTML = '<p class="text-center text-gray-400 py-12 text-xs">No se encontraron productos con los filtros seleccionados.</p>';
+        contenedor.innerHTML = '<p class="text-center text-gray-400 py-12 text-xs font-semibold">No hay categorías seleccionadas. Activa al menos un botón arriba para ver los productos.</p>';
         return;
       }
 
@@ -766,19 +779,4 @@
       let totalMonto = 0;
       Object.values(carrito).forEach(item => {
         const subtotal = item.cantidad * item.precio;
-        totalMonto += subtotal;
-        mensaje += `• *${item.nombre}*\n  ${item.cantidad} x ${item.unidad} ($${item.precio.toFixed(2)} c/u) = *$${subtotal.toFixed(2)}*\n`;
-      });
-
-      mensaje += `\n------------------------------------\n`;
-      mensaje += `*TOTAL A PAGAR: $${totalMonto.toFixed(2)}*`;
-
-      const telefono = "50379201948"; 
-      const urlWhatsapp = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
-      window.open(urlWhatsapp, '_blank');
-    }
-
-    window.onload = cargarProductosDesdeSheets;
-  </script>
-</body>
-</html>
+        totalM
