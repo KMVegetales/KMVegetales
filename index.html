@@ -125,38 +125,38 @@
   </header>
 
   <!-- CONTENEDOR PRINCIPAL -->
-  <main class="max-w-7xl mx-auto px-4 mt-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
+  <main class="max-w-7xl mx-auto px-4 mt-4 grid grid-cols-1 lg:grid-cols-4 gap-6">
 
     <!-- COLUMNA IZQUIERDA: BANNER Y PRODUCTOS -->
-    <div class="lg:col-span-3 space-y-5">
-      <!-- BANNER INTEGRADO CON CATEGORÍAS Y VISTAS -->
-      <div class="relative bg-gradient-to-r from-emerald-900 to-emerald-700 rounded-3xl p-6 text-white shadow-lg overflow-hidden flex flex-col justify-center space-y-4">
+    <div class="lg:col-span-3 space-y-4">
+      <!-- BANNER INTEGRADO COMPACTO PARA MÓVIL Y PC -->
+      <div class="relative bg-gradient-to-r from-emerald-900 to-emerald-700 rounded-3xl p-4 sm:p-6 text-white shadow-lg overflow-hidden flex flex-col justify-center space-y-3">
         <div class="absolute right-0 bottom-0 opacity-15 transform translate-x-4 translate-y-4">
           <i class="fas fa-seedling text-8xl"></i>
         </div>
         <div>
-          <span class="bg-emerald-600/60 text-emerald-200 text-xs font-semibold px-3 py-1 rounded-full w-max mb-1.5 backdrop-blur-sm">Frescura Garantizada</span>
-          <h2 class="text-xl md:text-2xl font-bold mb-1">Frescura y Calidad a Domicilio</h2>
-          <p class="text-emerald-100 text-xs max-w-md">Selecciona el producto y elige tu presentación ideal.</p>
+          <span class="bg-emerald-600/60 text-emerald-200 text-[10px] sm:text-xs font-semibold px-2.5 py-0.5 rounded-full w-max mb-1 backdrop-blur-sm">Frescura Garantizada</span>
+          <h2 class="text-lg sm:text-2xl font-bold leading-tight mb-0.5">Frescura y Calidad a Domicilio</h2>
+          <p class="text-emerald-100 text-[11px] sm:text-xs max-w-md">Selecciona el producto y elige tu presentación ideal.</p>
         </div>
 
-        <!-- FILTROS Y SELECTOR DE VISTA DENTRO DEL BANNER -->
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pt-2 border-t border-emerald-600/40">
+        <!-- FILTROS Y SELECTOR DE VISTA DENTRO DEL BANNER (COMPACTO) -->
+        <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-2.5 pt-2 border-t border-emerald-600/40">
           <!-- CATEGORÍAS -->
-          <div class="flex overflow-x-auto gap-2 py-1 no-scrollbar w-full sm:w-auto">
-            <button onclick="filtrarCategoria('TODOS')" id="btn-cat-todos" class="btn-cat-active px-4 py-2 bg-emerald-800 text-white rounded-xl font-semibold text-xs transition whitespace-nowrap active:scale-95 shadow-sm">Todos</button>
-            <button onclick="filtrarCategoria('VERDURAS')" id="btn-cat-verduras" class="btn-cat-inactive px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-xl font-semibold text-xs shadow-sm transition whitespace-nowrap active:scale-95"><i class="fas fa-carrot text-amber-600 mr-1"></i> Verduras</button>
-            <button onclick="filtrarCategoria('FRUTAS')" id="btn-cat-frutas" class="btn-cat-inactive px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-xl font-semibold text-xs shadow-sm transition whitespace-nowrap active:scale-95"><i class="fas fa-apple-alt text-red-500 mr-1"></i> Frutas</button>
-            <button onclick="filtrarCategoria('ESPECIES')" id="btn-cat-especies" class="btn-cat-inactive px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-xl font-semibold text-xs shadow-sm transition whitespace-nowrap active:scale-95"><i class="fas fa-pepper-hot text-emerald-600 mr-1"></i> Especies</button>
+          <div class="flex overflow-x-auto gap-1.5 py-0.5 no-scrollbar w-full sm:w-auto">
+            <button onclick="filtrarCategoria('TODOS')" id="btn-cat-todos" class="btn-cat-active px-3 py-1.5 bg-emerald-800 text-white rounded-xl font-semibold text-xs transition whitespace-nowrap active:scale-95 shadow-sm">Todos</button>
+            <button onclick="filtrarCategoria('VERDURAS')" id="btn-cat-verduras" class="btn-cat-inactive px-3 py-1.5 bg-white text-gray-600 border border-gray-200 rounded-xl font-semibold text-xs shadow-sm transition whitespace-nowrap active:scale-95"><i class="fas fa-carrot text-amber-600 mr-1"></i> Verduras</button>
+            <button onclick="filtrarCategoria('FRUTAS')" id="btn-cat-frutas" class="btn-cat-inactive px-3 py-1.5 bg-white text-gray-600 border border-gray-200 rounded-xl font-semibold text-xs shadow-sm transition whitespace-nowrap active:scale-95"><i class="fas fa-apple-alt text-red-500 mr-1"></i> Frutas</button>
+            <button onclick="filtrarCategoria('ESPECIES')" id="btn-cat-especies" class="btn-cat-inactive px-3 py-1.5 bg-white text-gray-600 border border-gray-200 rounded-xl font-semibold text-xs shadow-sm transition whitespace-nowrap active:scale-95"><i class="fas fa-pepper-hot text-emerald-600 mr-1"></i> Especies</button>
           </div>
 
           <!-- CAMBIO DE VISTA -->
-          <div class="flex items-center gap-1 bg-emerald-950/40 p-1 rounded-xl text-xs self-end sm:self-auto border border-emerald-600/30">
-            <button onclick="cambiarModoVista('fotos')" id="btn-vista-fotos" class="btn-modo-active px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 shadow-sm transition">
+          <div class="flex items-center justify-center gap-1 bg-emerald-950/40 p-1 rounded-xl text-xs border border-emerald-600/30">
+            <button onclick="cambiarModoVista('fotos')" id="btn-vista-fotos" class="btn-modo-active flex-1 sm:flex-none px-3 py-1.5 rounded-lg font-bold flex items-center justify-center gap-1.5 shadow-sm transition">
               <i class="fas fa-th-large"></i> Fotos
             </button>
-            <button onclick="cambiarModoVista('excel')" id="btn-vista-excel" class="btn-modo-inactive px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition">
-              <i class="fas fa-file-excel"></i> Hoja Excel (Rápido)
+            <button onclick="cambiarModoVista('excel')" id="btn-vista-excel" class="btn-modo-inactive flex-1 sm:flex-none px-3 py-1.5 rounded-lg font-bold flex items-center justify-center gap-1.5 transition">
+              <i class="fas fa-file-excel"></i> Excel (Rápido)
             </button>
           </div>
         </div>
@@ -303,11 +303,11 @@
       const btnExcel = document.getElementById('btn-vista-excel');
 
       if (modo === 'fotos') {
-        btnFotos.className = "btn-modo-active px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 shadow-sm transition";
-        btnExcel.className = "btn-modo-inactive px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition";
+        btnFotos.className = "btn-modo-active flex-1 sm:flex-none px-3 py-1.5 rounded-lg font-bold flex items-center justify-center gap-1.5 shadow-sm transition";
+        btnExcel.className = "btn-modo-inactive flex-1 sm:flex-none px-3 py-1.5 rounded-lg font-bold flex items-center justify-center gap-1.5 transition";
       } else {
-        btnExcel.className = "btn-modo-active px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 shadow-sm transition";
-        btnFotos.className = "btn-modo-inactive px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition";
+        btnExcel.className = "btn-modo-active flex-1 sm:flex-none px-3 py-1.5 rounded-lg font-bold flex items-center justify-center gap-1.5 shadow-sm transition";
+        btnFotos.className = "btn-modo-inactive flex-1 sm:flex-none px-3 py-1.5 rounded-lg font-bold flex items-center justify-center gap-1.5 transition";
       }
 
       renderProductos(obtenerProductosFiltrados());
@@ -326,9 +326,9 @@
       Object.keys(btns).forEach(c => {
         if (btns[c]) {
           if (c === cat) {
-            btns[c].className = "btn-cat-active px-4 py-2 bg-emerald-800 text-white rounded-xl font-semibold text-xs transition whitespace-nowrap active:scale-95 shadow-sm";
+            btns[c].className = "btn-cat-active px-3 py-1.5 bg-emerald-800 text-white rounded-xl font-semibold text-xs transition whitespace-nowrap active:scale-95 shadow-sm";
           } else {
-            btns[c].className = "btn-cat-inactive px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-xl font-semibold text-xs shadow-sm transition whitespace-nowrap active:scale-95";
+            btns[c].className = "btn-cat-inactive px-3 py-1.5 bg-white text-gray-600 border border-gray-200 rounded-xl font-semibold text-xs shadow-sm transition whitespace-nowrap active:scale-95";
           }
         }
       });
