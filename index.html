@@ -44,7 +44,7 @@
       appearance: none;
     }
 
-    .btn-cat-active { background-color: #065f46 !important; color: #ffffff !important; }
+    .btn-cat-active { background-color: #064e3b !important; color: #ffffff !important; border-color: transparent !important; }
     .btn-cat-inactive:hover { background-color: #f0fdf4 !important; border-color: #a7f3d0 !important; color: #065f46 !important; }
     
     .btn-modo-active { background-color: #059669 !important; color: white !important; }
@@ -129,37 +129,36 @@
 
     <!-- COLUMNA IZQUIERDA: BANNER Y PRODUCTOS -->
     <div class="lg:col-span-3 space-y-5">
-      <div class="relative bg-gradient-to-r from-emerald-900 to-emerald-700 rounded-3xl p-6 text-white shadow-lg overflow-hidden flex flex-col justify-center min-h-[140px]">
+      <!-- BANNER INTEGRADO CON CATEGORÍAS Y VISTAS -->
+      <div class="relative bg-gradient-to-r from-emerald-900 to-emerald-700 rounded-3xl p-6 text-white shadow-lg overflow-hidden flex flex-col justify-center space-y-4">
         <div class="absolute right-0 bottom-0 opacity-15 transform translate-x-4 translate-y-4">
           <i class="fas fa-seedling text-8xl"></i>
         </div>
-        <span class="bg-emerald-600/60 text-emerald-200 text-xs font-semibold px-3 py-1 rounded-full w-max mb-1.5 backdrop-blur-sm">Frescura Garantizada</span>
-        <h2 class="text-xl md:text-2xl font-bold mb-1">Frescura y Calidad a Domicilio</h2>
-        <p class="text-emerald-100 text-xs max-w-md mb-3">Selecciona el producto y elige tu presentación ideal.</p>
         <div>
-          <button onclick="filtrarCategoria('TODOS')" class="bg-white text-emerald-900 font-bold px-4 py-2 rounded-xl text-xs shadow-md hover:bg-emerald-50 active:scale-95 transition flex items-center gap-1.5">
-            <i class="fas fa-th-large text-emerald-700"></i> Ver Todo
-          </button>
-        </div>
-      </div>
-
-      <!-- FILTROS Y SELECTOR DE VISTA -->
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-        <!-- CATEGORÍAS -->
-        <div class="flex overflow-x-auto gap-2 py-1 no-scrollbar w-full sm:w-auto">
-          <button onclick="filtrarCategoria('TODOS')" id="btn-cat-todos" class="btn-cat-active px-4 py-2 bg-emerald-800 text-white rounded-xl font-semibold text-xs transition whitespace-nowrap active:scale-95">Todos</button>
-          <button onclick="filtrarCategoria('VERDURAS')" id="btn-cat-verduras" class="btn-cat-inactive px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-xl font-semibold text-xs shadow-sm transition whitespace-nowrap active:scale-95"><i class="fas fa-carrot text-amber-600 mr-1"></i> Verduras</button>
-          <button onclick="filtrarCategoria('FRUTAS')" id="btn-cat-frutas" class="btn-cat-inactive px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-xl font-semibold text-xs shadow-sm transition whitespace-nowrap active:scale-95"><i class="fas fa-apple-alt text-red-500 mr-1"></i> Frutas</button>
+          <span class="bg-emerald-600/60 text-emerald-200 text-xs font-semibold px-3 py-1 rounded-full w-max mb-1.5 backdrop-blur-sm">Frescura Garantizada</span>
+          <h2 class="text-xl md:text-2xl font-bold mb-1">Frescura y Calidad a Domicilio</h2>
+          <p class="text-emerald-100 text-xs max-w-md">Selecciona el producto y elige tu presentación ideal.</p>
         </div>
 
-        <!-- CAMBIO DE VISTA -->
-        <div class="flex items-center gap-1 bg-gray-200 p-1 rounded-xl text-xs self-end sm:self-auto">
-          <button onclick="cambiarModoVista('fotos')" id="btn-vista-fotos" class="btn-modo-active px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 shadow-sm transition">
-            <i class="fas fa-th-large"></i> Fotos
-          </button>
-          <button onclick="cambiarModoVista('excel')" id="btn-vista-excel" class="btn-modo-inactive px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition">
-            <i class="fas fa-file-excel"></i> Hoja Excel (Rápido)
-          </button>
+        <!-- FILTROS Y SELECTOR DE VISTA DENTRO DEL BANNER -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pt-2 border-t border-emerald-600/40">
+          <!-- CATEGORÍAS -->
+          <div class="flex overflow-x-auto gap-2 py-1 no-scrollbar w-full sm:w-auto">
+            <button onclick="filtrarCategoria('TODOS')" id="btn-cat-todos" class="btn-cat-active px-4 py-2 bg-emerald-800 text-white rounded-xl font-semibold text-xs transition whitespace-nowrap active:scale-95 shadow-sm">Todos</button>
+            <button onclick="filtrarCategoria('VERDURAS')" id="btn-cat-verduras" class="btn-cat-inactive px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-xl font-semibold text-xs shadow-sm transition whitespace-nowrap active:scale-95"><i class="fas fa-carrot text-amber-600 mr-1"></i> Verduras</button>
+            <button onclick="filtrarCategoria('FRUTAS')" id="btn-cat-frutas" class="btn-cat-inactive px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-xl font-semibold text-xs shadow-sm transition whitespace-nowrap active:scale-95"><i class="fas fa-apple-alt text-red-500 mr-1"></i> Frutas</button>
+            <button onclick="filtrarCategoria('ESPECIES')" id="btn-cat-especies" class="btn-cat-inactive px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-xl font-semibold text-xs shadow-sm transition whitespace-nowrap active:scale-95"><i class="fas fa-pepper-hot text-emerald-600 mr-1"></i> Especies</button>
+          </div>
+
+          <!-- CAMBIO DE VISTA -->
+          <div class="flex items-center gap-1 bg-emerald-950/40 p-1 rounded-xl text-xs self-end sm:self-auto border border-emerald-600/30">
+            <button onclick="cambiarModoVista('fotos')" id="btn-vista-fotos" class="btn-modo-active px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 shadow-sm transition">
+              <i class="fas fa-th-large"></i> Fotos
+            </button>
+            <button onclick="cambiarModoVista('excel')" id="btn-vista-excel" class="btn-modo-inactive px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition">
+              <i class="fas fa-file-excel"></i> Hoja Excel (Rápido)
+            </button>
+          </div>
         </div>
       </div>
 
@@ -314,12 +313,49 @@
       renderProductos(obtenerProductosFiltrados());
     }
 
+    function filtrarCategoria(cat) {
+      categoriaActual = cat;
+
+      const btns = {
+        'TODOS': document.getElementById('btn-cat-todos'),
+        'VERDURAS': document.getElementById('btn-cat-verduras'),
+        'FRUTAS': document.getElementById('btn-cat-frutas'),
+        'ESPECIES': document.getElementById('btn-cat-especies')
+      };
+
+      Object.keys(btns).forEach(c => {
+        if (btns[c]) {
+          if (c === cat) {
+            btns[c].className = "btn-cat-active px-4 py-2 bg-emerald-800 text-white rounded-xl font-semibold text-xs transition whitespace-nowrap active:scale-95 shadow-sm";
+          } else {
+            btns[c].className = "btn-cat-inactive px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-xl font-semibold text-xs shadow-sm transition whitespace-nowrap active:scale-95";
+          }
+        }
+      });
+
+      renderProductos(obtenerProductosFiltrados());
+    }
+
+    function obtenerProductosFiltrados() {
+      const textoBuscar = document.getElementById('input-buscar').value.toLowerCase().trim();
+
+      return productos.filter(p => {
+        const coincideCat = (categoriaActual === 'TODOS') || p.categoria.includes(categoriaActual);
+        const coincideTexto = p.nombre.toLowerCase().includes(textoBuscar) || p.categoria.toLowerCase().includes(textoBuscar);
+        return coincideCat && coincideTexto;
+      });
+    }
+
+    function filtrarProductos() {
+      renderProductos(obtenerProductosFiltrados());
+    }
+
     function renderProductos(listaACargar = productos) {
       const contenedor = document.getElementById('contenedor-productos');
       contenedor.innerHTML = '';
 
       if (listaACargar.length === 0) {
-        contenedor.innerHTML = '<p class="text-center text-gray-400 py-12 text-xs">Cargando productos...</p>';
+        contenedor.innerHTML = '<p class="text-center text-gray-400 py-12 text-xs">No se encontraron productos en esta categoría.</p>';
         return;
       }
 
@@ -685,43 +721,8 @@
       document.getElementById('total-precio-desktop').innerText = `$${totalMonto.toFixed(2)}`;
       document.getElementById('total-precio-mobile').innerText = `$${totalMonto.toFixed(2)}`;
 
-      const badgeDesktop = document.getElementById('cart-count-badge');
-      if (badgeDesktop) badgeDesktop.innerText = `${Object.keys(carrito).length} productos`;
-
-      const badgeMobile = document.getElementById('cart-count-mobile');
-      if (badgeMobile) badgeMobile.innerText = totalCantProductos;
-    }
-
-    function filtrarCategoria(cat) {
-      categoriaActual = cat;
-
-      const btnTodos = document.getElementById('btn-cat-todos');
-      const btnVerduras = document.getElementById('btn-cat-verduras');
-      const btnFrutas = document.getElementById('btn-cat-frutas');
-
-      [btnTodos, btnVerduras, btnFrutas].forEach(btn => {
-        if (btn) btn.className = "btn-cat-inactive px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-xl font-semibold text-xs shadow-sm transition whitespace-nowrap active:scale-95";
-      });
-
-      if (cat === 'TODOS' && btnTodos) btnTodos.className = "btn-cat-active px-4 py-2 bg-emerald-800 text-white rounded-xl font-semibold text-xs transition whitespace-nowrap active:scale-95";
-      if (cat === 'VERDURAS' && btnVerduras) btnVerduras.className = "btn-cat-active px-4 py-2 bg-emerald-800 text-white rounded-xl font-semibold text-xs transition whitespace-nowrap active:scale-95";
-      if (cat === 'FRUTAS' && btnFrutas) btnFrutas.className = "btn-cat-active px-4 py-2 bg-emerald-800 text-white rounded-xl font-semibold text-xs transition whitespace-nowrap active:scale-95";
-
-      renderProductos(obtenerProductosFiltrados());
-    }
-
-    function filtrarProductos() {
-      renderProductos(obtenerProductosFiltrados());
-    }
-
-    function obtenerProductosFiltrados() {
-      const textoBusqueda = document.getElementById('input-buscar').value.toLowerCase().trim();
-
-      return productos.filter(p => {
-        const coincideCat = (categoriaActual === 'TODOS') || (p.categoria === categoriaActual);
-        const coincideBusqueda = p.nombre.toLowerCase().includes(textoBusqueda) || p.descripcion.toLowerCase().includes(textoBusqueda);
-        return coincideCat && coincideBusqueda;
-      });
+      document.getElementById('cart-count-badge').innerText = `${Object.keys(carrito).length} productos`;
+      document.getElementById('cart-count-mobile').innerText = Object.keys(carrito).length;
     }
 
     function toggleCarritoMovil() {
@@ -729,51 +730,43 @@
       modal.classList.toggle('hidden');
     }
 
-    // ENVÍO DE PEDIDO A WHATSAPP (Limpia automáticamente cualquier "(s)")
     function enviarPedido() {
       if (Object.keys(carrito).length === 0) {
-        alert("El carrito está vacío. Agrega productos antes de enviar tu pedido.");
+        alert("Tu carrito está vacío. Agrega productos para realizar un pedido.");
         return;
       }
 
-      const nombreDesktop = document.getElementById('input-nombre').value.trim();
-      const direccionDesktop = document.getElementById('input-direccion').value.trim();
-      const nombreMobile = document.getElementById('input-nombre-m').value.trim();
-      const direccionMobile = document.getElementById('input-direccion-m').value.trim();
+      const esMovil = window.innerWidth < 1024;
+      const nombre = esMovil ? document.getElementById('input-nombre-m').value.trim() : document.getElementById('input-nombre').value.trim();
+      const direccion = esMovil ? document.getElementById('input-direccion-m').value.trim() : document.getElementById('input-direccion').value.trim();
 
-      const nombre = nombreDesktop || nombreMobile || "No especificado";
-      const direccion = direccionDesktop || direccionMobile || "No especificada";
+      if (!nombre) {
+        alert("Por favor ingresa el nombre de tu negocio o cliente.");
+        return;
+      }
 
-      let detalleTexto = "";
-      let totalPagar = 0;
+      let mensaje = `*NUEVO PEDIDO - KMVEGETALES*\n`;
+      mensaje += `*Cliente:* ${nombre}\n`;
+      if (direccion) mensaje += `*Dirección:* ${direccion}\n`;
+      mensaje += `------------------------------------\n\n`;
+      mensaje += `*DETALLE DEL PEDIDO:*\n`;
 
+      let totalMonto = 0;
       Object.values(carrito).forEach(item => {
         const subtotal = item.cantidad * item.precio;
-        totalPagar += subtotal;
-        
-        // Limpiamos cualquier "(s)" o "(S)" que traiga la unidad desde Google Sheets
-        const unidadLimpia = item.unidad.replace(/\(s\)/gi, '');
-        
-        detalleTexto += `• ${item.cantidad} ${unidadLimpia} - ${item.nombre} a $${item.precio.toFixed(2)} c/u ($${subtotal.toFixed(2)})\n`;
+        totalMonto += subtotal;
+        mensaje += `• *${item.nombre}*\n  ${item.cantidad} x ${item.unidad} ($${item.precio.toFixed(2)} c/u) = *$${subtotal.toFixed(2)}*\n`;
       });
 
-      let mensaje = `*NUEVO PEDIDO - KMVegetales*\n`;
-      mensaje += `❖ *Cliente:* ${nombre}\n`;
-      mensaje += `❖ *Entrega:* ${direccion}\n\n`;
-      mensaje += `*DETALLE DEL CARRITO:*\n`;
-      mensaje += detalleTexto;
-      mensaje += `\n*TOTAL A PAGAR: $${totalPagar.toFixed(2)}*`;
+      mensaje += `\n------------------------------------\n`;
+      mensaje += `*TOTAL A PAGAR: $${totalMonto.toFixed(2)}*`;
 
-      const numeroTelefono = "50374670712"; // Reemplaza por tu número real de WhatsApp
-      const url = `https://api.whatsapp.com/send?phone=${numeroTelefono}&text=${encodeURIComponent(mensaje)}`;
-
-      window.open(url, '_blank');
+      const telefono = "50379201948"; 
+      const urlWhatsapp = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+      window.open(urlWhatsapp, '_blank');
     }
 
-    // Inicialización
-    window.onload = () => {
-      cargarProductosDesdeSheets();
-    };
+    window.onload = cargarProductosDesdeSheets;
   </script>
 </body>
 </html>
