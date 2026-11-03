@@ -44,28 +44,49 @@
       appearance: none;
     }
 
-    /* ESTILOS DE INTERRUPTORES TIPO SWITCH (ON / OFF) ADAPTABLES */
+    /* ESTILOS DE LOS BOTONES DE CATEGORÍA */
+    .btn-cat {
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 11px;
+      padding: 8px 14px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      user-select: none;
+      border: 1px solid rgba(255,255,255,0.15);
+      transition: all 0.2s ease;
+    }
+    .btn-cat-active {
+      background-color: #059669; /* Verde sólido fuerte */
+      color: white;
+    }
+    .btn-cat-inactive {
+      background-color: #043829; /* Verde oscuro */
+      color: #9ca3af;
+      border-color: rgba(255,255,255,0.05);
+    }
+
+    /* ESTILO DEL INTERRUPTOR SWITCH EXCLUSIVO PARA VISTA FOTOS / EXCEL */
     .switch-card {
       background-color: #043829;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 14px;
-      padding: 6px 8px;
+      padding: 6px 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 6px;
+      gap: 10px;
       cursor: pointer;
       box-shadow: 0 2px 6px rgba(0,0,0,0.15);
       user-select: none;
-      width: 100%;
-    }
-    .switch-card:hover {
-      border-color: rgba(255, 255, 255, 0.3);
     }
 
     .switch-body {
-      width: 48px;
-      height: 24px;
+      width: 52px;
+      height: 26px;
       border-radius: 9999px;
       position: relative;
       transition: background-color 0.2s ease;
@@ -74,8 +95,8 @@
     }
 
     .switch-handle {
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
       background: radial-gradient(circle, #333333 0%, #111111 100%);
       border-radius: 50%;
       position: absolute;
@@ -84,24 +105,24 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.2);
     }
 
-    /* Estado ON */
+    /* Estado ON (Fotos) */
     .switch-on .switch-body {
       background-color: #bdef00;
     }
     .switch-on .switch-handle {
-      transform: translateX(26px);
+      transform: translateX(28px);
     }
     .switch-on .switch-text::before {
       content: "ON";
       color: #111827;
       font-weight: 800;
-      font-size: 8px;
+      font-size: 9px;
       position: absolute;
-      left: 6px;
-      top: 5px;
+      left: 7px;
+      top: 6px;
     }
 
-    /* Estado OFF */
+    /* Estado OFF (Excel Rápido) */
     .switch-off .switch-body {
       background-color: #b91c1c;
     }
@@ -112,10 +133,10 @@
       content: "OFF";
       color: #ffffff;
       font-weight: 800;
-      font-size: 8px;
+      font-size: 9px;
       position: absolute;
-      right: 5px;
-      top: 5px;
+      right: 6px;
+      top: 6px;
     }
 
     /* Estilos de la Tabla tipo Excel Limpia */
@@ -197,7 +218,7 @@
 
     <!-- COLUMNA IZQUIERDA: BANNER Y PRODUCTOS -->
     <div class="lg:col-span-3 space-y-4">
-      <!-- BANNER ADAPTABLE PARA CELULAR Y PC -->
+      <!-- BANNER -->
       <div class="relative bg-gradient-to-r from-emerald-900 to-emerald-700 rounded-3xl p-4 sm:p-6 text-white shadow-lg overflow-hidden flex flex-col justify-center space-y-3">
         <div class="absolute right-0 bottom-0 opacity-15 transform translate-x-4 translate-y-4">
           <i class="fas fa-seedling text-8xl"></i>
@@ -205,46 +226,29 @@
         <div>
           <span class="bg-emerald-600/60 text-emerald-200 text-[10px] sm:text-xs font-semibold px-2.5 py-0.5 rounded-full w-max mb-1 backdrop-blur-sm">Frescura Garantizada</span>
           <h2 class="text-lg sm:text-2xl font-bold leading-tight mb-0.5">Frescura y Calidad a Domicilio</h2>
-          <p class="text-emerald-100 text-[11px] sm:text-xs max-w-md">Controla las categorías y el modo de visualización con los interruptores.</p>
+          <p class="text-emerald-100 text-[11px] sm:text-xs max-w-md">Selecciona las categorías y cambia el modo de visualización.</p>
         </div>
 
-        <!-- CONTENEDOR DE INTERRUPTORES: DISEÑO PERFECTO EN CELULAR Y ESCRITORIO -->
+        <!-- CONTENEDOR DE CONTROLES (3 BOTONES DE CATEGORÍA + 1 SWITCH DE VISTA) -->
         <div class="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-3 pt-2 border-t border-emerald-600/40">
           
-          <!-- FILA 1 EN MÓVIL / BLOQUE IZQUIERDO EN PC: 3 CATEGORÍAS -->
-          <div class="grid grid-cols-3 gap-2 w-full md:w-auto md:flex md:items-center">
-            <!-- Switch Verduras -->
-            <div onclick="toggleFiltroCategoria('VERDURAS')" id="switch-verduras" class="switch-card switch-on md:w-40">
-              <div class="flex items-center gap-1.5 min-w-0">
-                <i class="fas fa-carrot text-amber-400 text-xs shrink-0"></i>
-                <span class="text-[11px] font-bold text-white truncate">Verduras</span>
-              </div>
-              <div class="switch-body switch-text"><div class="switch-handle"></div></div>
-            </div>
-
-            <!-- Switch Frutas -->
-            <div onclick="toggleFiltroCategoria('FRUTAS')" id="switch-frutas" class="switch-card switch-on md:w-40">
-              <div class="flex items-center gap-1.5 min-w-0">
-                <i class="fas fa-apple-alt text-red-400 text-xs shrink-0"></i>
-                <span class="text-[11px] font-bold text-white truncate">Frutas</span>
-              </div>
-              <div class="switch-body switch-text"><div class="switch-handle"></div></div>
-            </div>
-
-            <!-- Switch Especies -->
-            <div onclick="toggleFiltroCategoria('ESPECIES')" id="switch-especies" class="switch-card switch-on md:w-40">
-              <div class="flex items-center gap-1.5 min-w-0">
-                <i class="fas fa-pepper-hot text-emerald-400 text-xs shrink-0"></i>
-                <span class="text-[11px] font-bold text-white truncate">Especies</span>
-              </div>
-              <div class="switch-body switch-text"><div class="switch-handle"></div></div>
-            </div>
+          <!-- BOTONES DE CATEGORÍAS (VERDE SÓLIDO / VERDE OSCURO) -->
+          <div class="flex flex-wrap gap-2">
+            <button onclick="toggleFiltroCategoria('VERDURAS')" id="btn-cat-verduras" class="btn-cat btn-cat-active">
+              <i class="fas fa-carrot text-amber-300 text-xs"></i> Verduras
+            </button>
+            <button onclick="toggleFiltroCategoria('FRUTAS')" id="btn-cat-frutas" class="btn-cat btn-cat-active">
+              <i class="fas fa-apple-alt text-red-300 text-xs"></i> Frutas
+            </button>
+            <button onclick="toggleFiltroCategoria('ESPECIES')" id="btn-cat-especies" class="btn-cat btn-cat-active">
+              <i class="fas fa-pepper-hot text-emerald-300 text-xs"></i> Especies
+            </button>
           </div>
 
-          <!-- FILA 2 EN MÓVIL / BLOQUE DERECHO EN PC: MODO VISTA (FOTOS / EXCEL) -->
-          <div class="w-full md:w-auto flex justify-start md:justify-end">
-            <div onclick="toggleModoVistaSwitch()" id="switch-modo-vista" class="switch-card switch-on bg-[#022c22] w-full md:w-44">
-              <div class="flex items-center gap-1.5 min-w-0">
+          <!-- INTERRUPTOR SWITCH EXCLUSIVO PARA VISTA FOTOS / EXCEL -->
+          <div class="flex justify-start md:justify-end">
+            <div onclick="toggleModoVistaSwitch()" id="switch-modo-vista" class="switch-card switch-on">
+              <div class="flex items-center gap-1.5 min-w-0 pr-3">
                 <i id="icono-modo-vista" class="fas fa-th-large text-emerald-300 text-xs shrink-0"></i>
                 <span id="label-modo-vista" class="text-[11px] font-bold text-white truncate">Fotos</span>
               </div>
@@ -326,11 +330,8 @@
     let productos = [];
     let carrito = {};
     let seleccionPresentacion = {};
-    
-    // Modo vista: true = Fotos (ON), false = Excel Rápido (OFF)
     let modoFotosActivo = true;
 
-    // Estados de los interruptores de categoría (Inician TODOS encendidos por defecto)
     let filtrosActivos = {
       'VERDURAS': true,
       'FRUTAS': true,
@@ -405,11 +406,11 @@
       const label = document.getElementById('label-modo-vista');
 
       if (modoFotosActivo) {
-        elSwitch.className = "switch-card switch-on bg-[#022c22] w-full md:w-44";
+        elSwitch.className = "switch-card switch-on";
         icono.className = "fas fa-th-large text-emerald-300 text-xs shrink-0";
         label.innerText = "Fotos";
       } else {
-        elSwitch.className = "switch-card switch-off bg-[#022c22] w-full md:w-44";
+        elSwitch.className = "switch-card switch-off";
         icono.className = "fas fa-file-excel text-red-300 text-xs shrink-0";
         label.innerText = "Excel";
       }
@@ -419,12 +420,12 @@
 
     function toggleFiltroCategoria(cat) {
       filtrosActivos[cat] = !filtrosActivos[cat];
-      const elSwitch = document.getElementById(`switch-${cat.toLowerCase()}`);
+      const btnCat = document.getElementById(`btn-cat-${cat.toLowerCase()}`);
 
       if (filtrosActivos[cat]) {
-        elSwitch.className = "switch-card switch-on md:w-40";
+        btnCat.className = "btn-cat btn-cat-active";
       } else {
-        elSwitch.className = "switch-card switch-off md:w-40";
+        btnCat.className = "btn-cat btn-cat-inactive";
       }
 
       renderProductos(obtenerProductosFiltrados());
@@ -458,7 +459,7 @@
       contenedor.innerHTML = '';
 
       if (listaACargar.length === 0) {
-        contenedor.innerHTML = '<p class="text-center text-gray-400 py-12 text-xs font-semibold">No hay categorías seleccionadas. Enciende al menos un interruptor arriba para ver los productos.</p>';
+        contenedor.innerHTML = '<p class="text-center text-gray-400 py-12 text-xs font-semibold">No hay categorías seleccionadas. Selecciona al menos una categoría arriba para ver los productos.</p>';
         return;
       }
 
@@ -515,7 +516,7 @@
             card.innerHTML = `
               <div>
                 <div class="relative h-28 rounded-xl overflow-hidden mb-2 bg-gray-100">
-                  <img src="${p.foto}" alt="${p.nombre}" loading="lazy" class="w-full h-full object-cover" onerror="intentarFormatosAlternativos(this, '${nombreEscapado}')">
+                  <img src="${p.foto}" alt="${p.nombre}" loading="lazy" decoding="async" class="w-full h-full object-cover" onerror="intentarFormatosAlternativos(this, '${nombreEscapado}')">
                   <span class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-emerald-800 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase shadow-sm">${p.categoria}</span>
                 </div>
                 <h3 class="font-bold text-gray-800 text-xs mb-0.5 truncate">${p.nombre}</h3>
