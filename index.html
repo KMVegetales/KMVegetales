@@ -23,6 +23,16 @@
       transform: translateY(-2px);
     }
 
+    .btn-print {
+      background-color: #374151;
+      color: white;
+      box-shadow: 0 4px 14px rgba(55, 65, 81, 0.25);
+    }
+    .btn-print:hover {
+      background-color: #1f2937;
+      transform: translateY(-2px);
+    }
+
     .btn-qty-plus { background-color: #059669; color: white; }
     .btn-qty-plus:hover { background-color: #047857; }
     .btn-qty-plus:active { transform: scale(0.92); }
@@ -181,6 +191,41 @@
       background-color: #ffffff;
       box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.2);
     }
+
+    /* ESTILOS DE IMPRESIÓN (HOJA CARTA MULTICOLUMNA) */
+    @media print {
+      @page {
+        size: letter portrait;
+        margin: 12mm;
+      }
+      body * {
+        visibility: hidden;
+      }
+      #seccion-impresion-carta, #seccion-impresion-carta * {
+        visibility: visible;
+      }
+      #seccion-impresion-carta {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        color: #000;
+        font-family: monospace;
+        font-size: 10pt;
+      }
+      .columna-items-print {
+        column-count: 2;
+        column-gap: 20px;
+      }
+      .columna-items-print.tres-cols {
+        column-count: 3;
+        column-gap: 15px;
+      }
+      .item-print-block {
+        break-inside: avoid;
+        margin-bottom: 6px;
+      }
+    }
   </style>
 </head>
 <body class="bg-gray-50 min-h-screen pb-12">
@@ -275,9 +320,14 @@
             <input type="text" id="input-direccion" placeholder="Dirección exacta o referencia" class="w-full bg-gray-50 border border-gray-200 p-2.5 rounded-xl text-xs focus:outline-none focus:border-emerald-500 transition">
           </div>
 
-          <button onclick="enviarPedido()" class="btn-whatsapp w-full text-white font-bold py-3.5 rounded-xl shadow-lg flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
-            <i class="fab fa-whatsapp text-lg"></i> Enviar Pedido por WhatsApp
-          </button>
+          <div class="grid grid-cols-1 gap-2 pt-1">
+            <button onclick="enviarPedido()" class="btn-whatsapp w-full text-white font-bold py-3 rounded-xl shadow-lg flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
+              <i class="fab fa-whatsapp text-lg"></i> Enviar por WhatsApp
+            </button>
+            <button onclick="imprimirPedidoCarta()" class="btn-print w-full text-white font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
+              <i class="fas fa-print text-sm"></i> Imprimir Hoja Carta
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -302,12 +352,18 @@
         </div>
         <input type="text" id="input-nombre-m" placeholder="Nombre de tu negocio o cliente" class="w-full bg-gray-50 border border-gray-200 p-2.5 rounded-xl text-xs focus:outline-none focus:border-emerald-500 transition">
         <input type="text" id="input-direccion-m" placeholder="Dirección / Referencia de entrega" class="w-full bg-gray-50 border border-gray-200 p-2.5 rounded-xl text-xs focus:outline-none focus:border-emerald-500 transition">
-        <button onclick="enviarPedido()" class="btn-whatsapp w-full text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
-          <i class="fab fa-whatsapp text-lg"></i> Enviar Pedido por WhatsApp
+        <button onclick="enviarPedido()" class="btn-whatsapp w-full text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
+          <i class="fab fa-whatsapp text-lg"></i> Enviar por WhatsApp
+        </button>
+        <button onclick="imprimirPedidoCarta()" class="btn-print w-full text-white font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
+          <i class="fas fa-print text-sm"></i> Imprimir Hoja Carta
         </button>
       </div>
     </div>
   </div>
+
+  <!-- PLANTILLA OCULTA PARA IMPRESIÓN DIRECTA DE HOJA CARTA -->
+  <div id="seccion-impresion-carta" class="hidden"></div>
 
   <script>
     const URL_GOOGLE_SHEETS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR5GQG7EYouJss52fNj0HhbLq-8kjTwDn4b7lA7AmDPS4xSpq8fYjC3zv8BmcU6xpdsGmWflf2AU85c/pub?output=csv";
@@ -841,7 +897,6 @@
       const fechaTexto = `${dia}/${mes}/${anio}`;
       const horaTexto = `${horas}:${minutos}`;
 
-      // Iniciar correlativo en No. 0001 (formato de 4 dígitos)
       let correlativoActual = parseInt(localStorage.getItem('km_correlativo_num') || '0') + 1;
       localStorage.setItem('km_correlativo_num', correlativoActual);
       let correlativoFormateado = String(correlativoActual).padStart(4, '0');
@@ -868,9 +923,82 @@
       mensaje += "\n------------------------------------\n" +
                  "*TOTAL A PAGAR: $" + totalMonto.toFixed(2) + "*";
 
-      const telefono = "50374670712"; 
+      const telefono = "50379201948"; 
       const urlWhatsapp = "https://wa.me/" + telefono + "?text=" + encodeURIComponent(mensaje);
       window.open(urlWhatsapp, '_blank');
+    }
+
+    function imprimirPedidoCarta() {
+      if (Object.keys(carrito).length === 0) {
+        alert("Tu carrito está vacío. Agrega productos para generar la orden.");
+        return;
+      }
+
+      const esMovil = window.innerWidth < 1024;
+      const nombre = esMovil ? document.getElementById('input-nombre-m').value.trim() : document.getElementById('input-nombre').value.trim();
+      const direccion = esMovil ? document.getElementById('input-direccion-m').value.trim() : document.getElementById('input-direccion').value.trim();
+
+      if (!nombre) {
+        alert("Por favor ingresa el nombre de tu negocio o cliente.");
+        return;
+      }
+
+      const hoy = new Date();
+      const dia = String(hoy.getDate()).padStart(2, '0');
+      const mes = String(hoy.getMonth() + 1).padStart(2, '0');
+      const anio = hoy.getFullYear();
+      const horas = String(hoy.getHours()).padStart(2, '0');
+      const minutos = String(hoy.getMinutes()).padStart(2, '0');
+
+      const fechaTexto = `${dia}/${mes}/${anio} ${horas}:${minutos}`;
+      let correlativoActual = parseInt(localStorage.getItem('km_correlativo_num') || '1');
+      let correlativoFormateado = String(correlativoActual).padStart(4, '0');
+
+      const itemsArr = Object.values(carrito);
+      const totalItems = itemsArr.length;
+      let claseColumnas = "columna-items-print";
+      if (totalItems > 16) {
+        claseColumnas = "columna-items-print tres-cols";
+      }
+
+      let htmlItemsPrint = '';
+      let totalMonto = 0;
+
+      itemsArr.forEach(item => {
+        const subtotal = item.cantidad * item.precio;
+        totalMonto += subtotal;
+
+        htmlItemsPrint += `
+          <div class="item-print-block">
+            <strong>*${item.nombre}*</strong><br>
+            ${item.cantidad} x ${item.unidad} ($${item.precio.toFixed(2)} c/u) = *$${subtotal.toFixed(2)}*
+          </div>
+        `;
+      });
+
+      const contenedorPrint = document.getElementById('seccion-impresion-carta');
+      contenedorPrint.innerHTML = `
+        <div style="padding: 10px;">
+          <div style="margin-bottom: 12px; border-bottom: 1px dashed #000; padding-bottom: 8px;">
+            <p style="font-size: 14pt; font-weight: bold; margin: 0 0 4px 0;">*KMVEGETALES - NUEVO PEDIDO*</p>
+            <p style="margin: 2px 0;"><strong>*Orden N°:* No. ${correlativoFormateado}</strong></p>
+            <p style="margin: 2px 0;">*Fecha:* ${fechaTexto}</p>
+            <p style="margin: 2px 0;">*Cliente:* ${nombre.toUpperCase()}</p>
+            ${direccion ? `<p style="margin: 2px 0;">*Dirección:* ${direccion}</p>` : ''}
+            <p style="margin: 6px 0 0 0; font-weight: bold;">*DETALLE DEL PEDIDO:*</p>
+          </div>
+
+          <div class="${claseColumnas}">
+            ${htmlItemsPrint}
+          </div>
+
+          <div style="margin-top: 15px; border-top: 1px dashed #000; padding-top: 8px;">
+            <p style="font-size: 12pt; font-weight: bold; margin: 0;">*TOTAL A PAGAR: $${totalMonto.toFixed(2)}*</p>
+          </div>
+        </div>
+      `;
+
+      window.print();
     }
 
     window.onload = cargarProductosDesdeSheets;
