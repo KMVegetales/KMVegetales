@@ -526,14 +526,17 @@
                   </select>
                 </div>
 
-                <div class="pt-1 space-y-1">
-                  <label class="text-[9px] text-gray-400 font-semibold block">CANTIDAD:</label>
-                  <div class="flex items-center justify-between">
+                <div class="pt-1 grid grid-cols-2 gap-2 items-end">
+                  <div>
+                    <label class="text-[9px] text-gray-400 font-semibold block mb-0.5">PRECIO UNITARIO:</label>
                     <p id="precio-${p.id}" class="font-bold text-emerald-700 text-sm">$${presActual.precio.toFixed(2)}</p>
-                    
-                    <div class="flex items-center gap-1">
+                  </div>
+                  
+                  <div>
+                    <label class="text-[9px] text-gray-400 font-semibold block mb-0.5 text-right">CANTIDAD:</label>
+                    <div class="flex items-center justify-end gap-1">
                       <button onclick="cambiarCantidad('${p.id}', -1)" class="btn-qty-minus w-6 h-6 rounded-lg font-bold text-xs flex items-center justify-center">-</button>
-                      <input type="number" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" class="w-12 h-6 text-center text-xs font-bold bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                      <input type="number" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" class="w-10 h-6 text-center text-xs font-bold bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500">
                       <button onclick="cambiarCantidad('${p.id}', 1)" class="btn-qty-plus w-6 h-6 rounded-lg font-bold text-xs flex items-center justify-center">+</button>
                     </div>
                   </div>
@@ -854,7 +857,7 @@
       mensaje += `\n------------------------------------\n`;
       mensaje += `*TOTAL A PAGAR: $${totalMonto.toFixed(2)}*`;
 
-      const telefono = "50374670712"; 
+      const telefono = "50379201948"; 
       const urlWhatsapp = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
       window.open(urlWhatsapp, '_blank');
     }
