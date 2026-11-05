@@ -841,11 +841,13 @@
       const fechaTexto = `${dia}/${mes}/${anio}`;
       const horaTexto = `${horas}:${minutos}`;
 
-      let correlativoActual = parseInt(localStorage.getItem('km_correlativo_num') || '1000') + 1;
+      // Iniciar correlativo en No. 0001 (formato de 4 dígitos)
+      let correlativoActual = parseInt(localStorage.getItem('km_correlativo_num') || '0') + 1;
       localStorage.setItem('km_correlativo_num', correlativoActual);
+      let correlativoFormateado = String(correlativoActual).padStart(4, '0');
 
       let mensaje = "*KMVEGETALES - NUEVO PEDIDO*\n" +
-                    "*Orden N°:* #" + correlativoActual + "\n" +
+                    "*Orden N°:* No. " + correlativoFormateado + "\n" +
                     "*Fecha:* " + fechaTexto + " " + horaTexto + "\n" +
                     "*Cliente:* " + nombre + "\n";
       
