@@ -831,45 +831,43 @@
         return;
       }
 
-      // Generar o recuperar el correlativo diario y fecha actual
-      let hoy = new Date();
-      let fechaFormateada = hoy.toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' });
-      let horaFormateada = hoy.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+      const hoy = new Date();
+      const dia = String(hoy.getDate()).padStart(2, '0');
+      const mes = String(hoy.getMonth() + 1).padStart(2, '0');
+      const anio = hoy.getFullYear();
+      const horas = String(hoy.getHours()).padStart(2, '0');
+      const minutos = String(hoy.getMinutes()).padStart(2, '0');
 
-      // Manejo del número correlativo en el navegador
-      let fechaActualKey = hoy.toISOString().slice(0, 10); // YYYY-MM-DD
-      let ultimoDiaGuardado = localStorage.getItem('km_fecha_pedido') || '';
-      let correlativoActual = parseInt(localStorage.getItem('km_correlativo') || '1000');
+      const fechaTexto = `${dia}/${mes}/${anio}`;
+      const horaTexto = `${horas}:${minutos}`;
 
-      if (ultimoDiaGuardado !== fechaActualKey) {
-        correlativoActual = 1001; // Reinicia a 1001 si es un nuevo día
-      } else {
-        correlativoActual += 1;
+      let correlativoActual = parseInt(localStorage.getItem('km_correlativo_num') || '1000') + 1;
+      localStorage.setItem('km_correlativo_num', correlativoActual);
+
+      let mensaje = "*KMVEGETALES - NUEVO PEDIDO*\n" +
+                    "*Orden N°:* #" + correlativoActual + "\n" +
+                    "*Fecha:* " + fechaTexto + " " + horaTexto + "\n" +
+                    "*Cliente:* " + nombre + "\n";
+      
+      if (direccion) {
+        mensaje += "*Dirección:* " + direccion + "\n";
       }
 
-      localStorage.setItem('km_fecha_pedido', fechaActualKey);
-      localStorage.setItem('km_correlativo', correlativoActual);
-
-      let mensaje = `*NUEVO PEDIDO - KMVEGETALES*\n`;
-      mensaje += `*Pedido #${correlativoActual}*\n`;
-      mensaje += `*Fecha:* ${fechaFormateada} - ${horaFormateada}\n`;
-      mensaje += `*Cliente:* ${nombre}\n`;
-      if (direccion) mensaje += `*Dirección:* ${direccion}\n`;
-      mensaje += `------------------------------------\n\n`;
-      mensaje += `*DETALLE DEL PEDIDO:*\n`;
+      mensaje += "------------------------------------\n\n" +
+                 "*DETALLE DEL PEDIDO:*\n";
 
       let totalMonto = 0;
       Object.values(carrito).forEach(item => {
         const subtotal = item.cantidad * item.precio;
         totalMonto += subtotal;
-        mensaje += `• *${item.nombre}*\n  ${item.cantidad} x ${item.unidad} ($${item.precio.toFixed(2)} c/u) = *$${subtotal.toFixed(2)}*\n`;
+        mensaje += "• *" + item.nombre + "*\n  " + item.cantidad + " x " + item.unidad + " ($" + item.precio.toFixed(2) + " c/u) = *$" + subtotal.toFixed(2) + "*\n";
       });
 
-      mensaje += `\n------------------------------------\n`;
-      mensaje += `*TOTAL A PAGAR: $${totalMonto.toFixed(2)}*`;
+      mensaje += "\n------------------------------------\n" +
+                 "*TOTAL A PAGAR: $" + totalMonto.toFixed(2) + "*";
 
       const telefono = "50374670712"; 
-      const urlWhatsapp = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+      const urlWhatsapp = "https://wa.me/" + telefono + "?text=" + encodeURIComponent(mensaje);
       window.open(urlWhatsapp, '_blank');
     }
 
