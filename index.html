@@ -44,7 +44,7 @@
       appearance: none;
     }
 
-    /* ESTILOS DE LOS BOTONES DE CATEGORÍA (VERDE LIMÓN SÓLIDO CON TEXTO NEGRO) */
+    /* ESTILOS DE LOS BOTONES DE CATEGORÍA */
     .btn-cat {
       cursor: pointer;
       font-weight: 800;
@@ -60,19 +60,19 @@
       transition: all 0.2s ease;
     }
     .btn-cat-active {
-      background-color: #bdef00; /* Verde limón sólido exacto */
-      color: #111827; /* Texto negro */
+      background-color: #bdef00;
+      color: #111827;
     }
     .btn-cat-active i {
-      color: #111827 !important; /* Icono negro */
+      color: #111827 !important;
     }
     .btn-cat-inactive {
-      background-color: #043829; /* Verde oscuro apagado */
+      background-color: #043829;
       color: #9ca3af;
       border-color: rgba(255,255,255,0.05);
     }
 
-    /* ESTILO DEL INTERRUPTOR SWITCH EXCLUSIVO PARA VISTA FOTOS / EXCEL */
+    /* INTERRUPTOR FOTOS / EXCEL */
     .switch-card {
       background-color: #043829;
       border: 1px solid rgba(255, 255, 255, 0.15);
@@ -108,7 +108,6 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.2);
     }
 
-    /* Estado ON (Fotos) */
     .switch-on .switch-body {
       background-color: #bdef00;
     }
@@ -125,7 +124,6 @@
       top: 6px;
     }
 
-    /* Estado OFF (Excel Rápido) */
     .switch-off .switch-body {
       background-color: #b91c1c;
     }
@@ -142,7 +140,7 @@
       top: 6px;
     }
 
-    /* Estilos de la Tabla tipo Excel Limpia */
+    /* ESTILOS DE LA TABLA EXCEL */
     .tabla-excel {
       border-collapse: collapse;
       width: 100%;
@@ -232,10 +230,7 @@
           <p class="text-emerald-100 text-[11px] sm:text-xs max-w-md">Selecciona las categorías y cambia el modo de visualización.</p>
         </div>
 
-        <!-- CONTENEDOR DE CONTROLES -->
         <div class="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-3 pt-2 border-t border-emerald-600/40">
-          
-          <!-- BOTONES DE CATEGORÍAS (VERDE LIMÓN SÓLIDO Y TEXTO NEGRO) -->
           <div class="flex flex-wrap gap-2">
             <button onclick="toggleFiltroCategoria('VERDURAS')" id="btn-cat-verduras" class="btn-cat btn-cat-active">
               <i class="fas fa-carrot text-xs"></i> Verduras
@@ -248,7 +243,6 @@
             </button>
           </div>
 
-          <!-- INTERRUPTOR SWITCH EXCLUSIVO PARA VISTA FOTOS / EXCEL -->
           <div class="flex justify-start md:justify-end">
             <div onclick="toggleModoVistaSwitch()" id="switch-modo-vista" class="switch-card switch-on">
               <div class="flex items-center gap-1.5 min-w-0 pr-3">
@@ -258,7 +252,6 @@
               <div class="switch-body switch-text"><div class="switch-handle"></div></div>
             </div>
           </div>
-
         </div>
       </div>
 
@@ -276,7 +269,6 @@
           <span id="cart-count-badge" class="bg-emerald-600 text-white font-bold text-xs px-2.5 py-0.5 rounded-full shadow-sm">0 productos</span>
         </div>
 
-        <!-- Lista del carrito -->
         <div id="lista-carrito-desktop" class="divide-y max-h-[40vh] overflow-y-auto pr-1 space-y-2">
           <p class="text-gray-400 text-xs text-center py-6">Tu carrito está vacío</p>
         </div>
@@ -534,7 +526,8 @@
                   </select>
                 </div>
 
-                <div class="pt-1 space-y-1.5">
+                <div class="pt-1 space-y-1">
+                  <label class="text-[9px] text-gray-400 font-semibold block">CANTIDAD:</label>
                   <div class="flex items-center justify-between">
                     <p id="precio-${p.id}" class="font-bold text-emerald-700 text-sm">$${presActual.precio.toFixed(2)}</p>
                     
@@ -543,13 +536,6 @@
                       <input type="number" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" class="w-12 h-6 text-center text-xs font-bold bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500">
                       <button onclick="cambiarCantidad('${p.id}', 1)" class="btn-qty-plus w-6 h-6 rounded-lg font-bold text-xs flex items-center justify-center">+</button>
                     </div>
-                  </div>
-
-                  <div class="flex justify-end gap-1 pt-1 border-t border-gray-100">
-                    <button onclick="cambiarCantidad('${p.id}', 10)" class="text-[9px] font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-1 py-0.5 rounded border border-emerald-200 transition">+10</button>
-                    <button onclick="cambiarCantidad('${p.id}', 25)" class="text-[9px] font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-1 py-0.5 rounded border border-emerald-200 transition">+25</button>
-                    <button onclick="cambiarCantidad('${p.id}', 50)" class="text-[9px] font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-1 py-0.5 rounded border border-emerald-200 transition">+50</button>
-                    <button onclick="cambiarCantidad('${p.id}', 100)" class="text-[9px] font-bold bg-emerald-600 text-white hover:bg-emerald-700 px-1.5 py-0.5 rounded transition shadow-sm">+100</button>
                   </div>
                 </div>
               </div>
