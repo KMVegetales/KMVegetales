@@ -854,9 +854,9 @@
         const subtotal = item.cantidad * item.precio;
         totalMonto += subtotal;
         htmlColIzquierda += `
-          <div style="margin-bottom: 15px; padding-bottom: 8px; border-bottom: 1px dotted #ccc; font-size: 9.5pt;">
+          <div class="item-linea">
             <strong>*${item.nombre}*</strong><br>
-            <span style="color: #222;">${item.cantidad} x ${item.unidad} ($${item.precio.toFixed(2)})</span> = <strong>*${subtotal.toFixed(2)}*</strong>
+            <span style="color: #111;">${item.cantidad} x ${item.unidad} ($${item.precio.toFixed(2)})</span> = <strong>*${subtotal.toFixed(2)}*</strong>
           </div>
         `;
       });
@@ -865,9 +865,9 @@
         const subtotal = item.cantidad * item.precio;
         totalMonto += subtotal;
         htmlColDerecha += `
-          <div style="margin-bottom: 15px; padding-bottom: 8px; border-bottom: 1px dotted #ccc; font-size: 9.5pt;">
+          <div class="item-linea">
             <strong>*${item.nombre}*</strong><br>
-            <span style="color: #222;">${item.cantidad} x ${item.unidad} ($${item.precio.toFixed(2)})</span> = <strong>*${subtotal.toFixed(2)}*</strong>
+            <span style="color: #111;">${item.cantidad} x ${item.unidad} ($${item.precio.toFixed(2)})</span> = <strong>*${subtotal.toFixed(2)}*</strong>
           </div>
         `;
       });
@@ -897,26 +897,34 @@
           <style>
             @page {
               size: letter portrait;
-              margin: 10mm;
+              margin: 0;
             }
             * { box-sizing: border-box; }
-            body {
+            html, body {
+              height: 100%;
+              margin: 0;
+              padding: 0;
+              background: #fff;
               font-family: 'Courier New', Courier, monospace;
               color: #000;
-              margin: 0;
-              padding: 15px;
-              font-size: 9.5pt;
-              line-height: 1.4;
-              background: #fff;
+              font-size: 10.5pt;
+            }
+            body {
+              display: flex;
+              flex-direction: column;
             }
             .ticket-container {
-              width: 100%;
-              margin: 0 auto;
+              height: 100vh;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              padding: 12mm 10mm;
+              box-sizing: border-box;
             }
             .header-ticket {
-              margin-bottom: 12px;
               border-bottom: 2px solid #000;
               padding-bottom: 6px;
+              flex-shrink: 0;
             }
             .flex-2-columnas {
               display: flex !important;
@@ -924,15 +932,27 @@
               width: 100% !important;
               gap: 30px !important;
               justify-content: space-between !important;
+              flex-grow: 1;
+              align-items: stretch;
+              padding: 6px 0;
             }
             .columna-50 {
               width: 48% !important;
               flex: 0 0 48% !important;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+            }
+            .item-linea {
+              padding-bottom: 4px;
+              border-bottom: 1px dotted #bbb;
+              font-size: 10.5pt;
+              margin-bottom: auto;
             }
             .footer-ticket {
-              margin-top: 15px;
               border-top: 2px solid #000;
-              padding-top: 8px;
+              padding-top: 6px;
+              flex-shrink: 0;
             }
             .acciones-flotantes {
               position: fixed;
@@ -962,11 +982,9 @@
               border: none;
               box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4);
             }
-            .btn-unico-envio:hover {
-              background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            }
             @media print {
               .acciones-flotantes { display: none !important; }
+              .ticket-container { height: 100vh; padding: 10mm; }
             }
           </style>
           <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -982,12 +1000,12 @@
 
           <div class="ticket-container" id="contenido-ticket">
             <div class="header-ticket">
-              <p style="font-size: 12pt; font-weight: bold; margin: 0 0 3px 0;">*KMVEGETALES - NUEVO PEDIDO*</p>
+              <p style="font-size: 12pt; font-weight: bold; margin: 0 0 2px 0;">*KMVEGETALES - NUEVO PEDIDO*</p>
               <p style="margin: 2px 0; font-size: 10pt;"><strong>*Orden N°:* No. ${correlativoFormateado}</strong></p>
               <p style="margin: 2px 0; font-size: 9.5pt;">*Fecha:* ${fechaTexto}</p>
               <p style="margin: 4px 0; font-size: 12pt;">*Cliente:* <strong style="font-size: 14pt;">${nombre.toUpperCase()}</strong></p>
               ${direccion ? `<p style="margin: 2px 0; font-size: 9.5pt;">*Dirección:* ${direccion}</p>` : ''}
-              <p style="margin: 8px 0 4px 0; font-weight: bold; font-size: 10pt;">*DETALLE DE PRODUCTOS:*</p>
+              <p style="margin: 6px 0 3px 0; font-weight: bold; font-size: 10pt;">*DETALLE DE PRODUCTOS:*</p>
             </div>
 
             <div class="flex-2-columnas">
@@ -1000,7 +1018,7 @@
             </div>
 
             <div class="footer-ticket">
-              <p style="font-size: 11.5pt; font-weight: bold; margin: 0;">*TOTAL A PAGAR: $${totalMonto.toFixed(2)}*</p>
+              <p style="font-size: 12pt; font-weight: bold; margin: 0;">*TOTAL A PAGAR: $${totalMonto.toFixed(2)}*</p>
             </div>
           </div>
 
@@ -1008,7 +1026,7 @@
             function ejecutarEnvioTotal() {
               const elemento = document.getElementById('contenido-ticket');
               const opciones = {
-                margin:       [5, 5, 5, 5],
+                margin:       [0, 0, 0, 0],
                 filename:     '${nombreArchivoPDF}',
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, useCORS: true },
