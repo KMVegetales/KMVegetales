@@ -192,7 +192,6 @@
       box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.2);
     }
 
-    /* ESTILOS DE IMPRESIÓN (HOJA CARTA MULTICOLUMNA) */
     @media print {
       @page {
         size: letter portrait;
@@ -362,7 +361,6 @@
     </div>
   </div>
 
-  <!-- PLANTILLA OCULTA PARA IMPRESIÓN DIRECTA DE HOJA CARTA -->
   <div id="seccion-impresion-carta" class="hidden"></div>
 
   <script>
@@ -923,7 +921,7 @@
       mensaje += "\n------------------------------------\n" +
                  "*TOTAL A PAGAR: $" + totalMonto.toFixed(2) + "*";
 
-      const telefono = "50374670712"; 
+      const telefono = "50379201948"; 
       const urlWhatsapp = "https://wa.me/" + telefono + "?text=" + encodeURIComponent(mensaje);
       window.open(urlWhatsapp, '_blank');
     }
