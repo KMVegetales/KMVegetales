@@ -932,7 +932,7 @@
         `;
       });
 
-      // CONSTRUIR EL MENSAJE DE WHATSAPP PARA LA VENTANA EMERGENTE
+      // CONSTRUIR EL MENSAJE DE WHATSAPP CON EL MISMO FORMATO DE LA IMPRESIÓN (INCLUYENDO FECHA Y HORA)
       let mensajeWp = "*KMVEGETALES - NUEVO PEDIDO*\n" +
                       "*Orden N°:* No. " + correlativoFormateado + "\n" +
                       "*Fecha:* " + fechaTexto + "\n" +
@@ -940,14 +940,15 @@
       if (direccion) {
         mensajeWp += "*Dirección:* " + direccion + "\n";
       }
-      mensajeWp += "------------------------------------\n\n*DETALLE:*\n";
+      mensajeWp += "------------------------------------\n\n*DETALLE DE PRODUCTOS:*\n\n";
+      
       itemsArr.forEach(item => {
         const subtotal = item.cantidad * item.precio;
-        mensajeWp += "• *" + item.nombre + "*\n  " + item.cantidad + " x " + item.unidad + " ($" + item.precio.toFixed(2) + ") = *$" + subtotal.toFixed(2) + "*\n";
+        mensajeWp += "*" + item.nombre + "*\n" + item.cantidad + " x " + item.unidad + " ($" + item.precio.toFixed(2) + ") = *$" + subtotal.toFixed(2) + "*\n\n";
       });
-      mensajeWp += "\n------------------------------------\n*TOTAL A PAGAR: $" + totalMonto.toFixed(2) + "*";
+      mensajeWp += "------------------------------------\n*TOTAL A PAGAR: $" + totalMonto.toFixed(2) + "*";
 
-      const telefono = "50374670712";
+      const telefono = "50379201948";
       const urlWhatsapp = "https://wa.me/" + telefono + "?text=" + encodeURIComponent(mensajeWp);
 
       const ventanaImpresion = window.open('', '_blank', 'width=900,height=700');
@@ -987,25 +988,44 @@
               border-top: 2px solid #000;
               padding-top: 8px;
             }
-            .no-print {
+            .acciones-flotantes {
               position: fixed;
-              bottom: 20px;
-              right: 20px;
+              top: 15px;
+              right: 15px;
               z-index: 9999;
+              display: flex;
+              gap: 10px;
+              font-family: 'Plus Jakarta Sans', sans-serif;
+            }
+            .btn-wsp-popup {
               background: #059669;
               color: white;
-              padding: 12px 20px;
-              border-radius: 50px;
-              font-family: sans-serif;
+              padding: 8px 16px;
+              border-radius: 10px;
               font-weight: bold;
               text-decoration: none;
-              box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+              box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+              font-size: 11pt;
               display: flex;
               align-items: center;
-              gap: 8px;
+              gap: 6px;
+            }
+            .btn-print-popup {
+              background: #374151;
+              color: white;
+              padding: 8px 16px;
+              border-radius: 10px;
+              font-weight: bold;
+              border: none;
+              cursor: pointer;
+              box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+              font-size: 11pt;
+              display: flex;
+              align-items: center;
+              gap: 6px;
             }
             @media print {
-              .no-print {
+              .acciones-flotantes {
                 display: none !important;
               }
             }
@@ -1013,9 +1033,14 @@
           <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         </head>
         <body>
-          <a href="${urlWhatsapp}" target="_blank" class="no-print">
-            <i class="fab fa-whatsapp text-xl"></i> Enviar por WhatsApp
-          </a>
+          <div class="acciones-flotantes">
+            <a href="${urlWhatsapp}" target="_blank" class="btn-wsp-popup">
+              <i class="fab fa-whatsapp"></i> Enviar por WhatsApp
+            </a>
+            <button onclick="window.print()" class="btn-print-popup">
+              <i class="fas fa-print"></i> Imprimir
+            </button>
+          </div>
 
           <div class="ticket-container">
             <div class="header-ticket">
@@ -1035,11 +1060,6 @@
               <p style="font-size: 12pt; font-weight: bold; margin: 0;">*TOTAL A PAGAR: $${totalMonto.toFixed(2)}*</p>
             </div>
           </div>
-          <script>
-            window.onload = function() {
-              window.print();
-            };
-          <\/script>
         </body>
         </html>
       `);
