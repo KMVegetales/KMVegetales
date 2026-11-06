@@ -865,13 +865,15 @@
       let totalMonto = 0;
 
       let mensajeWp = "*KMVEGETALES - NUEVO PEDIDO*\n" +
+                      "------------------------------------\n" +
                       "*Orden N°:* No. " + correlativoFormateado + "\n" +
                       "*Fecha:* " + fechaTexto + "\n" +
                       "*Cliente:* " + nombre.toUpperCase() + "\n";
       if (direccion) {
         mensajeWp += "*Dirección:* " + direccion + "\n";
       }
-      mensajeWp += "------------------------------------\n\n*DETALLE DE PRODUCTOS:*\n\n";
+      mensajeWp += "------------------------------------\n\n" +
+                   "*DETALLE DE PRODUCTOS:*\n\n";
 
       itemsArr.forEach(item => {
         const subtotal = item.cantidad * item.precio;
@@ -879,7 +881,8 @@
         mensajeWp += "*" + item.nombre + "*\n" + item.cantidad + " x " + item.unidad + " ($" + item.precio.toFixed(2) + ") = *$" + subtotal.toFixed(2) + "*\n\n";
       });
 
-      mensajeWp += "------------------------------------\n*TOTAL A PAGAR: $" + totalMonto.toFixed(2) + "*";
+      mensajeWp += "------------------------------------\n" +
+                   "*TOTAL A PAGAR: $" + totalMonto.toFixed(2) + "*";
 
       const telefono = "50379201948"; 
       const urlWhatsapp = "https://wa.me/" + telefono + "?text=" + encodeURIComponent(mensajeWp);
@@ -929,19 +932,22 @@
       });
 
       let mensajeWp = "*KMVEGETALES - NUEVO PEDIDO*\n" +
+                      "------------------------------------\n" +
                       "*Orden N°:* No. " + correlativoFormateado + "\n" +
                       "*Fecha:* " + fechaTexto + "\n" +
                       "*Cliente:* " + nombre.toUpperCase() + "\n";
       if (direccion) {
         mensajeWp += "*Dirección:* " + direccion + "\n";
       }
-      mensajeWp += "------------------------------------\n\n*DETALLE DE PRODUCTOS:*\n\n";
+      mensajeWp += "------------------------------------\n\n" +
+                   "*DETALLE DE PRODUCTOS:*\n\n";
       
       itemsArr.forEach(item => {
         const subtotal = item.cantidad * item.precio;
         mensajeWp += "*" + item.nombre + "*\n" + item.cantidad + " x " + item.unidad + " ($" + item.precio.toFixed(2) + ") = *$" + subtotal.toFixed(2) + "*\n\n";
       });
-      mensajeWp += "------------------------------------\n*TOTAL A PAGAR: $" + totalMonto.toFixed(2) + "*";
+      mensajeWp += "------------------------------------\n" +
+                   "*TOTAL A PAGAR: $" + totalMonto.toFixed(2) + "*";
 
       const telefono = "50374670712";
       const urlWhatsapp = "https://wa.me/" + telefono + "?text=" + encodeURIComponent(mensajeWp);
