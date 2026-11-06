@@ -181,10 +181,15 @@
             <h1 class="text-lg font-bold leading-tight">KMVegetales</h1>
           </div>
         </div>
-        <button onclick="toggleCarritoMovil()" class="md:hidden relative bg-emerald-700 hover:bg-emerald-600 active:scale-95 p-2.5 rounded-xl border border-emerald-600 transition shadow-md">
-          <i class="fas fa-shopping-cart text-lg"></i>
-          <span id="cart-count-mobile" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
-        </button>
+        <div class="flex items-center gap-2">
+          <button onclick="reiniciarCorrelativoManual()" class="bg-red-600 hover:bg-red-700 text-white text-[10px] font-bold px-2.5 py-1.5 rounded-lg shadow transition" title="Reiniciar orden a 1">
+            <i class="fas fa-sync-alt mr-1"></i> Reiniciar Orden a 1
+          </button>
+          <button onclick="toggleCarritoMovil()" class="md:hidden relative bg-emerald-700 hover:bg-emerald-600 active:scale-95 p-2.5 rounded-xl border border-emerald-600 transition shadow-md">
+            <i class="fas fa-shopping-cart text-lg"></i>
+            <span id="cart-count-mobile" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+          </button>
+        </div>
       </div>
 
       <div class="w-full md:w-96 relative">
@@ -305,6 +310,7 @@
 
   <script>
     const URL_GOOGLE_SHEETS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR5GQG7EYouJss52fNj0HhbLq-8kjTwDn4b7lA7AmDPS4xSpq8fYjC3zv8BmcU6xpdsGmWflf2AU85c/pub?output=csv";
+    const CORREO_DESTINO = "cflmesv007@gmail.com";
 
     let productos = [];
     let carrito = {};
@@ -677,6 +683,11 @@
       let cantidadActual = carrito[itemKey] ? carrito[itemKey].cantidad : 0;
       let nuevaCantidad = cantidadActual + cambio;
 
+      if (nuevaCantidad > 0 && Object.keys(carrito).length >= 30 && !carrito[itemKey]) {
+        alert("El límite máximo por orden es de 30 productos diferentes.");
+        return;
+      }
+
       actualizarCarritoPorKey(itemKey, prod, pres, nuevaCantidad);
 
       const cantInput = document.getElementById(`cant-${prodId}`);
@@ -695,6 +706,12 @@
       const itemKey = `${prod.id}_${pres.unidad}`;
 
       let nuevaCantidad = parseInt(valorTexto) || 0;
+
+      if (nuevaCantidad > 0 && Object.keys(carrito).length >= 30 && !carrito[itemKey]) {
+        alert("El límite máximo por orden es de 30 productos diferentes.");
+        return;
+      }
+
       actualizarCarritoPorKey(itemKey, prod, pres, nuevaCantidad);
 
       const subtotalElem = document.getElementById(`subtotal-${prodId}`);
@@ -779,13 +796,20 @@
       document.getElementById('total-precio-desktop').innerText = `$${totalMonto.toFixed(2)}`;
       document.getElementById('total-precio-mobile').innerText = `$${totalMonto.toFixed(2)}`;
 
-      document.getElementById('cart-count-badge').innerText = `${Object.keys(carrito).length} productos`;
+      document.getElementById('cart-count-badge').innerText = `${Object.keys(carrito).length}/30 productos`;
       document.getElementById('cart-count-mobile').innerText = Object.keys(carrito).length;
     }
 
     function toggleCarritoMovil() {
       const modal = document.getElementById('modal-carrito-movil');
       modal.classList.toggle('hidden');
+    }
+
+    function reiniciarCorrelativoManual() {
+      if (confirm("¿Deseas reiniciar el número de orden para que el siguiente pedido sea el No. 1?")) {
+        localStorage.setItem('km_correlativo_num', '0');
+        alert("¡Listo! El próximo pedido iniciará en el número 1.");
+      }
     }
 
     function obtenerDatosPedido() {
@@ -803,9 +827,8 @@
       const fechaTexto = `${dia}/${mes}/${anio} ${horas}:${minutos}`;
       const fechaNombreArchivo = `${dia}-${mes}-${anio}`;
       
-      // Forzado estricto para iniciar desde 1 en adelante (reinicia si no existe o si supera valores viejos)
       let ultimoNum = parseInt(localStorage.getItem('km_correlativo_num') || '0');
-      if (ultimoNum < 0 || ultimoNum > 9998) {
+      if (isNaN(ultimoNum) || ultimoNum < 0 || ultimoNum > 9998) {
         ultimoNum = 0;
       }
       let correlativoActual = ultimoNum + 1;
@@ -841,14 +864,30 @@
       }
 
       const itemsArr = Object.values(carrito);
-      let htmlItemsPrint = '';
+      
+      // Separación estricta en 2 columnas: Máximo 15 en Columna 1 y el resto (hasta 15 más) en Columna 2
+      const columnaIzquierda = itemsArr.slice(0, 15);
+      const columnaDerecha = itemsArr.slice(15, 30);
+
+      let htmlColIzquierda = '';
+      let htmlColDerecha = '';
       let totalMonto = 0;
 
-      itemsArr.forEach(item => {
+      columnaIzquierda.forEach(item => {
         const subtotal = item.cantidad * item.precio;
         totalMonto += subtotal;
+        htmlColIzquierda += `
+          <div style="break-inside: avoid; margin-bottom: 5px; padding-bottom: 3px; border-bottom: 1px dotted #999; font-size: 8pt;">
+            <strong>*${item.nombre}*</strong><br>
+            <span style="color: #111;">${item.cantidad} x ${item.unidad} ($${item.precio.toFixed(2)})</span> = <strong style="color: #000;">*${subtotal.toFixed(2)}*</strong>
+          </div>
+        `;
+      });
 
-        htmlItemsPrint += `
+      columnaDerecha.forEach(item => {
+        const subtotal = item.cantidad * item.precio;
+        totalMonto += subtotal;
+        htmlColDerecha += `
           <div style="break-inside: avoid; margin-bottom: 5px; padding-bottom: 3px; border-bottom: 1px dotted #999; font-size: 8pt;">
             <strong>*${item.nombre}*</strong><br>
             <span style="color: #111;">${item.cantidad} x ${item.unidad} ($${item.precio.toFixed(2)})</span> = <strong style="color: #000;">*${subtotal.toFixed(2)}*</strong>
@@ -865,6 +904,10 @@
       const textoWp = `Hola, adjunto el archivo PDF del Pedido No. ${correlativoFormateado} del cliente ${nombre.toUpperCase()} del ${fechaTexto}.`;
       const urlWhatsapp1 = `https://wa.me/${telefono1}?text=` + encodeURIComponent(textoWp);
       const urlWhatsapp2 = `https://wa.me/${telefono2}?text=` + encodeURIComponent(textoWp);
+      
+      const asuntoCorreo = `Nuevo Pedido No. ${correlativoFormateado} - ${nombre.toUpperCase()}`;
+      const cuerpoCorreo = `Hola,\n\nAdjunto la orden del cliente ${nombre.toUpperCase()} generada el ${fechaTexto}.\n\nTotal a Pagar: $${totalMonto.toFixed(2)}\n\nSaludos.`;
+      const urlCorreo = `mailto:${CORREO_DESTINO}?subject=` + encodeURIComponent(asuntoCorreo) + `&body=` + encodeURIComponent(cuerpoCorreo);
 
       const ventanaImpresion = window.open('', '_blank', 'width=900,height=700');
       ventanaImpresion.document.write(`
@@ -890,15 +933,24 @@
             }
             .ticket-container {
               width: 100%;
+              max-width: 95%;
+              margin: 0 auto;
+              transform: scale(0.75);
+              transform-origin: top center;
             }
             .header-ticket {
               margin-bottom: 6px;
               border-bottom: 2px solid #000;
               padding-bottom: 4px;
             }
-            .grid-columnas {
-              column-count: 3;
-              column-gap: 12px;
+            .contenedor-columnas {
+              display: flex;
+              gap: 20px;
+              justify-content: center;
+            }
+            .columna-pedidos {
+              flex: 1;
+              width: 50%;
             }
             .footer-ticket {
               margin-top: 6px;
@@ -916,6 +968,20 @@
             }
             .btn-wsp-popup {
               background: #059669;
+              color: white;
+              padding: 10px 18px;
+              border-radius: 10px;
+              font-weight: bold;
+              text-decoration: none;
+              box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+              font-size: 11pt;
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              cursor: pointer;
+            }
+            .btn-mail-popup {
+              background: #2563eb;
               color: white;
               padding: 10px 18px;
               border-radius: 10px;
@@ -946,14 +1012,17 @@
               .acciones-flotantes {
                 display: none !important;
               }
+              .ticket-container {
+                transform: scale(0.75);
+              }
             }
           </style>
           <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         </head>
         <body>
           <div class="acciones-flotantes">
-            <button onclick="descargarPDFYAbrirWsp()" class="btn-wsp-popup">
-              <i class="fab fa-whatsapp text-lg"></i> Descargar PDF y WhatsApp
+            <button onclick="descargarPDFYEnviarTodo()" class="btn-wsp-popup">
+              <i class="fab fa-whatsapp text-lg"></i> PDF + WhatsApps + Correo
             </button>
             <button onclick="window.print()" class="btn-print-popup">
               <i class="fas fa-print"></i> Imprimir Hoja
@@ -970,8 +1039,13 @@
               <p style="margin: 4px 0 0 0; font-weight: bold; font-size: 9pt;">*DETALLE DE PRODUCTOS:*</p>
             </div>
 
-            <div class="grid-columnas">
-              ${htmlItemsPrint}
+            <div class="contenedor-columnas">
+              <div class="columna-pedidos">
+                ${htmlColIzquierda}
+              </div>
+              <div class="columna-pedidos">
+                ${htmlColDerecha}
+              </div>
             </div>
 
             <div class="footer-ticket">
@@ -980,7 +1054,7 @@
           </div>
 
           <script>
-            function descargarPDFYAbrirWsp() {
+            function descargarPDFYEnviarTodo() {
               const elemento = document.getElementById('contenido-ticket');
               const opciones = {
                 margin:       [3, 3, 3, 3],
@@ -993,10 +1067,11 @@
               html2pdf().from(elemento).set(opciones).save().then(function() {
                 window.open('${urlWhatsapp1}', '_blank');
                 window.open('${urlWhatsapp2}', '_blank');
+                window.open('${urlCorreo}', '_blank');
               });
             }
 
-            ${autoDescargarPDF ? 'window.onload = function() { setTimeout(descargarPDFYAbrirWsp, 500); };' : ''}
+            ${autoDescargarPDF ? 'window.onload = function() { setTimeout(descargarPDFYEnviarTodo, 500); };' : ''}
           <\/script>
         </body>
         </html>
