@@ -117,36 +117,16 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.2);
     }
 
-    .switch-on .switch-body {
-      background-color: #bdef00;
-    }
-    .switch-on .switch-handle {
-      transform: translateX(28px);
-    }
+    .switch-on .switch-body { background-color: #bdef00; }
+    .switch-on .switch-handle { transform: translateX(28px); }
     .switch-on .switch-text::before {
-      content: "ON";
-      color: #111827;
-      font-weight: 800;
-      font-size: 9px;
-      position: absolute;
-      left: 7px;
-      top: 6px;
+      content: "ON"; color: #111827; font-weight: 800; font-size: 9px; position: absolute; left: 7px; top: 6px;
     }
 
-    .switch-off .switch-body {
-      background-color: #b91c1c;
-    }
-    .switch-off .switch-handle {
-      transform: translateX(4px);
-    }
+    .switch-off .switch-body { background-color: #b91c1c; }
+    .switch-off .switch-handle { transform: translateX(4px); }
     .switch-off .switch-text::after {
-      content: "OFF";
-      color: #ffffff;
-      font-weight: 800;
-      font-size: 9px;
-      position: absolute;
-      right: 6px;
-      top: 6px;
+      content: "OFF"; color: #ffffff; font-weight: 800; font-size: 9px; position: absolute; right: 6px; top: 6px;
     }
 
     .tabla-excel {
@@ -172,9 +152,7 @@
       padding: 8px 12px;
       font-size: 12px;
     }
-    .tabla-excel tr:hover {
-      background-color: #f0fdf4;
-    }
+    .tabla-excel tr:hover { background-color: #f0fdf4; }
     .input-excel {
       width: 80px;
       text-align: center;
@@ -187,10 +165,7 @@
       color: #111827;
     }
     .input-excel:focus {
-      outline: none;
-      border-color: #059669;
-      background-color: #ffffff;
-      box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.2);
+      outline: none; border-color: #059669; background-color: #ffffff; box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.2);
     }
   </style>
 </head>
@@ -286,9 +261,12 @@
             <input type="text" id="input-direccion" placeholder="Dirección exacta o referencia" class="w-full bg-gray-50 border border-gray-200 p-2.5 rounded-xl text-xs focus:outline-none focus:border-emerald-500 transition">
           </div>
 
-          <div class="grid grid-cols-1 gap-2 pt-1">
-            <button onclick="imprimirPedidoCarta()" class="btn-whatsapp w-full text-white font-bold py-3 rounded-xl shadow-lg flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
-              <i class="fas fa-file-pdf text-lg"></i> Generar Orden en PDF
+          <div class="grid grid-cols-1 gap-2">
+            <button onclick="generarYEnviarPDFWhatsApp()" class="btn-whatsapp w-full text-white font-bold py-3 rounded-xl shadow-lg flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
+              <i class="fab fa-whatsapp text-lg"></i> Enviar PDF por WhatsApp
+            </button>
+            <button onclick="generarOrdenVistaPrevia()" class="btn-print w-full text-white font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
+              <i class="fas fa-print text-sm"></i> Generar Orden / Imprimir
             </button>
           </div>
         </div>
@@ -315,8 +293,11 @@
         </div>
         <input type="text" id="input-nombre-m" placeholder="Nombre de tu negocio o cliente" class="w-full bg-gray-50 border border-gray-200 p-2.5 rounded-xl text-xs focus:outline-none focus:border-emerald-500 transition">
         <input type="text" id="input-direccion-m" placeholder="Dirección / Referencia de entrega" class="w-full bg-gray-50 border border-gray-200 p-2.5 rounded-xl text-xs focus:outline-none focus:border-emerald-500 transition">
-        <button onclick="imprimirPedidoCarta()" class="btn-whatsapp w-full text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
-          <i class="fas fa-file-pdf text-lg"></i> Generar Orden en PDF
+        <button onclick="generarYEnviarPDFWhatsApp()" class="btn-whatsapp w-full text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
+          <i class="fab fa-whatsapp text-lg"></i> Enviar PDF por WhatsApp
+        </button>
+        <button onclick="generarOrdenVistaPrevia()" class="btn-print w-full text-white font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
+          <i class="fas fa-print text-sm"></i> Generar Orden / Imprimir
         </button>
       </div>
     </div>
@@ -656,38 +637,15 @@
 
     function intentarFormatosAlternativos(imgElement, nombreProducto) {
       if (!imgElement.dataset.intento) imgElement.dataset.intento = '1';
-
       const intentos = parseInt(imgElement.dataset.intento);
       const nombreCod = encodeURIComponent(nombreProducto);
 
       switch (intentos) {
-        case 1:
-          imgElement.src = `${nombreCod}.jpg`;
-          imgElement.dataset.intento = '2';
-          break;
-        case 2:
-          imgElement.src = `${nombreCod}.jpeg`;
-          imgElement.dataset.intento = '3';
-          break;
-        case 3:
-          imgElement.src = `${nombreCod}.PNG`;
-          imgElement.dataset.intento = '4';
-          break;
-        case 4:
-          imgElement.src = `${nombreCod}.JPG`;
-          imgElement.dataset.intento = '5';
-          break;
-        case 5:
-          imgElement.src = `${nombreCod}.JPEG`;
-          imgElement.dataset.intento = '6';
-          break;
-        default:
-          imgElement.src = 'logo.png';
-          imgElement.onerror = function() {
-            this.src = 'logo.jpg';
-            this.onerror = null;
-          };
-          break;
+        case 1: imgElement.src = `${nombreCod}.jpg`; imgElement.dataset.intento = '2'; break;
+        case 2: imgElement.src = `${nombreCod}.jpeg`; imgElement.dataset.intento = '3'; break;
+        case 3: imgElement.src = `${nombreCod}.PNG`; imgElement.dataset.intento = '4'; break;
+        case 4: imgElement.src = `${nombreCod}.JPG`; imgElement.dataset.intento = '5'; break;
+        default: imgElement.src = 'logo.png'; imgElement.onerror = null; break;
       }
     }
 
@@ -702,11 +660,12 @@
       const itemKey = `${prod.id}_${pres.unidad}`;
       const cantInput = document.getElementById(`cant-${prodId}`);
       const cant = carrito[itemKey] ? carrito[itemKey].cantidad : 0;
-      
       if (cantInput) cantInput.value = cant;
 
       const subtotalElem = document.getElementById(`subtotal-${prodId}`);
       if (subtotalElem) subtotalElem.innerText = `$${(cant * pres.precio).toFixed(2)}`;
+
+      actualizarInterfazCarrito();
     }
 
     function cambiarCantidad(prodId, cambio) {
@@ -843,6 +802,7 @@
 
       const fechaTexto = `${dia}/${mes}/${anio} ${horas}:${minutos}`;
       const fechaNombreArchivo = `${dia}-${mes}-${anio}`;
+      
       let correlativoActual = parseInt(localStorage.getItem('km_correlativo_num') || '0') + 1;
       localStorage.setItem('km_correlativo_num', correlativoActual);
       let correlativoFormateado = String(correlativoActual).padStart(4, '0');
@@ -850,7 +810,20 @@
       return { nombre, direccion, fechaTexto, fechaNombreArchivo, correlativoFormateado };
     }
 
-    function imprimirPedidoCarta() {
+    function generarYEnviarPDFWhatsApp() {
+      if (Object.keys(carrito).length === 0) {
+        alert("Tu carrito está vacío. Agrega productos para realizar un pedido.");
+        return;
+      }
+      const { nombre } = obtenerDatosPedido();
+      if (!nombre) {
+        alert("Por favor ingresa el nombre de tu negocio o cliente.");
+        return;
+      }
+      generarOrdenVistaPrevia(true);
+    }
+
+    function generarOrdenVistaPrevia(autoDescargarPDF = false) {
       if (Object.keys(carrito).length === 0) {
         alert("Tu carrito está vacío. Agrega productos para generar la orden.");
         return;
@@ -871,7 +844,7 @@
         totalMonto += subtotal;
 
         htmlItemsPrint += `
-          <div style="break-inside: avoid; margin-bottom: 7px; padding-bottom: 5px; border-bottom: 1px dotted #999; font-size: 10pt;">
+          <div style="break-inside: avoid; margin-bottom: 5px; padding-bottom: 3px; border-bottom: 1px dotted #999; font-size: 8pt;">
             <strong>*${item.nombre}*</strong><br>
             <span style="color: #111;">${item.cantidad} x ${item.unidad} ($${item.precio.toFixed(2)})</span> = <strong style="color: #000;">*${subtotal.toFixed(2)}*</strong>
           </div>
@@ -880,9 +853,13 @@
 
       const nombreLimpio = nombre.replace(/\s+/g, '_').toUpperCase();
       const nombreArchivoPDF = `Pedido_No_${correlativoFormateado}_${nombreLimpio}_${fechaNombreArchivo}.pdf`;
-      const telefono = "50374670712";
+      
+      const telefono1 = "50374670712";
+      const telefono2 = "50377225818";
+      
       const textoWp = `Hola, adjunto el archivo PDF del Pedido No. ${correlativoFormateado} del cliente ${nombre.toUpperCase()} del ${fechaTexto}.`;
-      const urlWhatsapp = `https://wa.me/${telefono}?text=` + encodeURIComponent(textoWp);
+      const urlWhatsapp1 = `https://wa.me/${telefono1}?text=` + encodeURIComponent(textoWp);
+      const urlWhatsapp2 = `https://wa.me/${telefono2}?text=` + encodeURIComponent(textoWp);
 
       const ventanaImpresion = window.open('', '_blank', 'width=900,height=700');
       ventanaImpresion.document.write(`
@@ -895,33 +872,33 @@
           <style>
             @page {
               size: letter portrait;
-              margin: 10mm;
+              margin: 6mm;
             }
             body {
               font-family: 'Courier New', Courier, monospace;
               color: #000;
               margin: 0;
-              padding: 15px;
-              font-size: 10pt;
-              line-height: 1.35;
+              padding: 5px;
+              font-size: 8pt;
+              line-height: 1.15;
               background: #fff;
             }
             .ticket-container {
               width: 100%;
             }
             .header-ticket {
-              margin-bottom: 12px;
+              margin-bottom: 6px;
               border-bottom: 2px solid #000;
-              padding-bottom: 8px;
+              padding-bottom: 4px;
             }
             .grid-columnas {
               column-count: 3;
-              column-gap: 18px;
+              column-gap: 12px;
             }
             .footer-ticket {
-              margin-top: 12px;
+              margin-top: 6px;
               border-top: 2px solid #000;
-              padding-top: 8px;
+              padding-top: 4px;
             }
             .acciones-flotantes {
               position: fixed;
@@ -971,7 +948,7 @@
         <body>
           <div class="acciones-flotantes">
             <button onclick="descargarPDFYAbrirWsp()" class="btn-wsp-popup">
-              <i class="fab fa-whatsapp text-lg"></i> Enviar PDF por WhatsApp
+              <i class="fab fa-whatsapp text-lg"></i> Descargar PDF y WhatsApp
             </button>
             <button onclick="window.print()" class="btn-print-popup">
               <i class="fas fa-print"></i> Imprimir Hoja
@@ -980,12 +957,12 @@
 
           <div class="ticket-container" id="contenido-ticket">
             <div class="header-ticket">
-              <p style="font-size: 13pt; font-weight: bold; margin: 0 0 4px 0;">*KMVEGETALES - NUEVO PEDIDO*</p>
-              <p style="margin: 2px 0; font-size: 10.5pt;"><strong>*Orden N°:* No. ${correlativoFormateado}</strong></p>
-              <p style="margin: 2px 0; font-size: 10pt;">*Fecha:* ${fechaTexto}</p>
-              <p style="margin: 2px 0; font-size: 10pt;">*Cliente:* ${nombre.toUpperCase()}</p>
-              ${direccion ? `<p style="margin: 2px 0; font-size: 10pt;">*Dirección:* ${direccion}</p>` : ''}
-              <p style="margin: 6px 0 0 0; font-weight: bold; font-size: 10.5pt;">*DETALLE DE PRODUCTOS:*</p>
+              <p style="font-size: 11pt; font-weight: bold; margin: 0 0 2px 0;">*KMVEGETALES - NUEVO PEDIDO*</p>
+              <p style="margin: 2px 0; font-size: 9pt;"><strong>*Orden N°:* No. ${correlativoFormateado}</strong></p>
+              <p style="margin: 2px 0; font-size: 8.5pt;">*Fecha:* ${fechaTexto}</p>
+              <p style="margin: 3px 0; font-size: 11pt;">*Cliente:* <strong style="font-size: 13.5pt;">${nombre.toUpperCase()}</strong></p>
+              ${direccion ? `<p style="margin: 2px 0; font-size: 8.5pt;">*Dirección:* ${direccion}</p>` : ''}
+              <p style="margin: 4px 0 0 0; font-weight: bold; font-size: 9pt;">*DETALLE DE PRODUCTOS:*</p>
             </div>
 
             <div class="grid-columnas">
@@ -993,7 +970,7 @@
             </div>
 
             <div class="footer-ticket">
-              <p style="font-size: 12pt; font-weight: bold; margin: 0;">*TOTAL A PAGAR: $${totalMonto.toFixed(2)}*</p>
+              <p style="font-size: 10pt; font-weight: bold; margin: 0;">*TOTAL A PAGAR: $${totalMonto.toFixed(2)}*</p>
             </div>
           </div>
 
@@ -1001,7 +978,7 @@
             function descargarPDFYAbrirWsp() {
               const elemento = document.getElementById('contenido-ticket');
               const opciones = {
-                margin:       10,
+                margin:       [3, 3, 3, 3],
                 filename:     '${nombreArchivoPDF}',
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, useCORS: true },
@@ -1009,9 +986,12 @@
               };
 
               html2pdf().from(elemento).set(opciones).save().then(function() {
-                window.open('${urlWhatsapp}', '_blank');
+                window.open('${urlWhatsapp1}', '_blank');
+                window.open('${urlWhatsapp2}', '_blank');
               });
             }
+
+            ${autoDescargarPDF ? 'window.onload = function() { setTimeout(descargarPDFYAbrirWsp, 500); };' : ''}
           <\/script>
         </body>
         </html>
