@@ -843,7 +843,7 @@
       const { nombre, direccion, fechaTexto, fechaNombreArchivo, correlativoFormateado } = obtenerDatosPedido();
       const itemsArr = Object.values(carrito);
       
-      // FORZADO ESTRÍCTO A 2 COLUMNAS (Máximo 15 en izquierda y resto a derecha)
+      // COLUMNA IZQUIERDA (1 a 15) Y COLUMNA DERECHA (16 a 30)
       const columnaIzquierda = itemsArr.slice(0, 15);
       const columnaDerecha = itemsArr.slice(15, 30);
 
@@ -880,8 +880,8 @@
       const telefono2 = "50377225818";
       
       const textoWp = `Hola, adjunto el archivo PDF del Pedido No. ${correlativoFormateado} del cliente ${nombre.toUpperCase()} del ${fechaTexto}.`;
-      const urlWhatsapp1 = `https://wa.me/${telefono1}?text=` + encodeURIComponent(textoWp);
-      const urlWhatsapp2 = `https://wa.me/${telefono2}?text=` + encodeURIComponent(textoWp);
+      const urlWhatsapp1 = `https://api.whatsapp.com/send?phone=${telefono1}&text=` + encodeURIComponent(textoWp);
+      const urlWhatsapp2 = `https://api.whatsapp.com/send?phone=${telefono2}&text=` + encodeURIComponent(textoWp);
       
       const asuntoCorreo = `Nuevo Pedido No. ${correlativoFormateado} - ${nombre.toUpperCase()}`;
       const cuerpoCorreo = `Hola,\n\nAdjunto la orden del cliente ${nombre.toUpperCase()} generada el ${fechaTexto}.\n\nTotal a Pagar: $${totalMonto.toFixed(2)}\n\nSaludos.`;
@@ -919,7 +919,6 @@
               border-bottom: 2px solid #000;
               padding-bottom: 4px;
             }
-            /* ESTRUCTURA DE 2 COLUMNAS FLEXIBLES OBLIGATORIAS */
             .flex-2-columnas {
               display: flex !important;
               flex-direction: row !important;
@@ -938,59 +937,59 @@
             }
             .acciones-flotantes {
               position: fixed;
-              top: 15px;
-              right: 15px;
+              top: 10px;
+              left: 10px;
+              right: 10px;
               z-index: 9999;
               display: flex;
-              gap: 10px;
+              flex-wrap: wrap;
+              gap: 8px;
+              justify-content: center;
               font-family: 'Plus Jakarta Sans', sans-serif;
+              background: rgba(255, 255, 255, 0.95);
+              padding: 10px;
+              border-radius: 12px;
+              box-shadow: 0 4px 15px rgba(0,0,0,0.15);
             }
-            .btn-wsp-popup {
-              background: #059669;
-              color: white;
-              padding: 10px 18px;
-              border-radius: 10px;
+            .btn-accion {
+              padding: 10px 14px;
+              border-radius: 8px;
               font-weight: bold;
               text-decoration: none;
-              box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-              font-size: 11pt;
-              display: flex;
+              font-size: 9.5pt;
+              display: inline-flex;
               align-items: center;
-              gap: 8px;
+              gap: 6px;
               cursor: pointer;
               border: none;
-            }
-            .btn-print-popup {
-              background: #374151;
               color: white;
-              padding: 10px 18px;
-              border-radius: 10px;
-              font-weight: bold;
-              border: none;
-              cursor: pointer;
-              box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-              font-size: 11pt;
-              display: flex;
-              align-items: center;
-              gap: 8px;
             }
+            .btn-pdf { background: #374151; }
+            .btn-wsp { background: #059669; }
+            .btn-mail { background: #2563eb; }
             @media print {
-              .acciones-flotantes {
-                display: none !important;
-              }
+              .acciones-flotantes { display: none !important; }
             }
           </style>
           <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         </head>
         <body>
           <div class="acciones-flotantes">
-            <button onclick="descargarPDFYEnviarTodo()" class="btn-wsp-popup">
-              <i class="fab fa-whatsapp text-lg"></i> PDF + WhatsApps + Correo
+            <button onclick="descargarPDFDirecto()" class="btn-accion btn-pdf">
+              <i class="fas fa-download"></i> 1. Descargar PDF
             </button>
-            <button onclick="window.print()" class="btn-print-popup">
-              <i class="fas fa-print"></i> Imprimir Hoja
+            <button onclick="abrirWhatsApp1()" class="btn-accion btn-wsp">
+              <i class="fab fa-whatsapp"></i> 2. Enviar a Wsp 1
+            </button>
+            <button onclick="abrirWhatsApp2()" class="btn-accion btn-wsp">
+              <i class="fab fa-whatsapp"></i> 3. Enviar a Wsp 2
+            </button>
+            <button onclick="abrirCorreo()" class="btn-accion btn-mail">
+              <i class="fas fa-envelope"></i> 4. Enviar a Correo
             </button>
           </div>
+
+          <div style="height: 55px;"></div>
 
           <div class="ticket-container" id="contenido-ticket">
             <div class="header-ticket">
@@ -1017,7 +1016,7 @@
           </div>
 
           <script>
-            function descargarPDFYEnviarTodo() {
+            function descargarPDFDirecto() {
               const elemento = document.getElementById('contenido-ticket');
               const opciones = {
                 margin:       [4, 4, 4, 4],
@@ -1026,15 +1025,22 @@
                 html2canvas:  { scale: 2, useCORS: true },
                 jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' }
               };
-
-              html2pdf().from(elemento).set(opciones).save().then(function() {
-                window.open('${urlWhatsapp1}', '_blank');
-                window.open('${urlWhatsapp2}', '_blank');
-                window.open('${urlCorreo}', '_blank');
-              });
+              html2pdf().from(elemento).set(opciones).save();
             }
 
-            ${autoDescargarPDF ? 'window.onload = function() { setTimeout(descargarPDFYEnviarTodo, 500); };' : ''}
+            function abrirWhatsApp1() {
+              window.open('${urlWhatsapp1}', '_blank');
+            }
+
+            function abrirWhatsApp2() {
+              window.open('${urlWhatsapp2}', '_blank');
+            }
+
+            function abrirCorreo() {
+              window.open('${urlCorreo}', '_blank');
+            }
+
+            ${autoDescargarPDF ? 'window.onload = function() { setTimeout(descargarPDFDirecto, 500); };' : ''}
           <\/script>
         </body>
         </html>
