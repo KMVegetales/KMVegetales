@@ -192,37 +192,36 @@
       box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.2);
     }
 
+    /* ESTILOS DE IMPRESIÓN EN UNA SOLA HOJA CARTA VERTICAL */
     @media print {
-      @page {
-        size: letter portrait;
-        margin: 12mm;
-      }
       body * {
-        visibility: hidden;
+        visibility: hidden !important;
       }
       #seccion-impresion-carta, #seccion-impresion-carta * {
-        visibility: visible;
+        visibility: visible !important;
       }
       #seccion-impresion-carta {
+        display: block !important;
         position: absolute;
         left: 0;
         top: 0;
         width: 100%;
         color: #000;
-        font-family: monospace;
-        font-size: 10pt;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 8.5pt;
+        line-height: 1.2;
+      }
+      @page {
+        size: letter portrait;
+        margin: 6mm;
       }
       .columna-items-print {
-        column-count: 2;
-        column-gap: 20px;
-      }
-      .columna-items-print.tres-cols {
         column-count: 3;
-        column-gap: 15px;
+        column-gap: 12px;
       }
       .item-print-block {
         break-inside: avoid;
-        margin-bottom: 6px;
+        margin-bottom: 3px;
       }
     }
   </style>
@@ -921,7 +920,7 @@
       mensaje += "\n------------------------------------\n" +
                  "*TOTAL A PAGAR: $" + totalMonto.toFixed(2) + "*";
 
-      const telefono = "50379201948"; 
+      const telefono = "50374670712"; 
       const urlWhatsapp = "https://wa.me/" + telefono + "?text=" + encodeURIComponent(mensaje);
       window.open(urlWhatsapp, '_blank');
     }
@@ -953,12 +952,6 @@
       let correlativoFormateado = String(correlativoActual).padStart(4, '0');
 
       const itemsArr = Object.values(carrito);
-      const totalItems = itemsArr.length;
-      let claseColumnas = "columna-items-print";
-      if (totalItems > 16) {
-        claseColumnas = "columna-items-print tres-cols";
-      }
-
       let htmlItemsPrint = '';
       let totalMonto = 0;
 
@@ -967,31 +960,31 @@
         totalMonto += subtotal;
 
         htmlItemsPrint += `
-          <div class="item-print-block">
+          <div class="item-print-block" style="font-size: 8.5pt; margin-bottom: 3px;">
             <strong>*${item.nombre}*</strong><br>
-            ${item.cantidad} x ${item.unidad} ($${item.precio.toFixed(2)} c/u) = *$${subtotal.toFixed(2)}*
+            ${item.cantidad} x ${item.unidad} ($${item.precio.toFixed(2)}) = *$${subtotal.toFixed(2)}*
           </div>
         `;
       });
 
       const contenedorPrint = document.getElementById('seccion-impresion-carta');
       contenedorPrint.innerHTML = `
-        <div style="padding: 10px;">
-          <div style="margin-bottom: 12px; border-bottom: 1px dashed #000; padding-bottom: 8px;">
-            <p style="font-size: 14pt; font-weight: bold; margin: 0 0 4px 0;">*KMVEGETALES - NUEVO PEDIDO*</p>
-            <p style="margin: 2px 0;"><strong>*Orden N°:* No. ${correlativoFormateado}</strong></p>
-            <p style="margin: 2px 0;">*Fecha:* ${fechaTexto}</p>
-            <p style="margin: 2px 0;">*Cliente:* ${nombre.toUpperCase()}</p>
-            ${direccion ? `<p style="margin: 2px 0;">*Dirección:* ${direccion}</p>` : ''}
-            <p style="margin: 6px 0 0 0; font-weight: bold;">*DETALLE DEL PEDIDO:*</p>
+        <div style="padding: 5px; width: 100%;">
+          <div style="margin-bottom: 8px; border-bottom: 1px solid #000; padding-bottom: 5px;">
+            <p style="font-size: 11pt; font-weight: bold; margin: 0 0 2px 0;">*KMVEGETALES - NUEVO PEDIDO*</p>
+            <p style="margin: 1px 0; font-size: 9pt;"><strong>*Orden N°:* No. ${correlativoFormateado}</strong></p>
+            <p style="margin: 1px 0; font-size: 9pt;">*Fecha:* ${fechaTexto}</p>
+            <p style="margin: 1px 0; font-size: 9pt;">*Cliente:* ${nombre.toUpperCase()}</p>
+            ${direccion ? `<p style="margin: 1px 0; font-size: 9pt;">*Dirección:* ${direccion}</p>` : ''}
+            <p style="margin: 4px 0 0 0; font-weight: bold; font-size: 9pt;">*DETALLE:*</p>
           </div>
 
-          <div class="${claseColumnas}">
+          <div class="columna-items-print" style="column-count: 3; column-gap: 12px;">
             ${htmlItemsPrint}
           </div>
 
-          <div style="margin-top: 15px; border-top: 1px dashed #000; padding-top: 8px;">
-            <p style="font-size: 12pt; font-weight: bold; margin: 0;">*TOTAL A PAGAR: $${totalMonto.toFixed(2)}*</p>
+          <div style="margin-top: 8px; border-top: 1px solid #000; padding-top: 5px;">
+            <p style="font-size: 10pt; font-weight: bold; margin: 0;">*TOTAL A PAGAR: $${totalMonto.toFixed(2)}*</p>
           </div>
         </div>
       `;
