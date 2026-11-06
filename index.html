@@ -932,6 +932,24 @@
         `;
       });
 
+      // CONSTRUIR EL MENSAJE DE WHATSAPP PARA LA VENTANA EMERGENTE
+      let mensajeWp = "*KMVEGETALES - NUEVO PEDIDO*\n" +
+                      "*Orden N°:* No. " + correlativoFormateado + "\n" +
+                      "*Fecha:* " + fechaTexto + "\n" +
+                      "*Cliente:* " + nombre.toUpperCase() + "\n";
+      if (direccion) {
+        mensajeWp += "*Dirección:* " + direccion + "\n";
+      }
+      mensajeWp += "------------------------------------\n\n*DETALLE:*\n";
+      itemsArr.forEach(item => {
+        const subtotal = item.cantidad * item.precio;
+        mensajeWp += "• *" + item.nombre + "*\n  " + item.cantidad + " x " + item.unidad + " ($" + item.precio.toFixed(2) + ") = *$" + subtotal.toFixed(2) + "*\n";
+      });
+      mensajeWp += "\n------------------------------------\n*TOTAL A PAGAR: $" + totalMonto.toFixed(2) + "*";
+
+      const telefono = "50379201948";
+      const urlWhatsapp = "https://wa.me/" + telefono + "?text=" + encodeURIComponent(mensajeWp);
+
       const ventanaImpresion = window.open('', '_blank', 'width=900,height=700');
       ventanaImpresion.document.write(`
         <!DOCTYPE html>
@@ -969,9 +987,36 @@
               border-top: 2px solid #000;
               padding-top: 8px;
             }
+            .no-print {
+              position: fixed;
+              bottom: 20px;
+              right: 20px;
+              z-index: 9999;
+              background: #059669;
+              color: white;
+              padding: 12px 20px;
+              border-radius: 50px;
+              font-family: sans-serif;
+              font-weight: bold;
+              text-decoration: none;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+              display: flex;
+              align-items: center;
+              gap: 8px;
+            }
+            @media print {
+              .no-print {
+                display: none !important;
+              }
+            }
           </style>
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         </head>
         <body>
+          <a href="${urlWhatsapp}" target="_blank" class="no-print">
+            <i class="fab fa-whatsapp text-xl"></i> Enviar por WhatsApp
+          </a>
+
           <div class="ticket-container">
             <div class="header-ticket">
               <p style="font-size: 13pt; font-weight: bold; margin: 0 0 4px 0;">*KMVEGETALES - NUEVO PEDIDO*</p>
@@ -993,7 +1038,6 @@
           <script>
             window.onload = function() {
               window.print();
-              window.close();
             };
           <\/script>
         </body>
