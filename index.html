@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KMVegetales - Catálogo en Línea</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
@@ -287,8 +286,11 @@
           </div>
 
           <div class="grid grid-cols-1 gap-2 pt-1">
-            <button onclick="imprimirPedidoCarta()" class="btn-whatsapp w-full text-white font-bold py-3 rounded-xl shadow-lg flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
-              <i class="fas fa-file-pdf text-lg"></i> Generar Orden en PDF
+            <button onclick="enviarPedido()" class="btn-whatsapp w-full text-white font-bold py-3 rounded-xl shadow-lg flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
+              <i class="fab fa-whatsapp text-lg"></i> Enviar por WhatsApp
+            </button>
+            <button onclick="imprimirPedidoCarta()" class="btn-print w-full text-white font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
+              <i class="fas fa-print text-sm"></i> Imprimir Hoja Carta
             </button>
           </div>
         </div>
@@ -315,8 +317,11 @@
         </div>
         <input type="text" id="input-nombre-m" placeholder="Nombre de tu negocio o cliente" class="w-full bg-gray-50 border border-gray-200 p-2.5 rounded-xl text-xs focus:outline-none focus:border-emerald-500 transition">
         <input type="text" id="input-direccion-m" placeholder="Dirección / Referencia de entrega" class="w-full bg-gray-50 border border-gray-200 p-2.5 rounded-xl text-xs focus:outline-none focus:border-emerald-500 transition">
-        <button onclick="imprimirPedidoCarta()" class="btn-whatsapp w-full text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
-          <i class="fas fa-file-pdf text-lg"></i> Generar Orden en PDF
+        <button onclick="enviarPedido()" class="btn-whatsapp w-full text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
+          <i class="fab fa-whatsapp text-lg"></i> Enviar por WhatsApp
+        </button>
+        <button onclick="imprimirPedidoCarta()" class="btn-print w-full text-white font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
+          <i class="fas fa-print text-sm"></i> Imprimir Hoja Carta
         </button>
       </div>
     </div>
@@ -829,10 +834,20 @@
       modal.classList.toggle('hidden');
     }
 
-    function obtenerDatosPedido() {
+    function enviarPedido() {
+      if (Object.keys(carrito).length === 0) {
+        alert("Tu carrito está vacío. Agrega productos para realizar un pedido.");
+        return;
+      }
+
       const esMovil = window.innerWidth < 1024;
       const nombre = esMovil ? document.getElementById('input-nombre-m').value.trim() : document.getElementById('input-nombre').value.trim();
       const direccion = esMovil ? document.getElementById('input-direccion-m').value.trim() : document.getElementById('input-direccion').value.trim();
+
+      if (!nombre) {
+        alert("Por favor ingresa el nombre de tu negocio o cliente.");
+        return;
+      }
 
       const hoy = new Date();
       const dia = String(hoy.getDate()).padStart(2, '0');
@@ -842,12 +857,36 @@
       const minutos = String(hoy.getMinutes()).padStart(2, '0');
 
       const fechaTexto = `${dia}/${mes}/${anio} ${horas}:${minutos}`;
-      const fechaNombreArchivo = `${dia}-${mes}-${anio}`;
       let correlativoActual = parseInt(localStorage.getItem('km_correlativo_num') || '0') + 1;
       localStorage.setItem('km_correlativo_num', correlativoActual);
       let correlativoFormateado = String(correlativoActual).padStart(4, '0');
 
-      return { nombre, direccion, fechaTexto, fechaNombreArchivo, correlativoFormateado };
+      const itemsArr = Object.values(carrito);
+      let totalMonto = 0;
+
+      let mensajeWp = "*KMVEGETALES - NUEVO PEDIDO*\n" +
+                      "------------------------------------\n" +
+                      "*Orden N°:* No. " + correlativoFormateado + "\n" +
+                      "*Fecha:* " + fechaTexto + "\n" +
+                      "*Cliente:* " + nombre.toUpperCase() + "\n";
+      if (direccion) {
+        mensajeWp += "*Dirección:* " + direccion + "\n";
+      }
+      mensajeWp += "------------------------------------\n\n" +
+                   "*DETALLE DE PRODUCTOS:*\n\n";
+
+      itemsArr.forEach(item => {
+        const subtotal = item.cantidad * item.precio;
+        totalMonto += subtotal;
+        mensajeWp += "*" + item.nombre + "*\n" + item.cantidad + " x " + item.unidad + " ($" + item.precio.toFixed(2) + ") = *$" + subtotal.toFixed(2) + "*\n\n";
+      });
+
+      mensajeWp += "------------------------------------\n" +
+                   "*TOTAL A PAGAR: $" + totalMonto.toFixed(2) + "*";
+
+      const telefono = "50379201948"; 
+      const urlWhatsapp = "https://wa.me/" + telefono + "?text=" + encodeURIComponent(mensajeWp);
+      window.open(urlWhatsapp, '_blank');
     }
 
     function imprimirPedidoCarta() {
@@ -856,11 +895,25 @@
         return;
       }
 
-      const { nombre, direccion, fechaTexto, fechaNombreArchivo, correlativoFormateado } = obtenerDatosPedido();
+      const esMovil = window.innerWidth < 1024;
+      const nombre = esMovil ? document.getElementById('input-nombre-m').value.trim() : document.getElementById('input-nombre').value.trim();
+      const direccion = esMovil ? document.getElementById('input-direccion-m').value.trim() : document.getElementById('input-direccion').value.trim();
+
       if (!nombre) {
         alert("Por favor ingresa el nombre de tu negocio o cliente.");
         return;
       }
+
+      const hoy = new Date();
+      const dia = String(hoy.getDate()).padStart(2, '0');
+      const mes = String(hoy.getMonth() + 1).padStart(2, '0');
+      const anio = hoy.getFullYear();
+      const horas = String(hoy.getHours()).padStart(2, '0');
+      const minutos = String(hoy.getMinutes()).padStart(2, '0');
+
+      const fechaTexto = `${dia}/${mes}/${anio} ${horas}:${minutos}`;
+      let correlativoActual = parseInt(localStorage.getItem('km_correlativo_num') || '1');
+      let correlativoFormateado = String(correlativoActual).padStart(4, '0');
 
       const itemsArr = Object.values(carrito);
       let htmlItemsPrint = '';
@@ -878,11 +931,26 @@
         `;
       });
 
-      const nombreLimpio = nombre.replace(/\s+/g, '_').toUpperCase();
-      const nombreArchivoPDF = `Pedido_No_${correlativoFormateado}_${nombreLimpio}_${fechaNombreArchivo}.pdf`;
-      const telefono = "50379201948";
-      const textoWp = `Hola, adjunto el archivo PDF del Pedido No. ${correlativoFormateado} del cliente ${nombre.toUpperCase()} del ${fechaTexto}.`;
-      const urlWhatsapp = `https://wa.me/${telefono}?text=` + encodeURIComponent(textoWp);
+      let mensajeWp = "*KMVEGETALES - NUEVO PEDIDO*\n" +
+                      "------------------------------------\n" +
+                      "*Orden N°:* No. " + correlativoFormateado + "\n" +
+                      "*Fecha:* " + fechaTexto + "\n" +
+                      "*Cliente:* " + nombre.toUpperCase() + "\n";
+      if (direccion) {
+        mensajeWp += "*Dirección:* " + direccion + "\n";
+      }
+      mensajeWp += "------------------------------------\n\n" +
+                   "*DETALLE DE PRODUCTOS:*\n\n";
+      
+      itemsArr.forEach(item => {
+        const subtotal = item.cantidad * item.precio;
+        mensajeWp += "*" + item.nombre + "*\n" + item.cantidad + " x " + item.unidad + " ($" + item.precio.toFixed(2) + ") = *$" + subtotal.toFixed(2) + "*\n\n";
+      });
+      mensajeWp += "------------------------------------\n" +
+                   "*TOTAL A PAGAR: $" + totalMonto.toFixed(2) + "*";
+
+      const telefono = "50374670712";
+      const urlWhatsapp = "https://wa.me/" + telefono + "?text=" + encodeURIComponent(mensajeWp);
 
       const ventanaImpresion = window.open('', '_blank', 'width=900,height=700');
       ventanaImpresion.document.write(`
@@ -890,8 +958,7 @@
         <html lang="es">
         <head>
           <meta charset="UTF-8">
-          <title>Orden No. ${correlativoFormateado} - ${nombre.toUpperCase()}</title>
-          <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"><\/script>
+          <title>Imprimir Orden No. ${correlativoFormateado}</title>
           <style>
             @page {
               size: letter portrait;
@@ -901,10 +968,9 @@
               font-family: 'Courier New', Courier, monospace;
               color: #000;
               margin: 0;
-              padding: 15px;
+              padding: 10px;
               font-size: 10pt;
               line-height: 1.35;
-              background: #fff;
             }
             .ticket-container {
               width: 100%;
@@ -935,7 +1001,7 @@
             .btn-wsp-popup {
               background: #059669;
               color: white;
-              padding: 10px 18px;
+              padding: 8px 16px;
               border-radius: 10px;
               font-weight: bold;
               text-decoration: none;
@@ -943,13 +1009,12 @@
               font-size: 11pt;
               display: flex;
               align-items: center;
-              gap: 8px;
-              cursor: pointer;
+              gap: 6px;
             }
             .btn-print-popup {
               background: #374151;
               color: white;
-              padding: 10px 18px;
+              padding: 8px 16px;
               border-radius: 10px;
               font-weight: bold;
               border: none;
@@ -958,7 +1023,7 @@
               font-size: 11pt;
               display: flex;
               align-items: center;
-              gap: 8px;
+              gap: 6px;
             }
             @media print {
               .acciones-flotantes {
@@ -970,15 +1035,15 @@
         </head>
         <body>
           <div class="acciones-flotantes">
-            <button onclick="descargarPDFYAbrirWsp()" class="btn-wsp-popup">
-              <i class="fab fa-whatsapp text-lg"></i> Enviar PDF por WhatsApp
-            </button>
+            <a href="${urlWhatsapp}" target="_blank" class="btn-wsp-popup">
+              <i class="fab fa-whatsapp"></i> Enviar por WhatsApp
+            </a>
             <button onclick="window.print()" class="btn-print-popup">
-              <i class="fas fa-print"></i> Imprimir Hoja
+              <i class="fas fa-print"></i> Imprimir
             </button>
           </div>
 
-          <div class="ticket-container" id="contenido-ticket">
+          <div class="ticket-container">
             <div class="header-ticket">
               <p style="font-size: 13pt; font-weight: bold; margin: 0 0 4px 0;">*KMVEGETALES - NUEVO PEDIDO*</p>
               <p style="margin: 2px 0; font-size: 10.5pt;"><strong>*Orden N°:* No. ${correlativoFormateado}</strong></p>
@@ -996,23 +1061,6 @@
               <p style="font-size: 12pt; font-weight: bold; margin: 0;">*TOTAL A PAGAR: $${totalMonto.toFixed(2)}*</p>
             </div>
           </div>
-
-          <script>
-            function descargarPDFYAbrirWsp() {
-              const elemento = document.getElementById('contenido-ticket');
-              const opciones = {
-                margin:       10,
-                filename:     '${nombreArchivoPDF}',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
-                jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' }
-              };
-
-              html2pdf().from(elemento).set(opciones).save().then(function() {
-                window.open('${urlWhatsapp}', '_blank');
-              });
-            }
-          <\/script>
         </body>
         </html>
       `);
