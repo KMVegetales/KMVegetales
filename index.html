@@ -191,39 +191,6 @@
       background-color: #ffffff;
       box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.2);
     }
-
-    /* ESTILOS DE IMPRESIÓN EN UNA SOLA HOJA CARTA VERTICAL */
-    @media print {
-      body * {
-        visibility: hidden !important;
-      }
-      #seccion-impresion-carta, #seccion-impresion-carta * {
-        visibility: visible !important;
-      }
-      #seccion-impresion-carta {
-        display: block !important;
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        color: #000;
-        font-family: 'Courier New', Courier, monospace;
-        font-size: 8.5pt;
-        line-height: 1.2;
-      }
-      @page {
-        size: letter portrait;
-        margin: 6mm;
-      }
-      .columna-items-print {
-        column-count: 3;
-        column-gap: 12px;
-      }
-      .item-print-block {
-        break-inside: avoid;
-        margin-bottom: 3px;
-      }
-    }
   </style>
 </head>
 <body class="bg-gray-50 min-h-screen pb-12">
@@ -359,8 +326,6 @@
       </div>
     </div>
   </div>
-
-  <div id="seccion-impresion-carta" class="hidden"></div>
 
   <script>
     const URL_GOOGLE_SHEETS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR5GQG7EYouJss52fNj0HhbLq-8kjTwDn4b7lA7AmDPS4xSpq8fYjC3zv8BmcU6xpdsGmWflf2AU85c/pub?output=csv";
@@ -960,36 +925,81 @@
         totalMonto += subtotal;
 
         htmlItemsPrint += `
-          <div class="item-print-block" style="font-size: 8.5pt; margin-bottom: 3px;">
+          <div style="break-inside: avoid; margin-bottom: 3px; font-size: 8pt;">
             <strong>*${item.nombre}*</strong><br>
             ${item.cantidad} x ${item.unidad} ($${item.precio.toFixed(2)}) = *$${subtotal.toFixed(2)}*
           </div>
         `;
       });
 
-      const contenedorPrint = document.getElementById('seccion-impresion-carta');
-      contenedorPrint.innerHTML = `
-        <div style="padding: 5px; width: 100%;">
-          <div style="margin-bottom: 8px; border-bottom: 1px solid #000; padding-bottom: 5px;">
-            <p style="font-size: 11pt; font-weight: bold; margin: 0 0 2px 0;">*KMVEGETALES - NUEVO PEDIDO*</p>
-            <p style="margin: 1px 0; font-size: 9pt;"><strong>*Orden N°:* No. ${correlativoFormateado}</strong></p>
-            <p style="margin: 1px 0; font-size: 9pt;">*Fecha:* ${fechaTexto}</p>
-            <p style="margin: 1px 0; font-size: 9pt;">*Cliente:* ${nombre.toUpperCase()}</p>
-            ${direccion ? `<p style="margin: 1px 0; font-size: 9pt;">*Dirección:* ${direccion}</p>` : ''}
-            <p style="margin: 4px 0 0 0; font-weight: bold; font-size: 9pt;">*DETALLE:*</p>
-          </div>
+      const ventanaImpresion = window.open('', '_blank', 'width=800,height=600');
+      ventanaImpresion.document.write(`
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+          <meta charset="UTF-8">
+          <title>Imprimir Orden No. ${correlativoFormateado}</title>
+          <style>
+            @page {
+              size: letter portrait;
+              margin: 6mm;
+            }
+            body {
+              font-family: 'Courier New', Courier, monospace;
+              color: #000;
+              margin: 0;
+              padding: 2px;
+              font-size: 8.5pt;
+              line-height: 1.15;
+            }
+            .ticket-container {
+              width: 100%;
+            }
+            .header-ticket {
+              margin-bottom: 6px;
+              border-bottom: 1px solid #000;
+              padding-bottom: 4px;
+            }
+            .grid-columnas {
+              column-count: 3;
+              column-gap: 12px;
+            }
+            .footer-ticket {
+              margin-top: 6px;
+              border-top: 1px solid #000;
+              padding-top: 4px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="ticket-container">
+            <div class="header-ticket">
+              <p style="font-size: 10pt; font-weight: bold; margin: 0 0 2px 0;">*KMVEGETALES - NUEVO PEDIDO*</p>
+              <p style="margin: 1px 0; font-size: 8.5pt;"><strong>*Orden N°:* No. ${correlativoFormateado}</strong></p>
+              <p style="margin: 1px 0; font-size: 8.5pt;">*Fecha:* ${fechaTexto}</p>
+              <p style="margin: 1px 0; font-size: 8.5pt;">*Cliente:* ${nombre.toUpperCase()}</p>
+              ${direccion ? `<p style="margin: 1px 0; font-size: 8.5pt;">*Dirección:* ${direccion}</p>` : ''}
+              <p style="margin: 3px 0 0 0; font-weight: bold; font-size: 8.5pt;">*DETALLE:*</p>
+            </div>
 
-          <div class="columna-items-print" style="column-count: 3; column-gap: 12px;">
-            ${htmlItemsPrint}
-          </div>
+            <div class="grid-columnas">
+              ${htmlItemsPrint}
+            </div>
 
-          <div style="margin-top: 8px; border-top: 1px solid #000; padding-top: 5px;">
-            <p style="font-size: 10pt; font-weight: bold; margin: 0;">*TOTAL A PAGAR: $${totalMonto.toFixed(2)}*</p>
+            <div class="footer-ticket">
+              <p style="font-size: 9.5pt; font-weight: bold; margin: 0;">*TOTAL A PAGAR: $${totalMonto.toFixed(2)}*</p>
+            </div>
           </div>
-        </div>
-      `;
-
-      window.print();
+          <script>
+            window.onload = function() {
+              window.print();
+              window.close();
+            };
+          <\/script>
+        </body>
+        </html>
+      `);
+      ventanaImpresion.document.close();
     }
 
     window.onload = cargarProductosDesdeSheets;
