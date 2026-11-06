@@ -803,7 +803,12 @@
       const fechaTexto = `${dia}/${mes}/${anio} ${horas}:${minutos}`;
       const fechaNombreArchivo = `${dia}-${mes}-${anio}`;
       
-      let correlativoActual = parseInt(localStorage.getItem('km_correlativo_num') || '0') + 1;
+      // Forzado estricto para iniciar desde 1 en adelante (reinicia si no existe o si supera valores viejos)
+      let ultimoNum = parseInt(localStorage.getItem('km_correlativo_num') || '0');
+      if (ultimoNum < 0 || ultimoNum > 9998) {
+        ultimoNum = 0;
+      }
+      let correlativoActual = ultimoNum + 1;
       localStorage.setItem('km_correlativo_num', correlativoActual);
       let correlativoFormateado = String(correlativoActual).padStart(4, '0');
 
