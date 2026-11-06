@@ -856,37 +856,33 @@
       const horas = String(hoy.getHours()).padStart(2, '0');
       const minutos = String(hoy.getMinutes()).padStart(2, '0');
 
-      const fechaTexto = `${dia}/${mes}/${anio}`;
-      const horaTexto = `${horas}:${minutos}`;
-
+      const fechaTexto = `${dia}/${mes}/${anio} ${horas}:${minutos}`;
       let correlativoActual = parseInt(localStorage.getItem('km_correlativo_num') || '0') + 1;
       localStorage.setItem('km_correlativo_num', correlativoActual);
       let correlativoFormateado = String(correlativoActual).padStart(4, '0');
 
-      let mensaje = "*KMVEGETALES - NUEVO PEDIDO*\n" +
-                    "*Orden N°:* No. " + correlativoFormateado + "\n" +
-                    "*Fecha:* " + fechaTexto + " " + horaTexto + "\n" +
-                    "*Cliente:* " + nombre + "\n";
-      
-      if (direccion) {
-        mensaje += "*Dirección:* " + direccion + "\n";
-      }
-
-      mensaje += "------------------------------------\n\n" +
-                 "*DETALLE DEL PEDIDO:*\n";
-
+      const itemsArr = Object.values(carrito);
       let totalMonto = 0;
-      Object.values(carrito).forEach(item => {
+
+      let mensajeWp = "*KMVEGETALES - NUEVO PEDIDO*\n" +
+                      "*Orden N°:* No. " + correlativoFormateado + "\n" +
+                      "*Fecha:* " + fechaTexto + "\n" +
+                      "*Cliente:* " + nombre.toUpperCase() + "\n";
+      if (direccion) {
+        mensajeWp += "*Dirección:* " + direccion + "\n";
+      }
+      mensajeWp += "------------------------------------\n\n*DETALLE DE PRODUCTOS:*\n\n";
+
+      itemsArr.forEach(item => {
         const subtotal = item.cantidad * item.precio;
         totalMonto += subtotal;
-        mensaje += "• *" + item.nombre + "*\n  " + item.cantidad + " x " + item.unidad + " ($" + item.precio.toFixed(2) + " c/u) = *$" + subtotal.toFixed(2) + "*\n";
+        mensajeWp += "*" + item.nombre + "*\n" + item.cantidad + " x " + item.unidad + " ($" + item.precio.toFixed(2) + ") = *$" + subtotal.toFixed(2) + "*\n\n";
       });
 
-      mensaje += "\n------------------------------------\n" +
-                 "*TOTAL A PAGAR: $" + totalMonto.toFixed(2) + "*";
+      mensajeWp += "------------------------------------\n*TOTAL A PAGAR: $" + totalMonto.toFixed(2) + "*";
 
       const telefono = "50379201948"; 
-      const urlWhatsapp = "https://wa.me/" + telefono + "?text=" + encodeURIComponent(mensaje);
+      const urlWhatsapp = "https://wa.me/" + telefono + "?text=" + encodeURIComponent(mensajeWp);
       window.open(urlWhatsapp, '_blank');
     }
 
@@ -932,7 +928,6 @@
         `;
       });
 
-      // CONSTRUIR EL MENSAJE DE WHATSAPP CON EL MISMO FORMATO DE LA IMPRESIÓN (INCLUYENDO FECHA Y HORA)
       let mensajeWp = "*KMVEGETALES - NUEVO PEDIDO*\n" +
                       "*Orden N°:* No. " + correlativoFormateado + "\n" +
                       "*Fecha:* " + fechaTexto + "\n" +
@@ -948,7 +943,7 @@
       });
       mensajeWp += "------------------------------------\n*TOTAL A PAGAR: $" + totalMonto.toFixed(2) + "*";
 
-      const telefono = "50374670712";
+      const telefono = "50379201948";
       const urlWhatsapp = "https://wa.me/" + telefono + "?text=" + encodeURIComponent(mensajeWp);
 
       const ventanaImpresion = window.open('', '_blank', 'width=900,height=700');
