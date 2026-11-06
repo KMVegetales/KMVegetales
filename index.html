@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KMVegetales - Catálogo en Línea</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Librería para generar el PDF de forma automática -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -288,11 +287,8 @@
           </div>
 
           <div class="grid grid-cols-1 gap-2 pt-1">
-            <button onclick="enviarPedidoPDFWhatsApp()" class="btn-whatsapp w-full text-white font-bold py-3 rounded-xl shadow-lg flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
-              <i class="fab fa-whatsapp text-lg"></i> Enviar PDF por WhatsApp
-            </button>
-            <button onclick="imprimirPedidoCarta()" class="btn-print w-full text-white font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
-              <i class="fas fa-print text-sm"></i> Imprimir Hoja Carta
+            <button onclick="imprimirPedidoCarta()" class="btn-whatsapp w-full text-white font-bold py-3 rounded-xl shadow-lg flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
+              <i class="fas fa-file-pdf text-lg"></i> Generar Orden en PDF
             </button>
           </div>
         </div>
@@ -319,11 +315,8 @@
         </div>
         <input type="text" id="input-nombre-m" placeholder="Nombre de tu negocio o cliente" class="w-full bg-gray-50 border border-gray-200 p-2.5 rounded-xl text-xs focus:outline-none focus:border-emerald-500 transition">
         <input type="text" id="input-direccion-m" placeholder="Dirección / Referencia de entrega" class="w-full bg-gray-50 border border-gray-200 p-2.5 rounded-xl text-xs focus:outline-none focus:border-emerald-500 transition">
-        <button onclick="enviarPedidoPDFWhatsApp()" class="btn-whatsapp w-full text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
-          <i class="fab fa-whatsapp text-lg"></i> Enviar PDF por WhatsApp
-        </button>
-        <button onclick="imprimirPedidoCarta()" class="btn-print w-full text-white font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
-          <i class="fas fa-print text-sm"></i> Imprimir Hoja Carta
+        <button onclick="imprimirPedidoCarta()" class="btn-whatsapp w-full text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 text-xs uppercase tracking-wide">
+          <i class="fas fa-file-pdf text-lg"></i> Generar Orden en PDF
         </button>
       </div>
     </div>
@@ -849,37 +842,22 @@
       const minutos = String(hoy.getMinutes()).padStart(2, '0');
 
       const fechaTexto = `${dia}/${mes}/${anio} ${horas}:${minutos}`;
+      const fechaNombreArchivo = `${dia}-${mes}-${anio}`;
       let correlativoActual = parseInt(localStorage.getItem('km_correlativo_num') || '0') + 1;
       localStorage.setItem('km_correlativo_num', correlativoActual);
       let correlativoFormateado = String(correlativoActual).padStart(4, '0');
 
-      return { nombre, direccion, fechaTexto, correlativoFormateado };
+      return { nombre, direccion, fechaTexto, fechaNombreArchivo, correlativoFormateado };
     }
 
-    function enviarPedidoPDFWhatsApp() {
-      if (Object.keys(carrito).length === 0) {
-        alert("Tu carrito está vacío. Agrega productos para realizar un pedido.");
-        return;
-      }
-
-      const { nombre, direccion, fechaTexto, correlativoFormateado } = obtenerDatosPedido();
-      if (!nombre) {
-        alert("Por favor ingresa el nombre de tu negocio o cliente.");
-        return;
-      }
-
-      // Generar la ventana de impresión/PDF automáticamente al hacer clic en WhatsApp
-      imprimirPedidoCarta(true);
-    }
-
-    function imprimirPedidoCarta(autoDescargarPDF = false) {
+    function imprimirPedidoCarta() {
       if (Object.keys(carrito).length === 0) {
         alert("Tu carrito está vacío. Agrega productos para generar la orden.");
         return;
       }
 
-      const { nombre, direccion, fechaTexto, correlativoFormateado } = obtenerDatosPedido();
-      if (!nombre && !autoDescargarPDF) {
+      const { nombre, direccion, fechaTexto, fechaNombreArchivo, correlativoFormateado } = obtenerDatosPedido();
+      if (!nombre) {
         alert("Por favor ingresa el nombre de tu negocio o cliente.");
         return;
       }
@@ -900,8 +878,10 @@
         `;
       });
 
-      const telefono = "50374670712";
-      const textoWp = `Hola, aquí adjunto el PDF del pedido No. ${correlativoFormateado} para ${nombre.toUpperCase()}.`;
+      const nombreLimpio = nombre.replace(/\s+/g, '_').toUpperCase();
+      const nombreArchivoPDF = `Pedido_No_${correlativoFormateado}_${nombreLimpio}_${fechaNombreArchivo}.pdf`;
+      const telefono = "50379201948";
+      const textoWp = `Hola, adjunto el archivo PDF del Pedido No. ${correlativoFormateado} del cliente ${nombre.toUpperCase()} del ${fechaTexto}.`;
       const urlWhatsapp = `https://wa.me/${telefono}?text=` + encodeURIComponent(textoWp);
 
       const ventanaImpresion = window.open('', '_blank', 'width=900,height=700');
@@ -910,7 +890,7 @@
         <html lang="es">
         <head>
           <meta charset="UTF-8">
-          <title>Orden No. ${correlativoFormateado} - KMVegetales</title>
+          <title>Orden No. ${correlativoFormateado} - ${nombre.toUpperCase()}</title>
           <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"><\/script>
           <style>
             @page {
@@ -955,7 +935,7 @@
             .btn-wsp-popup {
               background: #059669;
               color: white;
-              padding: 8px 16px;
+              padding: 10px 18px;
               border-radius: 10px;
               font-weight: bold;
               text-decoration: none;
@@ -963,12 +943,13 @@
               font-size: 11pt;
               display: flex;
               align-items: center;
-              gap: 6px;
+              gap: 8px;
+              cursor: pointer;
             }
-            .btn-pdf-popup {
-              background: #2563eb;
+            .btn-print-popup {
+              background: #374151;
               color: white;
-              padding: 8px 16px;
+              padding: 10px 18px;
               border-radius: 10px;
               font-weight: bold;
               border: none;
@@ -977,7 +958,7 @@
               font-size: 11pt;
               display: flex;
               align-items: center;
-              gap: 6px;
+              gap: 8px;
             }
             @media print {
               .acciones-flotantes {
@@ -989,11 +970,11 @@
         </head>
         <body>
           <div class="acciones-flotantes">
-            <a href="${urlWhatsapp}" target="_blank" class="btn-wsp-popup">
-              <i class="fab fa-whatsapp"></i> 1. Abrir WhatsApp
-            </a>
-            <button onclick="descargarPDF()" class="btn-pdf-popup" id="btn-pdf">
-              <i class="fas fa-file-pdf"></i> 2. Descargar PDF
+            <button onclick="descargarPDFYAbrirWsp()" class="btn-wsp-popup">
+              <i class="fab fa-whatsapp text-lg"></i> Enviar PDF por WhatsApp
+            </button>
+            <button onclick="window.print()" class="btn-print-popup">
+              <i class="fas fa-print"></i> Imprimir Hoja
             </button>
           </div>
 
@@ -1017,19 +998,20 @@
           </div>
 
           <script>
-            function descargarPDF() {
+            function descargarPDFYAbrirWsp() {
               const elemento = document.getElementById('contenido-ticket');
               const opciones = {
                 margin:       10,
-                filename:     'Pedido_No_${correlativoFormateado}_${nombre.replace(/\\s+/g, '_')}.pdf',
+                filename:     '${nombreArchivoPDF}',
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, useCORS: true },
                 jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' }
               };
-              html2pdf().from(elemento).save();
-            }
 
-            ${autoDescargarPDF ? 'window.onload = function() { setTimeout(descargarPDF, 500); };' : ''}
+              html2pdf().from(elemento).set(opciones).save().then(function() {
+                window.open('${urlWhatsapp}', '_blank');
+              });
+            }
           <\/script>
         </body>
         </html>
