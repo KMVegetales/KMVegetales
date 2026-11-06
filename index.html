@@ -925,14 +925,14 @@
         totalMonto += subtotal;
 
         htmlItemsPrint += `
-          <div style="break-inside: avoid; margin-bottom: 3px; font-size: 8pt;">
+          <div style="break-inside: avoid; margin-bottom: 7px; padding-bottom: 5px; border-bottom: 1px dotted #999; font-size: 10pt;">
             <strong>*${item.nombre}*</strong><br>
-            ${item.cantidad} x ${item.unidad} ($${item.precio.toFixed(2)}) = *$${subtotal.toFixed(2)}*
+            <span style="color: #111;">${item.cantidad} x ${item.unidad} ($${item.precio.toFixed(2)})</span> = <strong style="color: #000;">*${subtotal.toFixed(2)}*</strong>
           </div>
         `;
       });
 
-      const ventanaImpresion = window.open('', '_blank', 'width=800,height=600');
+      const ventanaImpresion = window.open('', '_blank', 'width=900,height=700');
       ventanaImpresion.document.write(`
         <!DOCTYPE html>
         <html lang="es">
@@ -942,44 +942,44 @@
           <style>
             @page {
               size: letter portrait;
-              margin: 6mm;
+              margin: 10mm;
             }
             body {
               font-family: 'Courier New', Courier, monospace;
               color: #000;
               margin: 0;
-              padding: 2px;
-              font-size: 8.5pt;
-              line-height: 1.15;
+              padding: 10px;
+              font-size: 10pt;
+              line-height: 1.35;
             }
             .ticket-container {
               width: 100%;
             }
             .header-ticket {
-              margin-bottom: 6px;
-              border-bottom: 1px solid #000;
-              padding-bottom: 4px;
+              margin-bottom: 12px;
+              border-bottom: 2px solid #000;
+              padding-bottom: 8px;
             }
             .grid-columnas {
               column-count: 3;
-              column-gap: 12px;
+              column-gap: 18px;
             }
             .footer-ticket {
-              margin-top: 6px;
-              border-top: 1px solid #000;
-              padding-top: 4px;
+              margin-top: 12px;
+              border-top: 2px solid #000;
+              padding-top: 8px;
             }
           </style>
         </head>
         <body>
           <div class="ticket-container">
             <div class="header-ticket">
-              <p style="font-size: 10pt; font-weight: bold; margin: 0 0 2px 0;">*KMVEGETALES - NUEVO PEDIDO*</p>
-              <p style="margin: 1px 0; font-size: 8.5pt;"><strong>*Orden N°:* No. ${correlativoFormateado}</strong></p>
-              <p style="margin: 1px 0; font-size: 8.5pt;">*Fecha:* ${fechaTexto}</p>
-              <p style="margin: 1px 0; font-size: 8.5pt;">*Cliente:* ${nombre.toUpperCase()}</p>
-              ${direccion ? `<p style="margin: 1px 0; font-size: 8.5pt;">*Dirección:* ${direccion}</p>` : ''}
-              <p style="margin: 3px 0 0 0; font-weight: bold; font-size: 8.5pt;">*DETALLE:*</p>
+              <p style="font-size: 13pt; font-weight: bold; margin: 0 0 4px 0;">*KMVEGETALES - NUEVO PEDIDO*</p>
+              <p style="margin: 2px 0; font-size: 10.5pt;"><strong>*Orden N°:* No. ${correlativoFormateado}</strong></p>
+              <p style="margin: 2px 0; font-size: 10pt;">*Fecha:* ${fechaTexto}</p>
+              <p style="margin: 2px 0; font-size: 10pt;">*Cliente:* ${nombre.toUpperCase()}</p>
+              ${direccion ? `<p style="margin: 2px 0; font-size: 10pt;">*Dirección:* ${direccion}</p>` : ''}
+              <p style="margin: 6px 0 0 0; font-weight: bold; font-size: 10.5pt;">*DETALLE DE PRODUCTOS:*</p>
             </div>
 
             <div class="grid-columnas">
@@ -987,7 +987,7 @@
             </div>
 
             <div class="footer-ticket">
-              <p style="font-size: 9.5pt; font-weight: bold; margin: 0;">*TOTAL A PAGAR: $${totalMonto.toFixed(2)}*</p>
+              <p style="font-size: 12pt; font-weight: bold; margin: 0;">*TOTAL A PAGAR: $${totalMonto.toFixed(2)}*</p>
             </div>
           </div>
           <script>
