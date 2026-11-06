@@ -843,7 +843,6 @@
       const { nombre, direccion, fechaTexto, fechaNombreArchivo, correlativoFormateado } = obtenerDatosPedido();
       const itemsArr = Object.values(carrito);
       
-      // COLUMNA IZQUIERDA (1 a 15) Y COLUMNA DERECHA (16 a 30)
       const columnaIzquierda = itemsArr.slice(0, 15);
       const columnaDerecha = itemsArr.slice(15, 30);
 
@@ -855,7 +854,7 @@
         const subtotal = item.cantidad * item.precio;
         totalMonto += subtotal;
         htmlColIzquierda += `
-          <div style="margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px dotted #ccc; font-size: 8.5pt;">
+          <div style="margin-bottom: 15px; padding-bottom: 8px; border-bottom: 1px dotted #ccc; font-size: 9.5pt;">
             <strong>*${item.nombre}*</strong><br>
             <span style="color: #222;">${item.cantidad} x ${item.unidad} ($${item.precio.toFixed(2)})</span> = <strong>*${subtotal.toFixed(2)}*</strong>
           </div>
@@ -866,7 +865,7 @@
         const subtotal = item.cantidad * item.precio;
         totalMonto += subtotal;
         htmlColDerecha += `
-          <div style="margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px dotted #ccc; font-size: 8.5pt;">
+          <div style="margin-bottom: 15px; padding-bottom: 8px; border-bottom: 1px dotted #ccc; font-size: 9.5pt;">
             <strong>*${item.nombre}*</strong><br>
             <span style="color: #222;">${item.cantidad} x ${item.unidad} ($${item.precio.toFixed(2)})</span> = <strong>*${subtotal.toFixed(2)}*</strong>
           </div>
@@ -898,16 +897,16 @@
           <style>
             @page {
               size: letter portrait;
-              margin: 8mm;
+              margin: 10mm;
             }
             * { box-sizing: border-box; }
             body {
               font-family: 'Courier New', Courier, monospace;
               color: #000;
               margin: 0;
-              padding: 10px;
-              font-size: 8.5pt;
-              line-height: 1.2;
+              padding: 15px;
+              font-size: 9.5pt;
+              line-height: 1.4;
               background: #fff;
             }
             .ticket-container {
@@ -915,15 +914,15 @@
               margin: 0 auto;
             }
             .header-ticket {
-              margin-bottom: 8px;
+              margin-bottom: 12px;
               border-bottom: 2px solid #000;
-              padding-bottom: 4px;
+              padding-bottom: 6px;
             }
             .flex-2-columnas {
               display: flex !important;
               flex-direction: row !important;
               width: 100% !important;
-              gap: 25px !important;
+              gap: 30px !important;
               justify-content: space-between !important;
             }
             .columna-50 {
@@ -931,9 +930,9 @@
               flex: 0 0 48% !important;
             }
             .footer-ticket {
-              margin-top: 10px;
+              margin-top: 15px;
               border-top: 2px solid #000;
-              padding-top: 6px;
+              padding-top: 8px;
             }
             .acciones-flotantes {
               position: fixed;
@@ -942,8 +941,6 @@
               right: 10px;
               z-index: 9999;
               display: flex;
-              flex-wrap: wrap;
-              gap: 8px;
               justify-content: center;
               font-family: 'Plus Jakarta Sans', sans-serif;
               background: rgba(255, 255, 255, 0.95);
@@ -951,22 +948,23 @@
               border-radius: 12px;
               box-shadow: 0 4px 15px rgba(0,0,0,0.15);
             }
-            .btn-accion {
-              padding: 10px 14px;
-              border-radius: 8px;
+            .btn-unico-envio {
+              background: linear-gradient(135deg, #059669 0%, #047857 100%);
+              color: white;
+              padding: 12px 24px;
+              border-radius: 10px;
               font-weight: bold;
-              text-decoration: none;
-              font-size: 9.5pt;
+              font-size: 11pt;
               display: inline-flex;
               align-items: center;
-              gap: 6px;
+              gap: 10px;
               cursor: pointer;
               border: none;
-              color: white;
+              box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4);
             }
-            .btn-pdf { background: #374151; }
-            .btn-wsp { background: #059669; }
-            .btn-mail { background: #2563eb; }
+            .btn-unico-envio:hover {
+              background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            }
             @media print {
               .acciones-flotantes { display: none !important; }
             }
@@ -975,30 +973,21 @@
         </head>
         <body>
           <div class="acciones-flotantes">
-            <button onclick="descargarPDFDirecto()" class="btn-accion btn-pdf">
-              <i class="fas fa-download"></i> 1. Descargar PDF
-            </button>
-            <button onclick="abrirWhatsApp1()" class="btn-accion btn-wsp">
-              <i class="fab fa-whatsapp"></i> 2. Enviar a Wsp 1
-            </button>
-            <button onclick="abrirWhatsApp2()" class="btn-accion btn-wsp">
-              <i class="fab fa-whatsapp"></i> 3. Enviar a Wsp 2
-            </button>
-            <button onclick="abrirCorreo()" class="btn-accion btn-mail">
-              <i class="fas fa-envelope"></i> 4. Enviar a Correo
+            <button onclick="ejecutarEnvioTotal()" class="btn-unico-envio">
+              <i class="fas fa-paper-plane text-lg"></i> Guardar PDF y Enviar a WhatsApp / Correo
             </button>
           </div>
 
-          <div style="height: 55px;"></div>
+          <div style="height: 60px;"></div>
 
           <div class="ticket-container" id="contenido-ticket">
             <div class="header-ticket">
-              <p style="font-size: 11pt; font-weight: bold; margin: 0 0 2px 0;">*KMVEGETALES - NUEVO PEDIDO*</p>
-              <p style="margin: 2px 0; font-size: 9pt;"><strong>*Orden N°:* No. ${correlativoFormateado}</strong></p>
-              <p style="margin: 2px 0; font-size: 8.5pt;">*Fecha:* ${fechaTexto}</p>
-              <p style="margin: 3px 0; font-size: 11pt;">*Cliente:* <strong style="font-size: 13.5pt;">${nombre.toUpperCase()}</strong></p>
-              ${direccion ? `<p style="margin: 2px 0; font-size: 8.5pt;">*Dirección:* ${direccion}</p>` : ''}
-              <p style="margin: 6px 0 2px 0; font-weight: bold; font-size: 9pt;">*DETALLE DE PRODUCTOS:*</p>
+              <p style="font-size: 12pt; font-weight: bold; margin: 0 0 3px 0;">*KMVEGETALES - NUEVO PEDIDO*</p>
+              <p style="margin: 2px 0; font-size: 10pt;"><strong>*Orden N°:* No. ${correlativoFormateado}</strong></p>
+              <p style="margin: 2px 0; font-size: 9.5pt;">*Fecha:* ${fechaTexto}</p>
+              <p style="margin: 4px 0; font-size: 12pt;">*Cliente:* <strong style="font-size: 14pt;">${nombre.toUpperCase()}</strong></p>
+              ${direccion ? `<p style="margin: 2px 0; font-size: 9.5pt;">*Dirección:* ${direccion}</p>` : ''}
+              <p style="margin: 8px 0 4px 0; font-weight: bold; font-size: 10pt;">*DETALLE DE PRODUCTOS:*</p>
             </div>
 
             <div class="flex-2-columnas">
@@ -1011,36 +1000,31 @@
             </div>
 
             <div class="footer-ticket">
-              <p style="font-size: 10.5pt; font-weight: bold; margin: 0;">*TOTAL A PAGAR: $${totalMonto.toFixed(2)}*</p>
+              <p style="font-size: 11.5pt; font-weight: bold; margin: 0;">*TOTAL A PAGAR: $${totalMonto.toFixed(2)}*</p>
             </div>
           </div>
 
           <script>
-            function descargarPDFDirecto() {
+            function ejecutarEnvioTotal() {
               const elemento = document.getElementById('contenido-ticket');
               const opciones = {
-                margin:       [4, 4, 4, 4],
+                margin:       [5, 5, 5, 5],
                 filename:     '${nombreArchivoPDF}',
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, useCORS: true },
                 jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' }
               };
-              html2pdf().from(elemento).set(opciones).save();
+
+              html2pdf().from(elemento).set(opciones).save().then(function() {
+                setTimeout(() => {
+                  window.open('${urlWhatsapp1}', '_blank');
+                  window.open('${urlWhatsapp2}', '_blank');
+                  window.open('${urlCorreo}', '_blank');
+                }, 800);
+              });
             }
 
-            function abrirWhatsApp1() {
-              window.open('${urlWhatsapp1}', '_blank');
-            }
-
-            function abrirWhatsApp2() {
-              window.open('${urlWhatsapp2}', '_blank');
-            }
-
-            function abrirCorreo() {
-              window.open('${urlCorreo}', '_blank');
-            }
-
-            ${autoDescargarPDF ? 'window.onload = function() { setTimeout(descargarPDFDirecto, 500); };' : ''}
+            ${autoDescargarPDF ? 'window.onload = function() { setTimeout(ejecutarEnvioTotal, 600); };' : ''}
           <\/script>
         </body>
         </html>
