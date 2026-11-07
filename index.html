@@ -791,7 +791,7 @@
 
     function reiniciarCorrelativoManual() {
       if (confirm("¿Deseas reiniciar el número de orden para que el siguiente pedido sea el No. 1?")) {
-        localStorage.setItem('km_correlativo_num', '0');
+        localStorage.setItem('km_correlativo_num_v2', '0');
         alert("¡Listo! El próximo pedido iniciará en el número 1.");
       }
     }
@@ -811,12 +811,12 @@
       const fechaTexto = `${dia}/${mes}/${anio} ${horas}:${minutos}`;
       const fechaNombreArchivo = `${dia}-${mes}-${anio}`;
       
-      let ultimoNum = parseInt(localStorage.getItem('km_correlativo_num') || '0');
+      let ultimoNum = parseInt(localStorage.getItem('km_correlativo_num_v2') || '0');
       if (isNaN(ultimoNum) || ultimoNum < 0 || ultimoNum >= 9999) {
         ultimoNum = 0;
       }
       let correlativoActual = ultimoNum + 1;
-      localStorage.setItem('km_correlativo_num', correlativoActual);
+      localStorage.setItem('km_correlativo_num_v2', correlativoActual);
       let correlativoFormateado = String(correlativoActual).padStart(4, '0');
 
       return { nombre, direccion, fechaTexto, fechaNombreArchivo, correlativoFormateado };
@@ -913,17 +913,17 @@
               flex-direction: column;
             }
             .ticket-container {
-              height: 268mm;
+              min-height: 268mm;
               display: flex;
               flex-direction: column;
-              justify-content: space-between;
+              justify-content: flex-start;
               padding: 8mm 10mm;
               box-sizing: border-box;
             }
             .header-ticket {
               border-bottom: 2px solid #000;
-              padding-bottom: 4px;
-              flex-shrink: 0;
+              padding-bottom: 6px;
+              margin-bottom: 10px;
             }
             .flex-2-columnas {
               display: flex !important;
@@ -931,16 +931,13 @@
               width: 100% !important;
               gap: 25px !important;
               justify-content: space-between !important;
-              flex-grow: 1;
-              align-items: flex-start;
-              padding: 4px 0;
+              align-items: flex-start !important;
             }
             .columna-50 {
               width: 48% !important;
               flex: 0 0 48% !important;
               display: flex;
               flex-direction: column;
-              justify-content: flex-start;
               gap: 8px;
             }
             .item-linea {
@@ -951,8 +948,8 @@
             }
             .footer-ticket {
               border-top: 2px solid #000;
-              padding-top: 4px;
-              flex-shrink: 0;
+              padding-top: 6px;
+              margin-top: 15px;
             }
             .acciones-flotantes {
               position: fixed;
@@ -984,7 +981,7 @@
             }
             @media print {
               .acciones-flotantes { display: none !important; }
-              .ticket-container { height: 268mm; padding: 8mm 10mm; }
+              .ticket-container { min-height: 268mm; padding: 8mm 10mm; }
             }
           </style>
           <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -1005,8 +1002,9 @@
               <p style="margin: 2px 0; font-size: 9pt;">*Fecha:* ${fechaTexto}</p>
               <p style="margin: 3px 0; font-size: 11pt;">*Cliente:* <strong style="font-size: 13pt;">${nombre.toUpperCase()}</strong></p>
               ${direccion ? `<p style="margin: 2px 0; font-size: 9pt;">*Dirección:* ${direccion}</p>` : ''}
-              <p style="margin: 4px 0 2px 0; font-weight: bold; font-size: 9.5pt;">*DETALLE DE PRODUCTOS:*</p>
             </div>
+
+            <p style="margin: 0 0 6px 0; font-weight: bold; font-size: 9.5pt;">*DETALLE DE PRODUCTOS:*</p>
 
             <div class="flex-2-columnas">
               <div class="columna-50">
@@ -1051,9 +1049,10 @@
     }
 
     window.onload = function() {
-      // Fuerza el reinicio a 0 si existe cualquier valor guardado previo (como el 1059)
-      localStorage.removeItem('km_correlativo_num');
-      localStorage.setItem('km_correlativo_num', '0');
+      // Fuerza el inicio del correlativo en 0 para que la primera orden comience estrictamente en 0001
+      if (!localStorage.getItem('km_correlativo_num_v2')) {
+        localStorage.setItem('km_correlativo_num_v2', '0');
+      }
       cargarProductosDesdeSheets();
     };
   </script>
