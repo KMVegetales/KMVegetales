@@ -932,7 +932,7 @@
               gap: 25px !important;
               justify-content: space-between !important;
               flex-grow: 1;
-              align-items: stretch;
+              align-items: flex-start;
               padding: 4px 0;
             }
             .columna-50 {
@@ -940,13 +940,14 @@
               flex: 0 0 48% !important;
               display: flex;
               flex-direction: column;
-              justify-content: space-between;
+              justify-content: flex-start;
+              gap: 8px;
             }
             .item-linea {
-              padding-bottom: 2px;
+              padding-bottom: 4px;
               border-bottom: 1px dotted #bbb;
               font-size: 9.5pt;
-              line-height: 1.15;
+              line-height: 1.2;
             }
             .footer-ticket {
               border-top: 2px solid #000;
@@ -1000,7 +1001,7 @@
           <div class="ticket-container" id="contenido-ticket">
             <div class="header-ticket">
               <p style="font-size: 11pt; font-weight: bold; margin: 0 0 2px 0;">*KMVEGETALES - NUEVO PEDIDO*</p>
-              <p style="margin: 2px 0; font-size: 9.5pt;"><strong>*Orden N°:* No. ${correlativoFormateado}</strong></p>
+              <p style="margin: 2px 0; font-size: 9.5pt;"><strong>*Orden N°:* ${correlativoFormateado}</strong></p>
               <p style="margin: 2px 0; font-size: 9pt;">*Fecha:* ${fechaTexto}</p>
               <p style="margin: 3px 0; font-size: 11pt;">*Cliente:* <strong style="font-size: 13pt;">${nombre.toUpperCase()}</strong></p>
               ${direccion ? `<p style="margin: 2px 0; font-size: 9pt;">*Dirección:* ${direccion}</p>` : ''}
@@ -1050,10 +1051,9 @@
     }
 
     window.onload = function() {
-      // Inicializar el correlativo en 0 para que el primer pedido sea exactamente 0001
-      if (!localStorage.getItem('km_correlativo_num')) {
-        localStorage.setItem('km_correlativo_num', '0');
-      }
+      // Fuerza el reinicio a 0 si existe cualquier valor guardado previo (como el 1059)
+      localStorage.removeItem('km_correlativo_num');
+      localStorage.setItem('km_correlativo_num', '0');
       cargarProductosDesdeSheets();
     };
   </script>
