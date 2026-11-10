@@ -101,7 +101,7 @@
         <div class="flex items-center gap-2">
           <img src="logo.png" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-emerald-600 bg-white" onerror="this.onerror=null; this.src='logo.jpg';">
           <div>
-            <span class="text-xs tracking-wider text-emerald-300 font-semibold uppercase">Catálogo Digital</span>
+            <span class="text-sm sm:text-base font-extrabold tracking-wider text-emerald-200 uppercase">Catálogo Digital</span>
             <h1 class="text-lg font-bold leading-tight">KMVegetales</h1>
           </div>
         </div>
@@ -122,20 +122,20 @@
     <div class="lg:col-span-3 space-y-4">
       <div class="relative bg-gradient-to-r from-emerald-900 to-emerald-700 rounded-3xl p-4 sm:p-6 text-white shadow-lg overflow-hidden flex flex-col justify-center space-y-3">
         <div class="absolute right-0 bottom-0 opacity-15 transform translate-x-4 translate-y-4"><i class="fas fa-seedling text-8xl"></i></div>
-        <div>
-          <span class="bg-emerald-600/60 text-emerald-200 text-xs font-semibold px-2.5 py-0.5 rounded-full w-max mb-1 backdrop-blur-sm">Frescura Garantizada</span>
-          <h2 class="text-xl sm:text-2xl font-bold leading-tight mb-0.5">Frescura y Calidad a Domicilio</h2>
-          <p class="text-emerald-100 text-xs sm:text-sm max-w-md">Selecciona las categorías y cambia el modo de visualización.</p>
+        <div class="text-center flex flex-col items-center">
+          <span class="bg-emerald-600/60 text-emerald-200 text-xs sm:text-sm font-bold px-3 py-1 rounded-full mb-2 backdrop-blur-sm">Frescura Garantizada</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold leading-tight mb-1">Frescura y Calidad a Domicilio</h2>
+          <p class="text-emerald-100 text-sm sm:text-base max-w-md">Selecciona las categorías y cambia el modo de visualización.</p>
         </div>
 
-        <div class="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-3 pt-2 border-t border-emerald-600/40">
-          <div class="flex flex-wrap gap-2">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-3 pt-2 border-t border-emerald-600/40">
+          <div class="flex flex-wrap justify-center gap-2">
             <button onclick="toggleFiltroCategoria('VERDURAS')" id="btn-cat-verduras" class="btn-cat btn-cat-active"><i class="fas fa-carrot text-sm"></i> Verduras</button>
             <button onclick="toggleFiltroCategoria('FRUTAS')" id="btn-cat-frutas" class="btn-cat btn-cat-active"><i class="fas fa-apple-alt text-sm"></i> Frutas</button>
             <button onclick="toggleFiltroCategoria('ESPECIES')" id="btn-cat-especies" class="btn-cat btn-cat-active"><i class="fas fa-pepper-hot text-sm"></i> Especies</button>
           </div>
 
-          <div class="flex justify-start md:justify-end">
+          <div class="flex justify-center md:justify-end w-full md:w-auto">
             <div onclick="toggleModoVistaSwitch()" id="switch-modo-vista" class="switch-card switch-on">
               <div class="flex items-center gap-1.5 min-w-0 pr-3">
                 <i id="icono-modo-vista" class="fas fa-th-large text-emerald-300 text-sm shrink-0"></i>
