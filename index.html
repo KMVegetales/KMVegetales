@@ -635,11 +635,10 @@
       const ampmWp = horas >= 12 ? 'p. m.' : 'a. m.';
       const ampmFile = horas >= 12 ? 'p.m.' : 'a.m.';
 
-      // Fecha y hora exacta para el mensaje de WhatsApp: CARLOS del 09/11/2026 8:39 p. m.
       const fechaTextoWp = `${dia}/${mes}/${anio} ${horas12}:${minutos} ${ampmWp}`;
-
-      // Nombre del archivo PDF con hora única para evitar duplicados: Pedido_CARLOS_09-11-2026_9-25_p.m.pdf
       const nombreLimpio = nombre.replace(/\s+/g, '_').toUpperCase();
+      
+      // ESTE ES EL NOMBRE ÚNICO CON HORA EXACTA PARA EL PDF:
       const nombreArchivoPDF = `Pedido_${nombreLimpio}_${dia}-${mes}-${anio}_${horas12}-${minutos}_${ampmFile}.pdf`;
 
       return { nombre, direccion, fechaTextoWp, nombreArchivoPDF };
@@ -685,7 +684,7 @@
       const telefono1 = "50374670712";
       const telefono2 = "50377225818";
       
-      // WhatsApp con la estructura exacta que pediste: CARLOS del 09/11/2026 8:39 p. m.. adjunto el archivo PDF del pedido
+      // ESTE ES EL TEXTO EXACTO PARA WHATSAPP:
       const textoWp = `${nombre.toUpperCase()} del ${fechaTextoWp}.. adjunto el archivo PDF del pedido`;
       const urlWhatsapp1 = `https://api.whatsapp.com/send?phone=${telefono1}&text=` + encodeURIComponent(textoWp);
       const urlWhatsapp2 = `https://api.whatsapp.com/send?phone=${telefono2}&text=` + encodeURIComponent(textoWp);
