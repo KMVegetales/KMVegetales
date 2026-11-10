@@ -833,7 +833,7 @@
 
       let horas = hoy.getHours();
       const minutos = String(hoy.getMinutes()).padStart(2, '0');
-      const ampm = horas >= 12 ? 'p. m.' : 'a. m.';
+      const ampm = horas >= 12 ? 'PM' : 'AM';
       horas = horas % 12;
       horas = horas ? horas : 12;
       const horaFormateada = `${horas}:${minutos} ${ampm}`;
