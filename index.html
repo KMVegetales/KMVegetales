@@ -17,7 +17,7 @@
     input, select, textarea { font-size: 16px !important; }
     button, select, input { transition: all 0.2s ease-in-out; }
 
-    /* FORZAR ESTRICTAMENTE 2 COLUMNAS EN CELULAR (IGNORA CUALQUIER OTRA REGLA) */
+    /* FORZAR ESTRICTAMENTE 2 COLUMNAS EN CELULAR */
     .grid-productos-movil {
       display: grid !important;
       grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
@@ -394,7 +394,6 @@
           tituloSeccion.innerHTML = `<i class="fas fa-seedling"></i> ${cat}`;
           contenedor.appendChild(tituloSeccion);
 
-          // USANDO LA NUEVA CLASE ESTRICTA DE 2 COLUMNAS
           const grid = document.createElement('div');
           grid.className = 'grid-productos-movil';
 
@@ -435,7 +434,7 @@
                     <label class="text-[10px] text-gray-400 font-semibold block mb-0.5 text-right">CANTIDAD:</label>
                     <div class="flex items-center justify-end gap-1">
                       <button onclick="cambiarCantidad('${p.id}', -1)" class="btn-qty-minus w-7 h-7 rounded-lg font-bold text-sm flex items-center justify-center">-</button>
-                      <input type="number" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" class="w-11 h-7 text-center text-sm font-bold bg-gray-50 border border-gray-200 rounded-lg" style="font-size: 16px !important;">
+                      <input type="number" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select(); prevenirZoomMovil(this);" oninput="fijarCantidadDirecta('${p.id}', this.value)" class="w-11 h-7 text-center text-sm font-bold bg-gray-50 border border-gray-200 rounded-lg" style="font-size: 16px !important;">
                       <button onclick="cambiarCantidad('${p.id}', 1)" class="btn-qty-plus w-7 h-7 rounded-lg font-bold text-sm flex items-center justify-center">+</button>
                     </div>
                   </div>
@@ -478,7 +477,7 @@
                 <td class="w-36"><select onchange="cambiarPresentacion('${p.id}', this.value)" class="select-custom w-full bg-gray-50 border border-gray-200 text-xs rounded p-1.5" style="font-size: 16px !important;">${opcionesHTML}</select></td>
                 <td id="precio-${p.id}" class="font-bold text-gray-700 text-right text-sm">$${presActual.precio.toFixed(2)}</td>
                 <td class="text-center w-28">
-                  <input type="number" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" onkeydown="navegarTecladoExcel(event, ${globalIndex})" class="input-excel input-fila-excel" data-index="${globalIndex}">
+                  <input type="number" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select(); prevenirZoomMovil(this);" oninput="fijarCantidadDirecta('${p.id}', this.value)" onkeydown="navegarTecladoExcel(event, ${globalIndex})" class="input-excel input-fila-excel" data-index="${globalIndex}" style="font-size: 16px !important;">
                 </td>
                 <td id="subtotal-${p.id}" class="font-bold text-emerald-700 text-right text-sm">$${subtotalLinea.toFixed(2)}</td>
               </tr>
@@ -489,6 +488,17 @@
           wrapperTabla.innerHTML = `<table class="tabla-excel"><thead><tr><th>Producto</th><th>Presentación</th><th class="text-right">Precio U.</th><th class="text-center">Cantidad</th><th class="text-right">Subtotal</th></tr></thead><tbody>${filasHTML}</tbody></table>`;
           contenedor.appendChild(wrapperTabla);
         });
+      }
+    }
+
+    // FUNCIÓN ANTI-ZOOM MÓVIL AL HACER FOCO EN LOS INPUTS
+    function prevenirZoomMovil(el) {
+      const viewportMeta = document.querySelector('meta[name="viewport"]');
+      if (viewportMeta) {
+        viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0');
+        setTimeout(() => {
+          viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+        }, 300);
       }
     }
 
