@@ -129,13 +129,13 @@
         </div>
 
         <div class="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-3 pt-2 border-t border-emerald-600/40">
-          <div class="flex flex-wrap gap-2">
+          <div class="flex flex-wrap justify-center md:justify-start gap-2">
             <button onclick="toggleFiltroCategoria('VERDURAS')" id="btn-cat-verduras" class="btn-cat btn-cat-active"><i class="fas fa-carrot text-sm"></i> Verduras</button>
             <button onclick="toggleFiltroCategoria('FRUTAS')" id="btn-cat-frutas" class="btn-cat btn-cat-active"><i class="fas fa-apple-alt text-sm"></i> Frutas</button>
             <button onclick="toggleFiltroCategoria('ESPECIES')" id="btn-cat-especies" class="btn-cat btn-cat-active"><i class="fas fa-pepper-hot text-sm"></i> Especies</button>
           </div>
 
-          <div class="flex justify-start md:justify-end">
+          <div class="flex justify-center md:justify-end">
             <div onclick="toggleModoVistaSwitch()" id="switch-modo-vista" class="switch-card switch-on">
               <div class="flex items-center gap-1.5 min-w-0 pr-3">
                 <i id="icono-modo-vista" class="fas fa-th-large text-emerald-300 text-sm shrink-0"></i>
@@ -273,12 +273,7 @@
 
         if (!id || !nombre) continue;
 
-        const nombreCod = encodeURIComponent(nombre);
-        let rutaFoto = `${nombreCod}.png`;
-        if (fotoCol && fotoCol !== 'OK' && fotoCol !== '') {
-          rutaFoto = encodeURIComponent(fotoCol);
-        }
-
+        let rutaFoto = (fotoCol && fotoCol !== 'OK' && fotoCol !== '') ? fotoCol : `${nombre}.jpg`;
         const descripcion = descCol && descCol !== '' ? descCol : `${nombre} fresco de alta calidad.`;
 
         if (!mapaProductos[id]) {
@@ -372,7 +367,7 @@
           contenedor.appendChild(tituloSeccion);
 
           const grid = document.createElement('div');
-          grid.className = 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3';
+          grid.className = 'grid grid-cols-2 lg:grid-cols-4 gap-3';
 
           prodsCat.forEach(p => {
             if (!seleccionPresentacion[p.id]) seleccionPresentacion[p.id] = 0;
@@ -391,7 +386,7 @@
             card.innerHTML = `
               <div>
                 <div class="relative h-32 rounded-xl overflow-hidden mb-2 bg-gray-100">
-                  <img src="${p.foto}" alt="${p.nombre}" loading="lazy" class="w-full h-full object-cover" onerror="intentarFormatosAlternativos(this, '${p.nombre}')">
+                  <img src="${p.foto}" alt="${p.nombre}" loading="lazy" class="w-full h-full object-cover" onerror="intentarFormatosAlternativos(this, '${p.nombre.replace(/'/g, "\'")}')">
                   <span class="absolute top-2 left-2 bg-white/90 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">${p.categoria}</span>
                 </div>
                 <h3 class="font-bold text-gray-800 text-xs sm:text-sm mb-0.5 truncate">${p.nombre}</h3>
@@ -483,12 +478,11 @@
     function intentarFormatosAlternativos(imgElement, nombreProducto) {
       if (!imgElement.dataset.intento) imgElement.dataset.intento = '1';
       const intentos = parseInt(imgElement.dataset.intento);
-      const nombreCod = encodeURIComponent(nombreProducto);
       switch (intentos) {
-        case 1: imgElement.src = `${nombreCod}.jpg`; imgElement.dataset.intento = '2'; break;
-        case 2: imgElement.src = `${nombreCod}.jpeg`; imgElement.dataset.intento = '3'; break;
-        case 3: imgElement.src = `${nombreCod}.PNG`; imgElement.dataset.intento = '4'; break;
-        case 4: imgElement.src = `${nombreCod}.JPG`; imgElement.dataset.intento = '5'; break;
+        case 1: imgElement.src = `${nombreProducto}.png`; imgElement.dataset.intento = '2'; break;
+        case 2: imgElement.src = `${nombreProducto}.jpeg`; imgElement.dataset.intento = '3'; break;
+        case 3: imgElement.src = `${nombreProducto}.PNG`; imgElement.dataset.intento = '4'; break;
+        case 4: imgElement.src = `${nombreProducto}.JPG`; imgElement.dataset.intento = '5'; break;
         default: imgElement.src = 'logo.png'; imgElement.onerror = null; break;
       }
     }
@@ -638,7 +632,6 @@
       const fechaTextoWp = `${dia}/${mes}/${anio} ${horas12}:${minutos} ${ampmWp}`;
       const nombreLimpio = nombre.replace(/\s+/g, '_').toUpperCase();
       
-      // ESTE ES EL NOMBRE ÚNICO CON HORA EXACTA PARA EL PDF:
       const nombreArchivoPDF = `Pedido_${nombreLimpio}_${dia}-${mes}-${anio}_${horas12}-${minutos}_${ampmFile}.pdf`;
 
       return { nombre, direccion, fechaTextoWp, nombreArchivoPDF };
@@ -684,7 +677,6 @@
       const telefono1 = "50374670712";
       const telefono2 = "50377225818";
       
-      // ESTE ES EL TEXTO EXACTO PARA WHATSAPP:
       const textoWp = `${nombre.toUpperCase()} del ${fechaTextoWp}.. adjunto el archivo PDF del pedido`;
       const urlWhatsapp1 = `https://api.whatsapp.com/send?phone=${telefono1}&text=` + encodeURIComponent(textoWp);
       const urlWhatsapp2 = `https://api.whatsapp.com/send?phone=${telefono2}&text=` + encodeURIComponent(textoWp);
