@@ -817,16 +817,18 @@
       const mes = String(hoy.getMonth() + 1).padStart(2, '0');
       const anio = hoy.getFullYear();
 
-      // Formato AM / PM
       let horas = hoy.getHours();
       const minutos = String(hoy.getMinutes()).padStart(2, '0');
+      
       const ampm = horas >= 12 ? 'p. m.' : 'a. m.';
-      horas = horas % 12;
-      horas = horas ? horas : 12; // la hora '0' se convierte en '12'
-      const horaFormateada = `${horas}:${minutos} ${ampm}`;
+      const horas12 = horas % 12 || 12;
+      const horaFormateada = `${horas12}:${minutos} ${ampm}`;
+
+      // Formato numérico exacto para el nombre del archivo PDF (ej: 2007)
+      const horaArchivo = String(horas).padStart(2, '0') + minutos;
 
       const fechaTexto = `${dia}/${mes}/${anio} ${horaFormateada}`;
-      const fechaNombreArchivo = `${dia}-${mes}-${anio}_${String(hoy.getHours()).padStart(2, '0')}${minutos}`;
+      const fechaNombreArchivo = `${dia}-${mes}-${anio}_${horaArchivo}`;
 
       return { nombre, direccion, fechaTexto, fechaNombreArchivo };
     }
