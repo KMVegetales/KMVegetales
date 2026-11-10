@@ -632,15 +632,16 @@
 
       let horas12 = horas % 12;
       horas12 = horas12 ? horas12 : 12;
-      const ampm = horas >= 12 ? 'p. m.' : 'a. m.';
-      const horaFormateadaWp = `${horas12}:${minutos} ${ampm}`;
+      const ampmWp = horas >= 12 ? 'p. m.' : 'a. m.';
+      const ampmFile = horas >= 12 ? 'p.m.' : 'a.m.';
 
-      const fechaTexto = `${dia}/${mes}/${anio} ${horaFormateadaWp}`;
-      
+      const fechaTextoWp = `${dia}/${mes}/${anio} ${horas12}:${minutos} ${ampmWp}`;
       const nombreLimpio = nombre.replace(/\s+/g, '_').toUpperCase();
-      const nombreArchivoPDF = `Pedido_${nombreLimpio}_${dia}-${mes}-${anio}.pdf`;
+      
+      // ESTE ES EL NOMBRE ÚNICO CON HORA EXACTA PARA EL PDF:
+      const nombreArchivoPDF = `Pedido_${nombreLimpio}_${dia}-${mes}-${anio}_${horas12}-${minutos}_${ampmFile}.pdf`;
 
-      return { nombre, direccion, fechaTexto, nombreArchivoPDF };
+      return { nombre, direccion, fechaTextoWp, nombreArchivoPDF };
     }
 
     function abrirVistaPreviaOrden() {
@@ -658,7 +659,7 @@
         return;
       }
 
-      const { direccion, fechaTexto, nombreArchivoPDF } = obtenerDatosPedido();
+      const { direccion, fechaTextoWp, nombreArchivoPDF } = obtenerDatosPedido();
       const itemsArr = Object.values(carrito);
       
       const columnaIzquierda = itemsArr.slice(0, 15);
@@ -683,8 +684,8 @@
       const telefono1 = "50374670712";
       const telefono2 = "50377225818";
       
-      // WhatsApp con la estructura exacta: NOMBRE del FECHA HORA.. adjunto el archivo PDF del pedido
-      const textoWp = `${nombre.toUpperCase()} del ${fechaTexto}.. adjunto el archivo PDF del pedido`;
+      // ESTE ES EL TEXTO EXACTO PARA WHATSAPP:
+      const textoWp = `${nombre.toUpperCase()} del ${fechaTextoWp}.. adjunto el archivo PDF del pedido`;
       const urlWhatsapp1 = `https://api.whatsapp.com/send?phone=${telefono1}&text=` + encodeURIComponent(textoWp);
       const urlWhatsapp2 = `https://api.whatsapp.com/send?phone=${telefono2}&text=` + encodeURIComponent(textoWp);
 
@@ -720,7 +721,7 @@
           <div class="ticket-container" id="contenido-ticket">
             <div class="header-ticket">
               <p style="font-size: 11pt; font-weight: bold; margin: 0 0 2px 0;">*KMVEGETALES - NUEVO PEDIDO*</p>
-              <p style="margin: 2px 0; font-size: 9.5pt;">*Fecha:* ${fechaTexto}</p>
+              <p style="margin: 2px 0; font-size: 9.5pt;">*Fecha:* ${fechaTextoWp}</p>
               <p style="margin: 3px 0; font-size: 11pt;">*Cliente:* <strong style="font-size: 13pt;">${nombre.toUpperCase()}</strong></p>
               ${direccion ? `<p style="margin: 2px 0; font-size: 9.5pt;">*Dirección:* ${direccion}</p>` : ''}
             </div>
