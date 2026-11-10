@@ -389,7 +389,7 @@
             card.innerHTML = `
               <div>
                 <div class="relative h-32 rounded-xl overflow-hidden mb-2 bg-gray-100">
-                  <img src="${p.foto}" alt="${p.nombre}" loading="lazy" class="w-full h-full object-cover" onerror="intentarFormatosAlternativos(this, '${p.nombre}')">
+                  <img src="${p.foto}" alt="${p.nombre}" loading="eager" class="w-full h-full object-cover" onerror="intentarFormatosAlternativos(this, '${p.nombre}')">
                   <span class="absolute top-2 left-2 bg-white/90 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">${p.categoria}</span>
                 </div>
                 <h3 class="font-extrabold text-gray-900 text-sm sm:text-base mb-1 truncate">${p.nombre}</h3>
@@ -408,7 +408,7 @@
                     <label class="text-[10px] text-gray-400 font-semibold block mb-0.5 text-right">CANTIDAD:</label>
                     <div class="flex items-center justify-end gap-1">
                       <button onclick="cambiarCantidad('${p.id}', -1)" class="btn-qty-minus w-8 h-8 rounded-lg font-black text-base flex items-center justify-center">-</button>
-                      <input type="number" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" class="w-12 h-8 text-center text-base font-black bg-gray-50 border border-gray-300 rounded-lg">
+                      <input type="number" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" style="font-size: 16px !important;" class="w-12 h-8 text-center font-black bg-gray-50 border border-gray-300 rounded-lg">
                       <button onclick="cambiarCantidad('${p.id}', 1)" class="btn-qty-plus w-8 h-8 rounded-lg font-black text-base flex items-center justify-center">+</button>
                     </div>
                   </div>
