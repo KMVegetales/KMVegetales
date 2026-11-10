@@ -8,8 +8,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
-    body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-text-size-adjust: 100%; }
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-text-size-adjust: 100%; font-size: 16px; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -36,22 +36,22 @@
     .select-custom {
       cursor: pointer;
       background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%6b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-      background-position: right 0.4rem center;
+      background-position: right 0.5rem center;
       background-repeat: no-repeat;
-      background-size: 1.2em 1.2em;
-      padding-right: 1.8rem;
+      background-size: 1.3em 1.3em;
+      padding-right: 2rem;
       appearance: none;
     }
 
     .btn-cat {
       cursor: pointer;
       font-weight: 800;
-      font-size: 12px;
-      padding: 8px 14px;
-      border-radius: 12px;
+      font-size: 14px;
+      padding: 10px 18px;
+      border-radius: 14px;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.2);
       border: 1px solid rgba(0,0,0,0.1);
     }
@@ -61,34 +61,34 @@
 
     .switch-card {
       background-color: #043829;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 14px;
-      padding: 6px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      padding: 8px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 12px;
       cursor: pointer;
     }
     .switch-body {
-      width: 52px; height: 26px; border-radius: 9999px; position: relative; transition: background-color 0.2s ease; box-shadow: inset 0 2px 4px rgba(0,0,0,0.4); flex-shrink: 0;
+      width: 58px; height: 30px; border-radius: 9999px; position: relative; transition: background-color 0.2s ease; box-shadow: inset 0 2px 4px rgba(0,0,0,0.4); flex-shrink: 0;
     }
     .switch-handle {
-      width: 20px; height: 20px; background: radial-gradient(circle, #333333 0%, #111111 100%); border-radius: 50%; position: absolute; top: 3px; transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+      width: 24px; height: 24px; background: radial-gradient(circle, #333333 0%, #111111 100%); border-radius: 50%; position: absolute; top: 3px; transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 2px 4px rgba(0,0,0,0.4);
     }
     .switch-on .switch-body { background-color: #bdef00; }
     .switch-on .switch-handle { transform: translateX(28px); }
-    .switch-on .switch-text::before { content: "ON"; color: #111827; font-weight: 800; font-size: 9px; position: absolute; left: 7px; top: 6px; }
+    .switch-on .switch-text::before { content: "ON"; color: #111827; font-weight: 800; font-size: 10px; position: absolute; left: 7px; top: 7px; }
     .switch-off .switch-body { background-color: #b91c1c; }
     .switch-off .switch-handle { transform: translateX(4px); }
-    .switch-off .switch-text::after { content: "OFF"; color: #ffffff; font-weight: 800; font-size: 9px; position: absolute; right: 6px; top: 6px; }
+    .switch-off .switch-text::after { content: "OFF"; color: #ffffff; font-weight: 800; font-size: 10px; position: absolute; right: 6px; top: 7px; }
 
     .tabla-excel { border-collapse: collapse; width: 100%; background-color: white; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 1.5rem; }
-    .tabla-excel th { background-color: #064e3b; color: white; text-align: left; padding: 10px 12px; font-size: 12px; text-transform: uppercase; }
-    .tabla-excel td { border-bottom: 1px solid #e5e7eb; padding: 10px 12px; font-size: 14px; }
+    .tabla-excel th { background-color: #064e3b; color: white; text-align: left; padding: 12px 14px; font-size: 14px; text-transform: uppercase; }
+    .tabla-excel td { border-bottom: 1px solid #e5e7eb; padding: 12px 14px; font-size: 15px; }
     .tabla-excel tr:hover { background-color: #f0fdf4; }
     .input-excel {
-      width: 90px; text-align: center; font-weight: 700; background-color: #f9fafb; border: 1.5px solid #d1d5db; border-radius: 6px; padding: 6px; font-size: 16px; color: #111827;
+      width: 100px; text-align: center; font-weight: 700; background-color: #f9fafb; border: 1.5px solid #d1d5db; border-radius: 8px; padding: 8px; font-size: 16px; color: #111827;
     }
     .input-excel:focus { outline: none; border-color: #059669; background-color: #ffffff; box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.2); }
   </style>
@@ -96,50 +96,51 @@
 <body class="bg-gray-50 min-h-screen pb-24 lg:pb-12">
 
   <header class="bg-[#064e3b] text-white shadow-md sticky top-0 z-30">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
+    <div class="w-full px-4 sm:px-6 py-3.5 flex flex-col md:flex-row justify-between items-center gap-4">
       <div class="flex items-center gap-3 w-full md:w-auto justify-between">
-        <div class="flex items-center gap-2">
-          <img src="logo.png" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-emerald-600 bg-white" onerror="this.onerror=null; this.src='logo.jpg';">
+        <div class="flex items-center gap-3">
+          <img src="logo.png" alt="Logo" class="w-12 h-12 rounded-xl object-cover border-2 border-emerald-500 bg-white" onerror="this.onerror=null; this.src='logo.jpg';">
           <div>
-            <span class="text-xs tracking-wider text-emerald-300 font-semibold uppercase">Catálogo Digital</span>
-            <h1 class="text-lg font-bold leading-tight">KMVegetales</h1>
+            <span class="text-xs tracking-wider text-emerald-300 font-bold uppercase">Catálogo Digital</span>
+            <h1 class="text-xl sm:text-2xl font-extrabold leading-tight">KMVegetales</h1>
           </div>
         </div>
-        <button onclick="toggleCarritoMovil()" class="md:hidden relative bg-emerald-700 hover:bg-emerald-600 active:scale-95 p-2.5 rounded-xl border border-emerald-600 transition shadow-md">
-          <i class="fas fa-shopping-cart text-lg"></i>
-          <span id="cart-count-mobile" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+        <button onclick="toggleCarritoMovil()" class="md:hidden relative bg-emerald-700 hover:bg-emerald-600 active:scale-95 p-3 rounded-xl border border-emerald-600 transition shadow-md">
+          <i class="fas fa-shopping-cart text-xl"></i>
+          <span id="cart-count-mobile" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center border-2 border-[#064e3b]">0</span>
         </button>
       </div>
 
-      <div class="w-full md:w-96 relative">
-        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"><i class="fas fa-search"></i></span>
-        <input type="text" id="input-buscar" oninput="filtrarProductos()" placeholder="Buscar frutas, verduras, sacos, cajas..." class="w-full pl-10 pr-4 py-2.5 bg-emerald-900/50 border border-emerald-700/60 rounded-xl text-sm text-white placeholder-emerald-300/70 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition">
+      <div class="w-full md:w-1/3 relative">
+        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-gray-300 text-base"><i class="fas fa-search"></i></span>
+        <input type="text" id="input-buscar" oninput="filtrarProductos()" placeholder="Buscar frutas, verduras, sacos, cajas..." class="w-full pl-11 pr-4 py-3 bg-emerald-900/60 border border-emerald-700/80 rounded-xl text-base text-white placeholder-emerald-200/80 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition font-medium">
       </div>
     </div>
   </header>
 
-  <main class="max-w-7xl mx-auto px-4 mt-4 grid grid-cols-1 lg:grid-cols-4 gap-6">
-    <div class="lg:col-span-3 space-y-4">
-      <div class="relative bg-gradient-to-r from-emerald-900 to-emerald-700 rounded-3xl p-4 sm:p-6 text-white shadow-lg overflow-hidden flex flex-col justify-center space-y-3">
-        <div class="absolute right-0 bottom-0 opacity-15 transform translate-x-4 translate-y-4"><i class="fas fa-seedling text-8xl"></i></div>
+  <main class="w-full px-3 sm:px-6 mt-4 grid grid-cols-1 lg:grid-cols-4 gap-6">
+    <div class="lg:col-span-3 space-y-5">
+      <!-- Banner expandido -->
+      <div class="relative bg-gradient-to-r from-emerald-900 via-emerald-800 to-emerald-700 rounded-3xl p-5 sm:p-7 text-white shadow-lg overflow-hidden flex flex-col justify-center space-y-4">
+        <div class="absolute right-0 bottom-0 opacity-15 transform translate-x-4 translate-y-4"><i class="fas fa-seedling text-9xl"></i></div>
         <div>
-          <span class="bg-emerald-600/60 text-emerald-200 text-xs font-semibold px-2.5 py-0.5 rounded-full w-max mb-1 backdrop-blur-sm">Frescura Garantizada</span>
-          <h2 class="text-xl sm:text-2xl font-bold leading-tight mb-0.5">Frescura y Calidad a Domicilio</h2>
-          <p class="text-emerald-100 text-xs sm:text-sm max-w-md">Selecciona las categorías y cambia el modo de visualización.</p>
+          <span class="bg-emerald-600/70 text-emerald-100 text-xs sm:text-sm font-bold px-3 py-1 rounded-full w-max mb-1.5 inline-block backdrop-blur-sm border border-emerald-500/30">Frescura Garantizada</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold leading-tight mb-1">Frescura y Calidad a Domicilio</h2>
+          <p class="text-emerald-100 text-sm sm:text-base font-medium max-w-lg">Selecciona las categorías y cambia el modo de visualización.</p>
         </div>
 
-        <div class="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-3 pt-2 border-t border-emerald-600/40">
-          <div class="flex flex-wrap justify-center md:justify-start gap-2">
-            <button onclick="toggleFiltroCategoria('VERDURAS')" id="btn-cat-verduras" class="btn-cat btn-cat-active"><i class="fas fa-carrot text-sm"></i> Verduras</button>
-            <button onclick="toggleFiltroCategoria('FRUTAS')" id="btn-cat-frutas" class="btn-cat btn-cat-active"><i class="fas fa-apple-alt text-sm"></i> Frutas</button>
-            <button onclick="toggleFiltroCategoria('ESPECIES')" id="btn-cat-especies" class="btn-cat btn-cat-active"><i class="fas fa-pepper-hot text-sm"></i> Especies</button>
+        <div class="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 pt-3 border-t border-emerald-600/50">
+          <div class="flex flex-wrap justify-center md:justify-start gap-2.5">
+            <button onclick="toggleFiltroCategoria('VERDURAS')" id="btn-cat-verduras" class="btn-cat btn-cat-active"><i class="fas fa-carrot text-base"></i> Verduras</button>
+            <button onclick="toggleFiltroCategoria('FRUTAS')" id="btn-cat-frutas" class="btn-cat btn-cat-active"><i class="fas fa-apple-alt text-base"></i> Frutas</button>
+            <button onclick="toggleFiltroCategoria('ESPECIES')" id="btn-cat-especies" class="btn-cat btn-cat-active"><i class="fas fa-pepper-hot text-base"></i> Especies</button>
           </div>
 
           <div class="flex justify-center md:justify-end">
             <div onclick="toggleModoVistaSwitch()" id="switch-modo-vista" class="switch-card switch-on">
-              <div class="flex items-center gap-1.5 min-w-0 pr-3">
-                <i id="icono-modo-vista" class="fas fa-th-large text-emerald-300 text-sm shrink-0"></i>
-                <span id="label-modo-vista" class="text-xs font-bold text-white truncate">Fotos</span>
+              <div class="flex items-center gap-2 min-w-0 pr-3">
+                <i id="icono-modo-vista" class="fas fa-th-large text-emerald-300 text-base shrink-0"></i>
+                <span id="label-modo-vista" class="text-xs sm:text-sm font-extrabold text-white truncate">Fotos</span>
               </div>
               <div class="switch-body switch-text"><div class="switch-handle"></div></div>
             </div>
@@ -152,38 +153,38 @@
 
     <!-- Panel Lateral Escritorio -->
     <div class="hidden lg:block">
-      <div class="bg-white rounded-3xl p-5 shadow-xl border border-gray-100 sticky top-24 space-y-4">
-        <div class="flex items-center justify-between border-b pb-3">
-          <h3 class="font-bold text-base text-gray-800 flex items-center gap-2">
-            <span class="bg-emerald-100 text-emerald-800 p-1.5 rounded-xl"><i class="fas fa-shopping-basket"></i></span> Tu Pedido
+      <div class="bg-white rounded-3xl p-6 shadow-xl border border-gray-100 sticky top-24 space-y-5">
+        <div class="flex items-center justify-between border-b pb-3.5">
+          <h3 class="font-bold text-lg text-gray-800 flex items-center gap-2">
+            <span class="bg-emerald-100 text-emerald-800 p-2 rounded-xl"><i class="fas fa-shopping-basket"></i></span> Tu Pedido
           </h3>
-          <span id="cart-count-badge" class="bg-emerald-600 text-white font-bold text-xs px-2.5 py-0.5 rounded-full shadow-sm">0 productos</span>
+          <span id="cart-count-badge" class="bg-emerald-600 text-white font-bold text-xs sm:text-sm px-3 py-1 rounded-full shadow-sm">0 productos</span>
         </div>
 
         <div id="lista-carrito-desktop" class="divide-y max-h-[40vh] overflow-y-auto pr-1 space-y-2">
-          <p class="text-gray-400 text-xs text-center py-6">Tu carrito está vacío</p>
+          <p class="text-gray-400 text-sm text-center py-6 font-medium">Tu carrito está vacío</p>
         </div>
 
-        <div class="border-t pt-3 space-y-3">
-          <div class="flex justify-between items-center text-base font-bold text-gray-800">
+        <div class="border-t pt-4 space-y-4">
+          <div class="flex justify-between items-center text-lg font-bold text-gray-800">
             <span>Total a Pagar:</span>
-            <span id="total-precio-desktop" class="text-emerald-700 text-xl font-extrabold">$0.00</span>
+            <span id="total-precio-desktop" class="text-emerald-700 text-2xl font-black">$0.00</span>
           </div>
 
-          <div class="space-y-2.5 pt-1">
+          <div class="space-y-3 pt-1">
             <div>
-              <label class="block text-xs font-bold text-gray-600 mb-1">Nombre del Negocio o Cliente:</label>
-              <input type="text" id="input-nombre" placeholder="Ej. CARLOS" class="w-full bg-gray-50 border border-gray-300 p-3 rounded-xl text-sm focus:outline-none focus:border-emerald-500 font-semibold">
+              <label class="block text-xs sm:text-sm font-bold text-gray-700 mb-1">Nombre del Negocio o Cliente:</label>
+              <input type="text" id="input-nombre" placeholder="Ej. CARLOS" class="w-full bg-gray-50 border border-gray-300 p-3.5 rounded-xl text-base focus:outline-none focus:border-emerald-500 font-bold text-gray-800">
             </div>
             <div>
-              <label class="block text-xs font-bold text-gray-600 mb-1">Dirección / Referencia:</label>
-              <input type="text" id="input-direccion" placeholder="Ej. APOPA" class="w-full bg-gray-50 border border-gray-300 p-3 rounded-xl text-sm focus:outline-none focus:border-emerald-500 font-semibold">
+              <label class="block text-xs sm:text-sm font-bold text-gray-700 mb-1">Dirección / Referencia:</label>
+              <input type="text" id="input-direccion" placeholder="Ej. APOPA" class="w-full bg-gray-50 border border-gray-300 p-3.5 rounded-xl text-base focus:outline-none focus:border-emerald-500 font-bold text-gray-800">
             </div>
           </div>
 
           <div class="grid grid-cols-1 gap-2 pt-2">
-            <button onclick="abrirVistaPreviaOrden()" class="btn-whatsapp w-full text-white font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 text-sm uppercase tracking-wide">
-              <i class="fab fa-whatsapp text-xl"></i> ENVIAR PEDIDO
+            <button onclick="abrirVistaPreviaOrden()" class="btn-whatsapp w-full text-white font-extrabold py-4 rounded-xl shadow-lg flex items-center justify-center gap-2.5 text-base uppercase tracking-wide">
+              <i class="fab fa-whatsapp text-2xl"></i> ENVIAR PEDIDO
             </button>
           </div>
         </div>
@@ -193,36 +194,36 @@
 
   <!-- Modal Carrito Móvil -->
   <div id="modal-carrito-movil" class="fixed inset-0 bg-black/60 z-50 hidden flex flex-col justify-end backdrop-blur-sm">
-    <div class="bg-white w-full max-h-[90vh] rounded-t-3xl p-5 flex flex-col justify-between shadow-2xl overflow-y-auto">
+    <div class="bg-white w-full max-h-[90vh] rounded-t-3xl p-6 flex flex-col justify-between shadow-2xl overflow-y-auto">
       <div>
-        <div class="flex justify-between items-center border-b pb-3 mb-2">
-          <h3 class="font-bold text-base text-gray-800 flex items-center gap-2">
-            <i class="fas fa-shopping-basket text-emerald-600 text-lg"></i> Tu Pedido Actual
+        <div class="flex justify-between items-center border-b pb-3.5 mb-3">
+          <h3 class="font-bold text-lg text-gray-800 flex items-center gap-2">
+            <i class="fas fa-shopping-basket text-emerald-600 text-xl"></i> Tu Pedido Actual
           </h3>
           <button onclick="toggleCarritoMovil()" class="text-gray-400 hover:text-gray-600 text-3xl font-bold px-2">&times;</button>
         </div>
         <div id="lista-carrito-mobile" class="divide-y my-2 max-h-[35vh] overflow-y-auto pr-1 space-y-2"></div>
       </div>
 
-      <div class="border-t pt-3 space-y-3 bg-white">
-        <div class="flex justify-between items-center text-lg font-bold">
+      <div class="border-t pt-4 space-y-4 bg-white">
+        <div class="flex justify-between items-center text-xl font-bold">
           <span>Total:</span>
-          <span id="total-precio-mobile" class="text-emerald-700 text-xl font-extrabold">$0.00</span>
+          <span id="total-precio-mobile" class="text-emerald-700 text-2xl font-black">$0.00</span>
         </div>
 
-        <div class="space-y-2.5">
+        <div class="space-y-3">
           <div>
-            <label class="block text-xs font-bold text-gray-600 mb-1">Nombre del Negocio o Cliente:</label>
-            <input type="text" id="input-nombre-m" placeholder="Ej. CARLOS" class="w-full bg-gray-50 border border-gray-300 p-3 rounded-xl text-sm focus:outline-none focus:border-emerald-500 font-semibold">
+            <label class="block text-xs sm:text-sm font-bold text-gray-700 mb-1">Nombre del Negocio o Cliente:</label>
+            <input type="text" id="input-nombre-m" placeholder="Ej. CARLOS" class="w-full bg-gray-50 border border-gray-300 p-3.5 rounded-xl text-base focus:outline-none focus:border-emerald-500 font-bold text-gray-800">
           </div>
           <div>
-            <label class="block text-xs font-bold text-gray-600 mb-1">Dirección / Referencia:</label>
-            <input type="text" id="input-direccion-m" placeholder="Ej. APOPA" class="w-full bg-gray-50 border border-gray-300 p-3 rounded-xl text-sm focus:outline-none focus:border-emerald-500 font-semibold">
+            <label class="block text-xs sm:text-sm font-bold text-gray-700 mb-1">Dirección / Referencia:</label>
+            <input type="text" id="input-direccion-m" placeholder="Ej. APOPA" class="w-full bg-gray-50 border border-gray-300 p-3.5 rounded-xl text-base focus:outline-none focus:border-emerald-500 font-bold text-gray-800">
           </div>
         </div>
 
-        <button onclick="abrirVistaPreviaOrden()" class="btn-whatsapp w-full text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 text-sm uppercase tracking-wide shadow-lg">
-          <i class="fab fa-whatsapp text-xl"></i> ENVIAR PEDIDO
+        <button onclick="abrirVistaPreviaOrden()" class="btn-whatsapp w-full text-white font-extrabold py-4 rounded-xl flex items-center justify-center gap-2.5 text-base uppercase tracking-wide shadow-lg">
+          <i class="fab fa-whatsapp text-2xl"></i> ENVIAR PEDIDO
         </button>
       </div>
     </div>
@@ -256,7 +257,8 @@
     }
 
     function parsearCSV(csvText) {
-      const lineas = csvText.trim().split('\n');
+      const lineas = csvText.trim().split('
+');
       const mapaProductos = {};
 
       for (let i = 1; i < lineas.length; i++) {
@@ -302,11 +304,11 @@
 
       if (modoFotosActivo) {
         elSwitch.className = "switch-card switch-on";
-        icono.className = "fas fa-th-large text-emerald-300 text-sm shrink-0";
+        icono.className = "fas fa-th-large text-emerald-300 text-base shrink-0";
         label.innerText = "Fotos";
       } else {
         elSwitch.className = "switch-card switch-off";
-        icono.className = "fas fa-file-excel text-red-300 text-sm shrink-0";
+        icono.className = "fas fa-file-excel text-red-300 text-base shrink-0";
         label.innerText = "Excel";
       }
       renderProductos(obtenerProductosFiltrados());
@@ -341,7 +343,7 @@
       contenedor.innerHTML = '';
 
       if (listaACargar.length === 0) {
-        contenedor.innerHTML = '<p class="text-center text-gray-400 py-12 text-sm font-semibold">No hay categorías seleccionadas.</p>';
+        contenedor.innerHTML = '<p class="text-center text-gray-400 py-12 text-base font-bold">No hay categorías seleccionadas.</p>';
         return;
       }
 
@@ -362,12 +364,12 @@
         categoriasOrdenadas.forEach(cat => {
           const prodsCat = grupos[cat];
           const tituloSeccion = document.createElement('div');
-          tituloSeccion.className = "bg-[#064e3b] text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider mb-3 mt-4 flex items-center gap-2 shadow-sm";
-          tituloSeccion.innerHTML = `<i class="fas fa-seedling"></i> ${cat}`;
+          tituloSeccion.className = "bg-[#064e3b] text-white px-5 py-3 rounded-xl font-black text-sm sm:text-base uppercase tracking-wider mb-3.5 mt-5 flex items-center gap-2.5 shadow-sm";
+          tituloSeccion.innerHTML = `<i class="fas fa-seedling text-emerald-300"></i> ${cat}`;
           contenedor.appendChild(tituloSeccion);
 
           const grid = document.createElement('div');
-          grid.className = 'grid grid-cols-2 lg:grid-cols-4 gap-3';
+          grid.className = 'grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4';
 
           prodsCat.forEach(p => {
             if (!seleccionPresentacion[p.id]) seleccionPresentacion[p.id] = 0;
@@ -382,32 +384,32 @@
             });
 
             const card = document.createElement('div');
-            card.className = 'card-producto bg-white rounded-2xl p-3 shadow-sm border border-gray-100 flex flex-col justify-between';
+            card.className = 'card-producto bg-white rounded-2xl p-3.5 shadow-sm border border-gray-100 flex flex-col justify-between';
             card.innerHTML = `
               <div>
-                <div class="relative h-32 rounded-xl overflow-hidden mb-2 bg-gray-100">
+                <div class="relative h-36 rounded-xl overflow-hidden mb-2.5 bg-gray-100">
                   <img src="${p.foto}" alt="${p.nombre}" loading="lazy" class="w-full h-full object-cover" onerror="intentarFormatosAlternativos(this, '${p.nombre.replace(/'/g, "\'")}')">
-                  <span class="absolute top-2 left-2 bg-white/90 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">${p.categoria}</span>
+                  <span class="absolute top-2 left-2 bg-white/95 text-emerald-800 text-[11px] font-black px-2.5 py-0.5 rounded-full uppercase shadow-sm">${p.categoria}</span>
                 </div>
-                <h3 class="font-bold text-gray-800 text-xs sm:text-sm mb-0.5 truncate">${p.nombre}</h3>
-                <p class="text-[11px] text-gray-400 line-clamp-1 mb-2">${p.descripcion}</p>
+                <h3 class="font-extrabold text-gray-900 text-sm sm:text-base mb-1 truncate">${p.nombre}</h3>
+                <p class="text-xs text-gray-500 line-clamp-1 mb-2.5 font-medium">${p.descripcion}</p>
               </div>
-              <div class="space-y-2 pt-1 border-t">
+              <div class="space-y-2.5 pt-2 border-t border-gray-100">
                 <div>
-                  <label class="text-[10px] text-gray-400 font-semibold block mb-0.5">PRESENTACIÓN:</label>
-                  <select onchange="cambiarPresentacion('${p.id}', this.value)" class="select-custom w-full bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold rounded-lg p-1.5">${opcionesHTML}</select>
+                  <label class="text-[11px] text-gray-500 font-extrabold block mb-1">PRESENTACIÓN:</label>
+                  <select onchange="cambiarPresentacion('${p.id}', this.value)" class="select-custom w-full bg-gray-50 border border-gray-300 text-gray-800 text-xs sm:text-sm font-bold rounded-lg p-2">${opcionesHTML}</select>
                 </div>
-                <div class="pt-1 grid grid-cols-2 gap-2 items-end">
+                <div class="pt-1 flex items-center justify-between gap-1">
                   <div>
-                    <label class="text-[10px] text-gray-400 font-semibold block mb-0.5">PRECIO:</label>
-                    <p id="precio-${p.id}" class="font-bold text-emerald-700 text-sm sm:text-base">$${presActual.precio.toFixed(2)}</p>
+                    <label class="text-[10px] text-gray-400 font-bold block mb-0.5">PRECIO:</label>
+                    <p id="precio-${p.id}" class="font-black text-emerald-700 text-base sm:text-lg">$${presActual.precio.toFixed(2)}</p>
                   </div>
-                  <div>
-                    <label class="text-[10px] text-gray-400 font-semibold block mb-0.5 text-right">CANTIDAD:</label>
+                  <div class="text-right">
+                    <label class="text-[10px] text-gray-400 font-bold block mb-0.5">CANTIDAD:</label>
                     <div class="flex items-center justify-end gap-1">
-                      <button onclick="cambiarCantidad('${p.id}', -1)" class="btn-qty-minus w-7 h-7 rounded-lg font-bold text-sm flex items-center justify-center">-</button>
-                      <input type="number" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" class="w-11 h-7 text-center text-sm font-bold bg-gray-50 border border-gray-200 rounded-lg">
-                      <button onclick="cambiarCantidad('${p.id}', 1)" class="btn-qty-plus w-7 h-7 rounded-lg font-bold text-sm flex items-center justify-center">+</button>
+                      <button onclick="cambiarCantidad('${p.id}', -1)" class="btn-qty-minus w-8 h-8 rounded-lg font-black text-base flex items-center justify-center">-</button>
+                      <input type="number" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" class="w-12 h-8 text-center text-base font-black bg-gray-50 border border-gray-300 rounded-lg">
+                      <button onclick="cambiarCantidad('${p.id}', 1)" class="btn-qty-plus w-8 h-8 rounded-lg font-black text-base flex items-center justify-center">+</button>
                     </div>
                   </div>
                 </div>
@@ -422,8 +424,8 @@
         categoriasOrdenadas.forEach(cat => {
           const prodsCat = grupos[cat];
           const tituloSeccion = document.createElement('div');
-          tituloSeccion.className = "bg-[#064e3b] text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider mb-2 mt-4 flex items-center gap-2 shadow-sm";
-          tituloSeccion.innerHTML = `<i class="fas fa-seedling"></i> ${cat}`;
+          tituloSeccion.className = "bg-[#064e3b] text-white px-5 py-3 rounded-xl font-black text-sm sm:text-base uppercase tracking-wider mb-2 mt-5 flex items-center gap-2.5 shadow-sm";
+          tituloSeccion.innerHTML = `<i class="fas fa-seedling text-emerald-300"></i> ${cat}`;
           contenedor.appendChild(tituloSeccion);
 
           const wrapperTabla = document.createElement('div');
@@ -445,13 +447,13 @@
 
             filasHTML += `
               <tr>
-                <td class="font-semibold text-gray-800 text-sm">${p.nombre}</td>
-                <td class="w-36"><select onchange="cambiarPresentacion('${p.id}', this.value)" class="select-custom w-full bg-gray-50 border border-gray-200 text-xs rounded p-1.5">${opcionesHTML}</select></td>
-                <td id="precio-${p.id}" class="font-bold text-gray-700 text-right text-sm">$${presActual.precio.toFixed(2)}</td>
-                <td class="text-center w-28">
-                  <input type="number" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" onkeydown="navegarTecladoExcel(event, ${globalIndex})" class="input-excel input-fila-excel" data-index="${globalIndex}">
+                <td class="font-bold text-gray-900 text-base">${p.nombre}</td>
+                <td class="w-40"><select onchange="cambiarPresentacion('${p.id}', this.value)" class="select-custom w-full bg-gray-50 border border-gray-300 text-sm font-bold rounded p-2">${opcionesHTML}</select></td>
+                <td id="precio-${p.id}" class="font-black text-gray-800 text-right text-base">$${presActual.precio.toFixed(2)}</td>
+                <td class="text-center w-32">
+                  <input type="number" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" onkeydown="navegarTecladoExcel(event, ${globalIndex})" class="input-excel input-fila-excel font-black text-base" data-index="${globalIndex}">
                 </td>
-                <td id="subtotal-${p.id}" class="font-bold text-emerald-700 text-right text-sm">$${subtotalLinea.toFixed(2)}</td>
+                <td id="subtotal-${p.id}" class="font-black text-emerald-700 text-right text-base">$${subtotalLinea.toFixed(2)}</td>
               </tr>
             `;
             globalIndex++;
@@ -578,25 +580,25 @@
           <div class="py-3 flex flex-col gap-1.5">
             <div class="flex justify-between items-start">
               <div>
-                <p class="font-bold text-gray-800 text-sm">${item.nombre}</p>
-                <p class="text-xs text-emerald-700 font-semibold">${item.unidad} ($${item.precio.toFixed(2)} c/u)</p>
+                <p class="font-extrabold text-gray-900 text-base">${item.nombre}</p>
+                <p class="text-xs sm:text-sm text-emerald-700 font-bold">${item.unidad} ($${item.precio.toFixed(2)} c/u)</p>
               </div>
-              <button onclick="eliminarItemCarrito('${itemKey}')" class="text-red-400 hover:text-red-600 font-bold text-lg px-2">&times;</button>
+              <button onclick="eliminarItemCarrito('${itemKey}')" class="text-red-400 hover:text-red-600 font-black text-xl px-2">&times;</button>
             </div>
             <div class="flex justify-between items-center">
-              <div class="flex items-center gap-1.5">
-                <button onclick="cambiarCantidadDesdeCarrito('${itemKey}', -1)" class="w-7 h-7 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-lg text-sm flex items-center justify-center">-</button>
-                <span class="text-sm font-bold px-2 text-gray-800">${item.cantidad}</span>
-                <button onclick="cambiarCantidadDesdeCarrito('${itemKey}', 1)" class="w-7 h-7 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-sm flex items-center justify-center">+</button>
+              <div class="flex items-center gap-2">
+                <button onclick="cambiarCantidadDesdeCarrito('${itemKey}', -1)" class="w-8 h-8 bg-gray-100 hover:bg-gray-200 text-gray-800 font-black rounded-lg text-base flex items-center justify-center">-</button>
+                <span class="text-base font-black px-2 text-gray-900">${item.cantidad}</span>
+                <button onclick="cambiarCantidadDesdeCarrito('${itemKey}', 1)" class="w-8 h-8 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-lg text-base flex items-center justify-center">+</button>
               </div>
-              <span class="font-bold text-emerald-700 text-sm">$${subtotal.toFixed(2)}</span>
+              <span class="font-black text-emerald-700 text-base">$${subtotal.toFixed(2)}</span>
             </div>
           </div>
         `;
       });
 
       if (Object.keys(carrito).length === 0) {
-        htmlItems = '<p class="text-gray-400 text-xs text-center py-6">Tu carrito está vacío</p>';
+        htmlItems = '<p class="text-gray-400 text-sm text-center py-6 font-medium">Tu carrito está vacío</p>';
       }
 
       document.getElementById('lista-carrito-desktop').innerHTML = htmlItems;
