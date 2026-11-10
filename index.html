@@ -820,16 +820,9 @@
       const minutos = String(hoy.getMinutes()).padStart(2, '0');
 
       const fechaTexto = `${dia}/${mes}/${anio} ${horas}:${minutos}`;
-      const fechaClave = `${dia}-${mes}-${anio}`;
-      const fechaNombreArchivo = `${dia}-${mes}-${anio}`;
-      
-      // Control automático diario basado en la fecha
-      const claveStorage = `km_ordenes_${fechaClave}`;
-      let ultimoNum = parseInt(localStorage.getItem(claveStorage) || '0');
-      let correlativoActual = ultimoNum + 1;
-      let correlativoFormateado = String(correlativoActual).padStart(4, '0');
+      const fechaNombreArchivo = `${dia}-${mes}-${anio}_${horas}${minutos}`;
 
-      return { nombre, direccion, fechaTexto, fechaNombreArchivo, correlativoFormateado, claveStorage, correlativoActual };
+      return { nombre, direccion, fechaTexto, fechaNombreArchivo };
     }
 
     function abrirVistaPreviaOrden() {
@@ -851,7 +844,7 @@
         return;
       }
 
-      const { direccion, fechaTexto, fechaNombreArchivo, correlativoFormateado, claveStorage, correlativoActual } = obtenerDatosPedido();
+      const { direccion, fechaTexto, fechaNombreArchivo } = obtenerDatosPedido();
       const itemsArr = Object.values(carrito);
       
       const columnaIzquierda = itemsArr.slice(0, 15);
@@ -884,12 +877,12 @@
       });
 
       const nombreLimpio = nombre.replace(/\s+/g, '_').toUpperCase();
-      const nombreArchivoPDF = `Pedido_No_${correlativoFormateado}_${nombreLimpio}_${fechaNombreArchivo}.pdf`;
+      const nombreArchivoPDF = `Pedido_${nombreLimpio}_${fechaNombreArchivo}.pdf`;
       
       const telefono1 = "50374670712";
       const telefono2 = "50377225818";
       
-      const textoWp = `Hola, adjunto el archivo PDF del Pedido No. ${correlativoFormateado} del cliente ${nombre.toUpperCase()} del ${fechaTexto}.`;
+      const textoWp = `Hola, adjunto el archivo PDF del pedido del cliente ${nombre.toUpperCase()} del ${fechaTexto}.`;
       const urlWhatsapp1 = `https://api.whatsapp.com/send?phone=${telefono1}&text=` + encodeURIComponent(textoWp);
       const urlWhatsapp2 = `https://api.whatsapp.com/send?phone=${telefono2}&text=` + encodeURIComponent(textoWp);
 
@@ -899,7 +892,7 @@
         <html lang="es">
         <head>
           <meta charset="UTF-8">
-          <title>Orden No. ${correlativoFormateado} - ${nombre.toUpperCase()}</title>
+          <title>Pedido - ${nombre.toUpperCase()}</title>
           <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"><\/script>
           <style>
             @page {
@@ -1005,10 +998,9 @@
           <div class="ticket-container" id="contenido-ticket">
             <div class="header-ticket">
               <p style="font-size: 11pt; font-weight: bold; margin: 0 0 2px 0;">*KMVEGETALES - NUEVO PEDIDO*</p>
-              <p style="margin: 2px 0; font-size: 9.5pt;"><strong>*Orden N°:* ${correlativoFormateado}</strong></p>
-              <p style="margin: 2px 0; font-size: 9pt;">*Fecha:* ${fechaTexto}</p>
+              <p style="margin: 2px 0; font-size: 9.5pt;">*Fecha:* ${fechaTexto}</p>
               <p style="margin: 3px 0; font-size: 11pt;">*Cliente:* <strong style="font-size: 13pt;">${nombre.toUpperCase()}</strong></p>
-              ${direccion ? `<p style="margin: 2px 0; font-size: 9pt;">*Dirección:* ${direccion}</p>` : ''}
+              ${direccion ? `<p style="margin: 2px 0; font-size: 9.5pt;">*Dirección:* ${direccion}</p>` : ''}
             </div>
 
             <p style="margin: 0 0 6px 0; font-weight: bold; font-size: 9.5pt;">*DETALLE DE PRODUCTOS:*</p>
@@ -1036,9 +1028,6 @@
               const btn = document.getElementById('btn-envio-final');
               btn.innerHTML = '<i class="fas fa-spinner fa-spin text-lg"></i> GENERANDO PDF Y ABRIENDO WHATSAPP...';
               btn.style.opacity = '0.7';
-
-              // Guardar el nuevo correlativo del día actual al confirmar el envío
-              localStorage.setItem('${claveStorage}', '${correlativoActual}');
 
               const elemento = document.getElementById('contenido-ticket');
               const opciones = {
