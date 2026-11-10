@@ -268,7 +268,7 @@
           </div>
 
           <div class="grid grid-cols-1 gap-2 pt-2">
-            <button onclick="generarPDFYEnviarWhatsAppDirecto()" class="btn-whatsapp w-full text-white font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 text-sm uppercase tracking-wide">
+            <button onclick="abrirVistaPreviaOrden()" class="btn-whatsapp w-full text-white font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 text-sm uppercase tracking-wide">
               <i class="fab fa-whatsapp text-xl"></i> ENVIAR PEDIDO
             </button>
           </div>
@@ -307,29 +307,10 @@
           </div>
         </div>
 
-        <button onclick="generarPDFYEnviarWhatsAppDirecto()" class="btn-whatsapp w-full text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 text-sm uppercase tracking-wide shadow-lg">
+        <button onclick="abrirVistaPreviaOrden()" class="btn-whatsapp w-full text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 text-sm uppercase tracking-wide shadow-lg">
           <i class="fab fa-whatsapp text-xl"></i> ENVIAR PEDIDO
         </button>
       </div>
-    </div>
-  </div>
-
-  <!-- Contenedor oculto para renderizar el PDF de manera limpia y automática -->
-  <div id="pdf-template-oculto" style="display: none; width: 215mm; background: #fff; font-family: 'Courier New', Courier, monospace; color: #000; padding: 10mm; box-sizing: border-box;">
-    <div id="pdf-header" style="border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 10px;">
-      <p style="font-size: 11pt; font-weight: bold; margin: 0 0 2px 0;">*KMVEGETALES - NUEVO PEDIDO*</p>
-      <p style="margin: 2px 0; font-size: 9.5pt;"><strong>*Orden N°:* <span id="pdf-orden"></span></strong></p>
-      <p style="margin: 2px 0; font-size: 9pt;">*Fecha:* <span id="pdf-fecha"></span></p>
-      <p style="margin: 3px 0; font-size: 11pt;">*Cliente:* <strong style="font-size: 13pt;" id="pdf-cliente"></strong></p>
-      <p style="margin: 2px 0; font-size: 9pt;" id="pdf-dir-container">*Dirección:* <span id="pdf-direccion"></span></p>
-    </div>
-    <p style="margin: 0 0 6px 0; font-weight: bold; font-size: 9.5pt;">*DETALLE DE PRODUCTOS:*</p>
-    <div id="pdf-columnas" style="display: flex; width: 100%; gap: 25px; justify-content: space-between; align-items: flex-start;">
-      <div id="pdf-col-1" style="width: 48%; display: flex; flex-direction: column; gap: 8px;"></div>
-      <div id="pdf-col-2" style="width: 48%; display: flex; flex-direction: column; gap: 8px;"></div>
-    </div>
-    <div id="pdf-footer" style="border-top: 2px solid #000; padding-top: 6px; margin-top: 15px;">
-      <p style="font-size: 11pt; font-weight: bold; margin: 0;">*TOTAL A PAGAR: $<span id="pdf-total"></span>*</p>
     </div>
   </div>
 
@@ -856,13 +837,12 @@
         ultimoNum = 0;
       }
       let correlativoActual = ultimoNum + 1;
-      localStorage.setItem('km_correlativo_num_v2', correlativoActual);
       let correlativoFormateado = String(correlativoActual).padStart(4, '0');
 
-      return { nombre, direccion, fechaTexto, fechaNombreArchivo, correlativoFormateado };
+      return { nombre, direccion, fechaTexto, fechaNombreArchivo, correlativoFormateado, correlativoActual };
     }
 
-    function generarPDFYEnviarWhatsAppDirecto() {
+    function abrirVistaPreviaOrden() {
       if (Object.keys(carrito).length === 0) {
         alert("Tu carrito está vacío. Agrega productos para realizar un pedido.");
         return;
@@ -895,7 +875,7 @@
         const subtotal = item.cantidad * item.precio;
         totalMonto += subtotal;
         htmlColIzquierda += `
-          <div style="padding-bottom: 4px; border-bottom: 1px dotted #bbb; font-size: 9.5pt; line-height: 1.2;">
+          <div class="item-linea">
             <strong>*${item.nombre}*</strong><br>
             <span style="color: #111;">${item.cantidad} x ${item.unidad} ($${item.precio.toFixed(2)})</span> = <strong>*${subtotal.toFixed(2)}*</strong>
           </div>
@@ -906,60 +886,201 @@
         const subtotal = item.cantidad * item.precio;
         totalMonto += subtotal;
         htmlColDerecha += `
-          <div style="padding-bottom: 4px; border-bottom: 1px dotted #bbb; font-size: 9.5pt; line-height: 1.2;">
+          <div class="item-linea">
             <strong>*${item.nombre}*</strong><br>
             <span style="color: #111;">${item.cantidad} x ${item.unidad} ($${item.precio.toFixed(2)})</span> = <strong>*${subtotal.toFixed(2)}*</strong>
           </div>
         `;
       });
 
-      // Llenar datos en el contenedor oculto
-      document.getElementById('pdf-orden').innerText = correlativoFormateado;
-      document.getElementById('pdf-fecha').innerText = fechaTexto;
-      document.getElementById('pdf-cliente').innerText = nombre.toUpperCase();
-      
-      const dirContainer = document.getElementById('pdf-dir-container');
-      if (direccion) {
-        dirContainer.style.display = 'block';
-        document.getElementById('pdf-direccion').innerText = direccion;
-      } else {
-        dirContainer.style.display = 'none';
-      }
-
-      document.getElementById('pdf-col-1').innerHTML = htmlColIzquierda;
-      document.getElementById('pdf-col-2').innerHTML = htmlColDerecha;
-      document.getElementById('pdf-total').innerText = totalMonto.toFixed(2);
-
       const nombreLimpio = nombre.replace(/\s+/g, '_').toUpperCase();
       const nombreArchivoPDF = `Pedido_No_${correlativoFormateado}_${nombreLimpio}_${fechaNombreArchivo}.pdf`;
       
-      const elementoPDF = document.getElementById('pdf-template-oculto');
-      elementoPDF.style.display = 'block';
+      const telefono1 = "50374670712";
+      const telefono2 = "50377225818";
+      
+      const textoWp = `Hola, adjunto el archivo PDF del Pedido No. ${correlativoFormateado} del cliente ${nombre.toUpperCase()} del ${fechaTexto}.`;
+      const urlWhatsapp1 = `https://api.whatsapp.com/send?phone=${telefono1}&text=` + encodeURIComponent(textoWp);
+      const urlWhatsapp2 = `https://api.whatsapp.com/send?phone=${telefono2}&text=` + encodeURIComponent(textoWp);
 
-      const opciones = {
-        margin:       [0, 0, 0, 0],
-        filename:     nombreArchivoPDF,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, useCORS: true },
-        jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' }
-      };
+      const ventanaImpresion = window.open('', '_blank', 'width=950,height=750');
+      ventanaImpresion.document.write(`
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+          <meta charset="UTF-8">
+          <title>Orden No. ${correlativoFormateado} - ${nombre.toUpperCase()}</title>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"><\/script>
+          <style>
+            @page {
+              size: letter portrait;
+              margin: 0;
+            }
+            * { box-sizing: border-box; }
+            html, body {
+              height: 100%;
+              margin: 0;
+              padding: 0;
+              background: #fff;
+              font-family: 'Courier New', Courier, monospace;
+              color: #000;
+            }
+            body {
+              display: flex;
+              flex-direction: column;
+            }
+            .ticket-container {
+              min-height: 268mm;
+              display: flex;
+              flex-direction: column;
+              justify-content: flex-start;
+              padding: 8mm 10mm;
+              box-sizing: border-box;
+            }
+            .header-ticket {
+              border-bottom: 2px solid #000;
+              padding-bottom: 6px;
+              margin-bottom: 10px;
+            }
+            .flex-2-columnas {
+              display: flex !important;
+              flex-direction: row !important;
+              width: 100% !important;
+              gap: 25px !important;
+              justify-content: space-between !important;
+              align-items: flex-start !important;
+            }
+            .columna-50 {
+              width: 48% !important;
+              flex: 0 0 48% !important;
+              display: flex;
+              flex-direction: column;
+              gap: 8px;
+            }
+            .item-linea {
+              padding-bottom: 4px;
+              border-bottom: 1px dotted #bbb;
+              font-size: 9.5pt;
+              line-height: 1.2;
+            }
+            .footer-ticket {
+              border-top: 2px solid #000;
+              padding-top: 6px;
+              margin-top: 15px;
+            }
+            .acciones-flotantes {
+              position: fixed;
+              top: 10px;
+              left: 10px;
+              right: 10px;
+              z-index: 9999;
+              display: flex;
+              justify-content: center;
+              font-family: 'Plus Jakarta Sans', sans-serif;
+              background: rgba(255, 255, 255, 0.95);
+              padding: 10px;
+              border-radius: 12px;
+              box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            }
+            .btn-unico-envio {
+              background: linear-gradient(135deg, #059669 0%, #047857 100%);
+              color: white;
+              padding: 12px 24px;
+              border-radius: 10px;
+              font-weight: bold;
+              font-size: 11pt;
+              display: inline-flex;
+              align-items: center;
+              gap: 10px;
+              cursor: pointer;
+              border: none;
+              box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4);
+            }
+            @media print {
+              .acciones-flotantes { display: none !important; }
+              .ticket-container { min-height: 268mm; padding: 8mm 10mm; }
+            }
+          </style>
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        </head>
+        <body>
+          <div class="acciones-flotantes">
+            <button id="btn-envio-final" onclick="ejecutarDescargaYEnvio()" class="btn-unico-envio">
+              <i class="fas fa-paper-plane text-lg"></i> ENVIAR PEDIDO A WHATSAPP
+            </button>
+          </div>
 
-      html2pdf().from(elementoPDF).set(opciones).save().then(function() {
-        elementoPDF.style.display = 'none';
-        
-        // Abrir WhatsApp directamente al terminar la descarga única
-        const telefono1 = "50374670712";
-        const telefono2 = "50377225818";
-        const textoWp = `Hola, adjunto el archivo PDF del Pedido No. ${correlativoFormateado} del cliente ${nombre.toUpperCase()} del ${fechaTexto}.`;
-        
-        const urlWhatsapp1 = `https://api.whatsapp.com/send?phone=${telefono1}&text=` + encodeURIComponent(textoWp);
-        const urlWhatsapp2 = `https://api.whatsapp.com/send?phone=${telefono2}&text=` + encodeURIComponent(textoWp);
+          <div style="height: 50px;"></div>
 
-        setTimeout(() => {
-          window.open(urlWhatsapp1, '_blank');
-          window.open(urlWhatsapp2, '_blank');
-        }, 500);
-      });
+          <div class="ticket-container" id="contenido-ticket">
+            <div class="header-ticket">
+              <p style="font-size: 11pt; font-weight: bold; margin: 0 0 2px 0;">*KMVEGETALES - NUEVO PEDIDO*</p>
+              <p style="margin: 2px 0; font-size: 9.5pt;"><strong>*Orden N°:* ${correlativoFormateado}</strong></p>
+              <p style="margin: 2px 0; font-size: 9pt;">*Fecha:* ${fechaTexto}</p>
+              <p style="margin: 3px 0; font-size: 11pt;">*Cliente:* <strong style="font-size: 13pt;">${nombre.toUpperCase()}</strong></p>
+              ${direccion ? `<p style="margin: 2px 0; font-size: 9pt;">*Dirección:* ${direccion}</p>` : ''}
+            </div>
+
+            <p style="margin: 0 0 6px 0; font-weight: bold; font-size: 9.5pt;">*DETALLE DE PRODUCTOS:*</p>
+
+            <div class="flex-2-columnas">
+              <div class="columna-50">
+                ${htmlColIzquierda}
+              </div>
+              <div class="columna-50">
+                ${htmlColDerecha}
+              </div>
+            </div>
+
+            <div class="footer-ticket">
+              <p style="font-size: 11pt; font-weight: bold; margin: 0;">*TOTAL A PAGAR: $${totalMonto.toFixed(2)}*</p>
+            </div>
+          </div>
+
+          <script>
+            let descargado = false;
+            function ejecutarDescargaYEnvio() {
+              if (descargado) return;
+              descargado = true;
+
+              const btn = document.getElementById('btn-envio-final');
+              btn.innerHTML = '<i class="fas fa-spinner fa-spin text-lg"></i> GENERANDO PDF Y ABRIENDO WHATSAPP...';
+              btn.style.opacity = '0.7';
+
+              // Incrementar correlativo solo al confirmar la descarga real
+              if (window.opener && window.opener.confirmarCorrelativoProcesado) {
+                window.opener.confirmarCorrelativoProcesado();
+              }
+
+              const elemento = document.getElementById('contenido-ticket');
+              const opciones = {
+                margin:       [0, 0, 0, 0],
+                filename:     '${nombreArchivoPDF}',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' }
+              };
+
+              html2pdf().from(elemento).set(opciones).save().then(function() {
+                setTimeout(() => {
+                  window.open('${urlWhatsapp1}', '_blank');
+                  window.open('${urlWhatsapp2}', '_blank');
+                }, 600);
+              });
+            }
+          <\/script>
+        </body>
+        </html>
+      `);
+      ventanaImpresion.document.close();
+    }
+
+    function confirmarCorrelativoProcesado() {
+      let ultimoNum = parseInt(localStorage.getItem('km_correlativo_num_v2') || '0');
+      if (isNaN(ultimoNum) || ultimoNum < 0 || ultimoNum >= 9999) {
+        ultimoNum = 0;
+      }
+      localStorage.setItem('km_correlativo_num_v2', ultimoNum + 1);
     }
 
     window.onload = function() {
