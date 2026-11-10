@@ -150,42 +150,42 @@
       <div id="contenedor-productos"></div>
     </div>
 
-    <!-- Panel Lateral Escritorio (Fijo: lista scrolleable, footer con total, inputs y botón siempre visibles) -->
+    <!-- Panel Lateral Escritorio (Fijo: lista scrolleable flexible, footer siempre visible) -->
     <div class="hidden lg:block">
-      <div class="bg-white rounded-3xl p-5 shadow-xl border border-gray-100 sticky top-24 flex flex-col justify-between" style="height: calc(100vh - 110px);">
-        <div>
-          <div class="flex items-center justify-between border-b pb-3 mb-2">
-            <h3 class="font-bold text-base text-gray-800 flex items-center gap-2">
-              <span class="bg-emerald-100 text-emerald-800 p-1.5 rounded-xl"><i class="fas fa-shopping-basket"></i></span> Tu Pedido
-            </h3>
-            <span id="cart-count-badge" class="bg-emerald-600 text-white font-bold text-xs px-2.5 py-0.5 rounded-full shadow-sm">0 productos</span>
-          </div>
-
-          <div id="lista-carrito-desktop" class="divide-y overflow-y-auto pr-1 space-y-2" style="max-height: calc(100vh - 390px);">
-            <p class="text-gray-400 text-xs text-center py-6">Tu carrito está vacío</p>
-          </div>
+      <div class="bg-white rounded-3xl p-4 shadow-xl border border-gray-100 sticky top-20 flex flex-col" style="max-height: calc(100vh - 100px);">
+        <div class="flex items-center justify-between border-b pb-2.5 mb-2 shrink-0">
+          <h3 class="font-bold text-sm text-gray-800 flex items-center gap-2">
+            <span class="bg-emerald-100 text-emerald-800 p-1.5 rounded-xl"><i class="fas fa-shopping-basket"></i></span> Tu Pedido
+          </h3>
+          <span id="cart-count-badge" class="bg-emerald-600 text-white font-bold text-xs px-2.5 py-0.5 rounded-full shadow-sm">0 productos</span>
         </div>
 
-        <div class="border-t pt-3 space-y-2.5 bg-white shrink-0 mt-2">
-          <div class="flex justify-between items-center text-base font-bold text-gray-800">
+        <!-- Lista de items con scroll interno automático -->
+        <div id="lista-carrito-desktop" class="divide-y overflow-y-auto pr-1 space-y-2 flex-1 min-h-[100px]" style="max-height: calc(100vh - 360px);">
+          <p class="text-gray-400 text-xs text-center py-6">Tu carrito está vacío</p>
+        </div>
+
+        <!-- Footer fijo del carrito -->
+        <div class="border-t pt-2.5 space-y-2 bg-white shrink-0 mt-2">
+          <div class="flex justify-between items-center text-sm font-bold text-gray-800">
             <span>Total a Pagar:</span>
-            <span id="total-precio-desktop" class="text-emerald-700 text-xl font-extrabold">$0.00</span>
+            <span id="total-precio-desktop" class="text-emerald-700 text-lg font-extrabold">$0.00</span>
           </div>
 
-          <div class="space-y-2">
+          <div class="space-y-1.5">
             <div>
-              <label class="block text-xs font-bold text-gray-600 mb-1">Nombre del Negocio o Cliente:</label>
-              <input type="text" id="input-nombre" placeholder="Ej. CARLOS" class="w-full bg-gray-50 border border-gray-300 p-2.5 rounded-xl text-sm focus:outline-none focus:border-emerald-500 font-semibold">
+              <label class="block text-[11px] font-bold text-gray-600 mb-0.5">Nombre del Negocio o Cliente:</label>
+              <input type="text" id="input-nombre" placeholder="Ej. CARLOS" class="w-full bg-gray-50 border border-gray-300 p-2 rounded-xl text-xs sm:text-sm focus:outline-none focus:border-emerald-500 font-semibold">
             </div>
             <div>
-              <label class="block text-xs font-bold text-gray-600 mb-1">Dirección / Referencia:</label>
-              <input type="text" id="input-direccion" placeholder="Ej. APOPA" class="w-full bg-gray-50 border border-gray-300 p-2.5 rounded-xl text-sm focus:outline-none focus:border-emerald-500 font-semibold">
+              <label class="block text-[11px] font-bold text-gray-600 mb-0.5">Dirección / Referencia:</label>
+              <input type="text" id="input-direccion" placeholder="Ej. APOPA" class="w-full bg-gray-50 border border-gray-300 p-2 rounded-xl text-xs sm:text-sm focus:outline-none focus:border-emerald-500 font-semibold">
             </div>
           </div>
 
-          <div class="pt-1">
-            <button onclick="abrirVistaPreviaOrden()" class="btn-whatsapp w-full text-white font-bold py-3.5 rounded-xl shadow-lg flex items-center justify-center gap-2 text-sm uppercase tracking-wide">
-              <i class="fab fa-whatsapp text-xl"></i> ENVIAR PEDIDO
+          <div class="pt-0.5">
+            <button onclick="abrirVistaPreviaOrden()" class="btn-whatsapp w-full text-white font-bold py-3 rounded-xl shadow-lg flex items-center justify-center gap-2 text-xs sm:text-sm uppercase tracking-wide">
+              <i class="fab fa-whatsapp text-lg"></i> ENVIAR PEDIDO
             </button>
           </div>
         </div>
