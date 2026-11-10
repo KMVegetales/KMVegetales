@@ -393,7 +393,6 @@
                   <span class="absolute top-2 left-2 bg-white/90 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">${p.categoria}</span>
                 </div>
                 <h3 class="font-extrabold text-gray-900 text-sm sm:text-base mb-1 truncate">${p.nombre}</h3>
-                <p class="text-[11px] text-gray-400 line-clamp-1 mb-2">${p.descripcion}</p>
               </div>
               <div class="space-y-2 pt-1 border-t">
                 <div>
@@ -637,6 +636,7 @@
       const fechaTextoWp = `${dia}/${mes}/${anio} ${horas12}:${minutos} ${ampmWp}`;
       const nombreLimpio = nombre.replace(/\s+/g, '_').toUpperCase();
       
+      // ESTE ES EL NOMBRE ÚNICO CON HORA EXACTA PARA EL PDF:
       const nombreArchivoPDF = `Pedido_${nombreLimpio}_${dia}-${mes}-${anio}_${horas12}-${minutos}_${ampmFile}.pdf`;
 
       return { nombre, direccion, fechaTextoWp, nombreArchivoPDF };
@@ -682,6 +682,7 @@
       const telefono1 = "50374670712";
       const telefono2 = "50377225818";
       
+      // ESTE ES EL TEXTO EXACTO PARA WHATSAPP:
       const textoWp = `${nombre.toUpperCase()} del ${fechaTextoWp}.. adjunto el archivo PDF del pedido`;
       const urlWhatsapp1 = `https://api.whatsapp.com/send?phone=${telefono1}&text=` + encodeURIComponent(textoWp);
       const urlWhatsapp2 = `https://api.whatsapp.com/send?phone=${telefono2}&text=` + encodeURIComponent(textoWp);
