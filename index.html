@@ -176,9 +176,6 @@
           </div>
         </div>
         <div class="flex items-center gap-2">
-          <button onclick="reiniciarCorrelativoManual()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-3 py-2 rounded-lg shadow transition" title="Reiniciar orden a 1">
-            <i class="fas fa-sync-alt mr-1"></i> Reiniciar Orden a 1
-          </button>
           <button onclick="toggleCarritoMovil()" class="md:hidden relative bg-emerald-700 hover:bg-emerald-600 active:scale-95 p-2.5 rounded-xl border border-emerald-600 transition shadow-md">
             <i class="fas fa-shopping-cart text-lg"></i>
             <span id="cart-count-mobile" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
@@ -810,13 +807,6 @@
       modal.classList.toggle('hidden');
     }
 
-    function reiniciarCorrelativoManual() {
-      if (confirm("¿Deseas reiniciar el número de orden para que el siguiente pedido sea el No. 1?")) {
-        localStorage.setItem('km_correlativo_num_v2', '0');
-        alert("¡Listo! El próximo pedido iniciará en el número 1.");
-      }
-    }
-
     function obtenerDatosPedido() {
       const esMovil = window.innerWidth < 1024;
       const nombre = esMovil ? document.getElementById('input-nombre-m').value.trim() : document.getElementById('input-nombre').value.trim();
@@ -830,16 +820,16 @@
       const minutos = String(hoy.getMinutes()).padStart(2, '0');
 
       const fechaTexto = `${dia}/${mes}/${anio} ${horas}:${minutos}`;
+      const fechaClave = `${dia}-${mes}-${anio}`;
       const fechaNombreArchivo = `${dia}-${mes}-${anio}`;
       
-      let ultimoNum = parseInt(localStorage.getItem('km_correlativo_num_v2') || '0');
-      if (isNaN(ultimoNum) || ultimoNum < 0 || ultimoNum >= 9999) {
-        ultimoNum = 0;
-      }
+      // Control automático diario basado en la fecha
+      const claveStorage = `km_ordenes_${fechaClave}`;
+      let ultimoNum = parseInt(localStorage.getItem(claveStorage) || '0');
       let correlativoActual = ultimoNum + 1;
       let correlativoFormateado = String(correlativoActual).padStart(4, '0');
 
-      return { nombre, direccion, fechaTexto, fechaNombreArchivo, correlativoFormateado, correlativoActual };
+      return { nombre, direccion, fechaTexto, fechaNombreArchivo, correlativoFormateado, claveStorage, correlativoActual };
     }
 
     function abrirVistaPreviaOrden() {
@@ -861,7 +851,7 @@
         return;
       }
 
-      const { direccion, fechaTexto, fechaNombreArchivo, correlativoFormateado } = obtenerDatosPedido();
+      const { direccion, fechaTexto, fechaNombreArchivo, correlativoFormateado, claveStorage, correlativoActual } = obtenerDatosPedido();
       const itemsArr = Object.values(carrito);
       
       const columnaIzquierda = itemsArr.slice(0, 15);
@@ -1047,9 +1037,8 @@
               btn.innerHTML = '<i class="fas fa-spinner fa-spin text-lg"></i> GENERANDO PDF Y ABRIENDO WHATSAPP...';
               btn.style.opacity = '0.7';
 
-              if (window.opener && window.opener.confirmarCorrelativoProcesado) {
-                window.opener.confirmarCorrelativoProcesado();
-              }
+              // Guardar el nuevo correlativo del día actual al confirmar el envío
+              localStorage.setItem('${claveStorage}', '${correlativoActual}');
 
               const elemento = document.getElementById('contenido-ticket');
               const opciones = {
@@ -1061,7 +1050,6 @@
               };
 
               html2pdf().from(elemento).set(opciones).outputPdf('blob').then(function(pdfBlob) {
-                // Forzar descarga única limpia mediante Blob
                 const blobUrl = URL.createObjectURL(pdfBlob);
                 const link = document.createElement('a');
                 link.href = blobUrl;
@@ -1083,18 +1071,7 @@
       ventanaImpresion.document.close();
     }
 
-    function confirmarCorrelativoProcesado() {
-      let ultimoNum = parseInt(localStorage.getItem('km_correlativo_num_v2') || '0');
-      if (isNaN(ultimoNum) || ultimoNum < 0 || ultimoNum >= 9999) {
-        ultimoNum = 0;
-      }
-      localStorage.setItem('km_correlativo_num_v2', ultimoNum + 1);
-    }
-
     window.onload = function() {
-      if (!localStorage.getItem('km_correlativo_num_v2')) {
-        localStorage.setItem('km_correlativo_num_v2', '0');
-      }
       cargarProductosDesdeSheets();
     };
   </script>
