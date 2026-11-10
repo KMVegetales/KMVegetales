@@ -277,12 +277,11 @@
 
         if (!id || !nombre) continue;
 
-        const nombreCod = encodeURIComponent(nombre);
-        let rutaFoto = `${nombreCod}.png`;
+       let rutaFoto = `${nombre}.jpg`;
         if (fotoCol && fotoCol !== 'OK' && fotoCol !== '') {
-          rutaFoto = encodeURIComponent(fotoCol);
+          rutaFoto = fotoCol;
         }
-
+        
         const descripcion = descCol && descCol !== '' ? descCol : `${nombre} fresco de alta calidad.`;
 
         if (!mapaProductos[id]) {
