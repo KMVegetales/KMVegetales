@@ -13,7 +13,7 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-    /* Evita el zoom automático en celulares para cualquier input o select */
+    /* Evita el zoom automático en celulares forzando 16px mínimo */
     input, select, textarea { font-size: 16px !important; }
     button, select, input { transition: all 0.2s ease-in-out; }
 
@@ -99,7 +99,6 @@
     }
     .input-excel:focus { outline: none; border-color: #059669; background-color: #ffffff; box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.2); }
 
-    /* Media query específica para escritorio para mantener su diseño original intacto */
     @media (min-width: 1024px) {
       .switch-card { width: auto; margin: 0; }
     }
@@ -147,7 +146,6 @@
             <button onclick="toggleFiltroCategoria('ESPECIES')" id="btn-cat-especies" class="btn-cat btn-cat-active"><i class="fas fa-pepper-hot text-sm"></i> Especies</button>
           </div>
 
-          <!-- Apagador centrado en móvil y alineado en escritorio -->
           <div class="flex justify-center md:justify-end w-full md:w-auto pt-1 md:pt-0">
             <div onclick="toggleModoVistaSwitch()" id="switch-modo-vista" class="switch-card switch-on">
               <div class="flex items-center gap-1.5 min-w-0 pr-3">
@@ -384,6 +382,7 @@
           tituloSeccion.innerHTML = `<i class="fas fa-seedling"></i> ${cat}`;
           contenedor.appendChild(tituloSeccion);
 
+          // FORZADO ESTRICTAMENTE A 2 COLUMNAS EN CELULAR (grid-cols-2)
           const grid = document.createElement('div');
           grid.className = 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3';
 
@@ -413,7 +412,7 @@
               <div class="space-y-2 pt-1 border-t">
                 <div>
                   <label class="text-[10px] text-gray-400 font-semibold block mb-0.5">PRESENTACIÓN:</label>
-                  <select onchange="cambiarPresentacion('${p.id}', this.value)" class="select-custom w-full bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold rounded-lg p-1.5">${opcionesHTML}</select>
+                  <select onchange="cambiarPresentacion('${p.id}', this.value)" class="select-custom w-full bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold rounded-lg p-1.5" style="font-size: 16px !important;">${opcionesHTML}</select>
                 </div>
                 <div class="pt-1 grid grid-cols-2 gap-2 items-end">
                   <div>
@@ -424,7 +423,7 @@
                     <label class="text-[10px] text-gray-400 font-semibold block mb-0.5 text-right">CANTIDAD:</label>
                     <div class="flex items-center justify-end gap-1">
                       <button onclick="cambiarCantidad('${p.id}', -1)" class="btn-qty-minus w-7 h-7 rounded-lg font-bold text-sm flex items-center justify-center">-</button>
-                      <input type="number" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" class="w-11 h-7 text-center text-sm font-bold bg-gray-50 border border-gray-200 rounded-lg">
+                      <input type="number" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" class="w-11 h-7 text-center text-sm font-bold bg-gray-50 border border-gray-200 rounded-lg" style="font-size: 16px !important;">
                       <button onclick="cambiarCantidad('${p.id}', 1)" class="btn-qty-plus w-7 h-7 rounded-lg font-bold text-sm flex items-center justify-center">+</button>
                     </div>
                   </div>
@@ -464,10 +463,10 @@
             filasHTML += `
               <tr>
                 <td class="font-semibold text-gray-800 text-sm">${p.nombre}</td>
-                <td class="w-36"><select onchange="cambiarPresentacion('${p.id}', this.value)" class="select-custom w-full bg-gray-50 border border-gray-200 text-xs rounded p-1.5">${opcionesHTML}</select></td>
+                <td class="w-36"><select onchange="cambiarPresentacion('${p.id}', this.value)" class="select-custom w-full bg-gray-50 border border-gray-200 text-xs rounded p-1.5" style="font-size: 16px !important;">${opcionesHTML}</select></td>
                 <td id="precio-${p.id}" class="font-bold text-gray-700 text-right text-sm">$${presActual.precio.toFixed(2)}</td>
                 <td class="text-center w-28">
-                  <input type="number" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" onkeydown="navegarTecladoExcel(event, ${globalIndex})" class="input-excel input-fila-excel" data-index="${globalIndex}">
+                  <input type="number" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" onkeydown="navegarTecladoExcel(event, ${globalIndex})" class="input-excel input-fila-excel" data-index="${globalIndex}" style="font-size: 16px !important;">
                 </td>
                 <td id="subtotal-${p.id}" class="font-bold text-emerald-700 text-right text-sm">$${subtotalLinea.toFixed(2)}</td>
               </tr>
@@ -646,11 +645,16 @@
       let horas12 = horas % 12;
       horas12 = horas12 ? horas12 : 12;
       const ampmWp = horas >= 12 ? 'p. m.' : 'a. m.';
-      const ampmFile = horas >= 12 ? 'p.m.' : 'a.m.';
 
       const fechaTextoWp = `${dia}/${mes}/${anio} ${horas12}:${minutos} ${ampmWp}`;
       const nombreLimpio = nombre.replace(/\s+/g, '_').toUpperCase();
-      const nombreArchivoPDF = `Pedido_${nombreLimpio}_${dia}-${mes}-${anio}_${horas12}-${minutos}_${ampmFile}.pdf`;
+      
+      const horasFile = hoy.getHours();
+      const minutosFile = String(hoy.getMinutes()).padStart(2, '0');
+      let h12File = horasFile % 12;
+      h12File = h12File ? h12File : 12;
+      const ampmFile = horasFile >= 12 ? 'p.m.' : 'a.m.';
+      const nombreArchivoPDF = `Pedido_${nombreLimpio}_${dia}-${mes}-${anio}_${h12File}-${minutosFile}_${ampmFile}.pdf`;
 
       return { nombre, direccion, fechaTextoWp, nombreArchivoPDF };
     }
