@@ -13,9 +13,22 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-    /* Evita el zoom automático en celulares forzando 16px mínimo */
+    /* EVITA EL ZOOM OBLIGATORIO EN MÓVILES */
     input, select, textarea { font-size: 16px !important; }
     button, select, input { transition: all 0.2s ease-in-out; }
+
+    /* FORZAR ESTRICTAMENTE 2 COLUMNAS EN CELULAR (IGNORA CUALQUIER OTRA REGLA) */
+    .grid-productos-movil {
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 10px !important;
+    }
+
+    @media (min-width: 1024px) {
+      .grid-productos-movil {
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+      }
+    }
 
     .btn-whatsapp {
       background: linear-gradient(135deg, #059669 0%, #047857 100%);
@@ -63,7 +76,6 @@
     .btn-cat-active i { color: #111827 !important; }
     .btn-cat-inactive { background-color: #043829; color: #9ca3af; border-color: rgba(255,255,255,0.05); }
 
-    /* Apagador centrado en vista móvil */
     .switch-card {
       background-color: #043829;
       border: 1px solid rgba(255, 255, 255, 0.15);
@@ -95,7 +107,7 @@
     .tabla-excel td { border-bottom: 1px solid #e5e7eb; padding: 10px 12px; font-size: 14px; }
     .tabla-excel tr:hover { background-color: #f0fdf4; }
     .input-excel {
-      width: 90px; text-align: center; font-weight: 700; background-color: #f9fafb; border: 1.5px solid #d1d5db; border-radius: 6px; padding: 6px; font-size: 16px; color: #111827;
+      width: 90px; text-align: center; font-weight: 700; background-color: #f9fafb; border: 1.5px solid #d1d5db; border-radius: 6px; padding: 6px; font-size: 16px !important; color: #111827;
     }
     .input-excel:focus { outline: none; border-color: #059669; background-color: #ffffff; box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.2); }
 
@@ -124,7 +136,7 @@
 
       <div class="w-full md:w-96 relative">
         <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"><i class="fas fa-search"></i></span>
-        <input type="text" id="input-buscar" oninput="filtrarProductos()" placeholder="Buscar frutas, verduras, sacos, cajas..." class="w-full pl-10 pr-4 py-2.5 bg-emerald-900/50 border border-emerald-700/60 rounded-xl text-sm text-white placeholder-emerald-300/70 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition">
+        <input type="text" id="input-buscar" oninput="filtrarProductos()" placeholder="Buscar frutas, verduras, sacos, cajas..." class="w-full pl-10 pr-4 py-2.5 bg-emerald-900/50 border border-emerald-700/60 rounded-xl text-sm text-white placeholder-emerald-300/70 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition" style="font-size: 16px !important;">
       </div>
     </div>
   </header>
@@ -184,11 +196,11 @@
           <div class="space-y-2.5 pt-1">
             <div>
               <label class="block text-xs font-bold text-gray-600 mb-1">Nombre del Negocio o Cliente:</label>
-              <input type="text" id="input-nombre" placeholder="Ej. CARLOS" class="w-full bg-gray-50 border border-gray-300 p-3 rounded-xl text-sm focus:outline-none focus:border-emerald-500 font-semibold">
+              <input type="text" id="input-nombre" placeholder="Ej. CARLOS" class="w-full bg-gray-50 border border-gray-300 p-3 rounded-xl text-sm focus:outline-none focus:border-emerald-500 font-semibold" style="font-size: 16px !important;">
             </div>
             <div>
               <label class="block text-xs font-bold text-gray-600 mb-1">Dirección / Referencia:</label>
-              <input type="text" id="input-direccion" placeholder="Ej. APOPA" class="w-full bg-gray-50 border border-gray-300 p-3 rounded-xl text-sm focus:outline-none focus:border-emerald-500 font-semibold">
+              <input type="text" id="input-direccion" placeholder="Ej. APOPA" class="w-full bg-gray-50 border border-gray-300 p-3 rounded-xl text-sm focus:outline-none focus:border-emerald-500 font-semibold" style="font-size: 16px !important;">
             </div>
           </div>
 
@@ -224,11 +236,11 @@
         <div class="space-y-2.5">
           <div>
             <label class="block text-xs font-bold text-gray-600 mb-1">Nombre del Negocio o Cliente:</label>
-            <input type="text" id="input-nombre-m" placeholder="Ej. CARLOS" class="w-full bg-gray-50 border border-gray-300 p-3 rounded-xl text-sm focus:outline-none focus:border-emerald-500 font-semibold">
+            <input type="text" id="input-nombre-m" placeholder="Ej. CARLOS" class="w-full bg-gray-50 border border-gray-300 p-3 rounded-xl text-sm focus:outline-none focus:border-emerald-500 font-semibold" style="font-size: 16px !important;">
           </div>
           <div>
             <label class="block text-xs font-bold text-gray-600 mb-1">Dirección / Referencia:</label>
-            <input type="text" id="input-direccion-m" placeholder="Ej. APOPA" class="w-full bg-gray-50 border border-gray-300 p-3 rounded-xl text-sm focus:outline-none focus:border-emerald-500 font-semibold">
+            <input type="text" id="input-direccion-m" placeholder="Ej. APOPA" class="w-full bg-gray-50 border border-gray-300 p-3 rounded-xl text-sm focus:outline-none focus:border-emerald-500 font-semibold" style="font-size: 16px !important;">
           </div>
         </div>
 
@@ -382,9 +394,9 @@
           tituloSeccion.innerHTML = `<i class="fas fa-seedling"></i> ${cat}`;
           contenedor.appendChild(tituloSeccion);
 
-          // FORZADO ESTRICTAMENTE A 2 COLUMNAS EN CELULAR (grid-cols-2)
+          // USANDO LA NUEVA CLASE ESTRICTA DE 2 COLUMNAS
           const grid = document.createElement('div');
-          grid.className = 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3';
+          grid.className = 'grid-productos-movil';
 
           prodsCat.forEach(p => {
             if (!seleccionPresentacion[p.id]) seleccionPresentacion[p.id] = 0;
@@ -466,7 +478,7 @@
                 <td class="w-36"><select onchange="cambiarPresentacion('${p.id}', this.value)" class="select-custom w-full bg-gray-50 border border-gray-200 text-xs rounded p-1.5" style="font-size: 16px !important;">${opcionesHTML}</select></td>
                 <td id="precio-${p.id}" class="font-bold text-gray-700 text-right text-sm">$${presActual.precio.toFixed(2)}</td>
                 <td class="text-center w-28">
-                  <input type="number" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" onkeydown="navegarTecladoExcel(event, ${globalIndex})" class="input-excel input-fila-excel" data-index="${globalIndex}" style="font-size: 16px !important;">
+                  <input type="number" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" onkeydown="navegarTecladoExcel(event, ${globalIndex})" class="input-excel input-fila-excel" data-index="${globalIndex}">
                 </td>
                 <td id="subtotal-${p.id}" class="font-bold text-emerald-700 text-right text-sm">$${subtotalLinea.toFixed(2)}</td>
               </tr>
