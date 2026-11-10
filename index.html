@@ -411,10 +411,10 @@
                   </div>
                   <div>
                     <label class="text-[10px] text-gray-400 font-semibold block mb-0.5 text-right">CANTIDAD:</label>
-                    <div class="flex items-center justify-end gap-1">
-                      <button onclick="cambiarCantidad('${p.id}', -1)" class="btn-qty-minus w-8 h-8 rounded-lg font-black text-base flex items-center justify-center">-</button>
-                      <input type="number" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" style="font-size: 16px !important;" class="w-12 h-8 text-center font-black bg-gray-50 border border-gray-300 rounded-lg">
-                      <button onclick="cambiarCantidad('${p.id}', 1)" class="btn-qty-plus w-8 h-8 rounded-lg font-black text-base flex items-center justify-center">+</button>
+                    <div class="flex items-center justify-end gap-1.5">
+                      <button onclick="cambiarCantidad('${p.id}', -1)" class="btn-qty-minus w-12 h-12 rounded-xl font-black text-xl flex items-center justify-center shadow-sm">-</button>
+                      <input type="number" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" style="font-size: 20px !important;" class="w-16 h-12 text-center font-black bg-gray-50 border-2 border-emerald-500 rounded-xl shadow-inner">
+                      <button onclick="cambiarCantidad('${p.id}', 1)" class="btn-qty-plus w-12 h-12 rounded-xl font-black text-xl flex items-center justify-center shadow-sm">+</button>
                     </div>
                   </div>
                 </div>
