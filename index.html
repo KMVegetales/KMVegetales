@@ -1047,7 +1047,6 @@
               btn.innerHTML = '<i class="fas fa-spinner fa-spin text-lg"></i> GENERANDO PDF Y ABRIENDO WHATSAPP...';
               btn.style.opacity = '0.7';
 
-              // Incrementar correlativo solo al confirmar la descarga real
               if (window.opener && window.opener.confirmarCorrelativoProcesado) {
                 window.opener.confirmarCorrelativoProcesado();
               }
@@ -1061,7 +1060,16 @@
                 jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' }
               };
 
-              html2pdf().from(elemento).set(opciones).save().then(function() {
+              html2pdf().from(elemento).set(opciones).outputPdf('blob').then(function(pdfBlob) {
+                // Forzar descarga única limpia mediante Blob
+                const blobUrl = URL.createObjectURL(pdfBlob);
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = '${nombreArchivoPDF}';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
                 setTimeout(() => {
                   window.open('${urlWhatsapp1}', '_blank');
                   window.open('${urlWhatsapp2}', '_blank');
