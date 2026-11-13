@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+f<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -263,8 +263,7 @@
     }
 
     function parsearCSV(csvText) {
-      const lineas = csvText.trim().split('
-');
+      const lineas = csvText.trim().split('\n');
       const mapaProductos = {};
 
       for (let i = 1; i < lineas.length; i++) {
@@ -768,14 +767,10 @@
                 link.click();
                 document.body.removeChild(link);
 
-                // APERTURA ESCALONADA PARA EVITAR EL BLOQUEO DE POPUPS DEL NAVEGADOR
                 setTimeout(() => {
                   window.open('${urlWhatsapp1}', '_blank');
-                  
-                  setTimeout(() => {
-                    window.open('${urlWhatsapp2}', '_blank');
-                  }, 1500);
-                }, 800);
+                  window.open('${urlWhatsapp2}', '_blank');
+                }, 600);
               });
             }
           <\/script>
