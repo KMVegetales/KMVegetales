@@ -639,8 +639,8 @@
 
       let horas12 = horas % 12;
       horas12 = horas12 ? horas12 : 12;
-      const ampmWp = horas >= 12 ? 'p. m.' : 'a. m.';
-      const ampmFile = horas >= 12 ? 'p.m.' : 'a.m.';
+      const ampmWp = horas >= 12 ? 'PM' : 'AM';
+      const ampmFile = horas >= 12 ? 'PM' : 'AM';
 
       const fechaTextoWp = `${dia}/${mes}/${anio} ${horas12}:${minutos} ${ampmWp}`;
       const nombreLimpio = nombre.replace(/\s+/g, '_').toUpperCase();
