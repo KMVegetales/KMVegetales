@@ -51,19 +51,45 @@
 
     .btn-cat {
       cursor: pointer;
-      font-weight: 800;
-      font-size: 12px;
-      padding: 8px 14px;
-      border-radius: 12px;
+      padding: 4px 8px;
+      border-radius: 16px;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-      border: 1px solid rgba(0,0,0,0.1);
+      justify-content: center;
+      transition: all 0.25s ease;
+      background-color: transparent;
+      border: 2px solid transparent;
     }
-    .btn-cat-active { background-color: #bdef00; color: #111827; }
-    .btn-cat-active i { color: #111827 !important; }
-    .btn-cat-inactive { background-color: #043829; color: #9ca3af; border-color: rgba(255,255,255,0.05); }
+    .btn-cat img {
+      height: 54px;
+      width: auto;
+      object-fit: contain;
+      transition: all 0.25s ease;
+    }
+    @media (min-width: 1024px) {
+      .btn-cat img {
+        height: 64px;
+      }
+    }
+    .btn-cat-active {
+      background-color: rgba(189, 239, 0, 0.18);
+      border-color: #bdef00;
+      box-shadow: 0 4px 12px rgba(189, 239, 0, 0.25);
+      transform: translateY(-2px);
+    }
+    .btn-cat-active img {
+      filter: drop-shadow(0 3px 6px rgba(0,0,0,0.35));
+      opacity: 1;
+    }
+    .btn-cat-inactive {
+      background-color: rgba(4, 56, 41, 0.5);
+      border-color: rgba(255, 255, 255, 0.08);
+      opacity: 0.45;
+      filter: grayscale(85%);
+    }
+    .btn-cat-inactive:hover {
+      opacity: 0.75;
+    }
 
     .switch-card {
       background-color: #043829;
@@ -140,10 +166,16 @@
         </div>
 
         <div class="flex flex-col md:flex-row justify-between items-center gap-3 pt-2 border-t border-emerald-600/40">
-          <div class="flex flex-wrap justify-center gap-2">
-            <button onclick="toggleFiltroCategoria('VERDURAS')" id="btn-cat-verduras" class="btn-cat btn-cat-active"><i class="fas fa-carrot text-sm"></i> Verduras</button>
-            <button onclick="toggleFiltroCategoria('FRUTAS')" id="btn-cat-frutas" class="btn-cat btn-cat-active"><i class="fas fa-apple-alt text-sm"></i> Frutas</button>
-            <button onclick="toggleFiltroCategoria('ESPECIES')" id="btn-cat-especies" class="btn-cat btn-cat-active"><i class="fas fa-pepper-hot text-sm"></i> Especies</button>
+          <div class="flex flex-wrap justify-center gap-2.5 sm:gap-3">
+            <button onclick="toggleFiltroCategoria('VERDURAS')" id="btn-cat-verduras" class="btn-cat btn-cat-active" title="Verduras">
+              <img src="VERDURAS.png" alt="Verduras" onerror="this.onerror=null; this.src='VERDURAS.jpg';">
+            </button>
+            <button onclick="toggleFiltroCategoria('FRUTAS')" id="btn-cat-frutas" class="btn-cat btn-cat-active" title="Frutas">
+              <img src="FRUTAS.png" alt="Frutas" onerror="this.onerror=null; this.src='FRUTAS.jpg';">
+            </button>
+            <button onclick="toggleFiltroCategoria('ESPECIES')" id="btn-cat-especies" class="btn-cat btn-cat-active" title="Especies">
+              <img src="ESPECIES.png" alt="Especies" onerror="this.onerror=null; this.src='ESPECIES.jpg';">
+            </button>
           </div>
 
           <div class="flex justify-center md:justify-end w-full md:w-auto">
@@ -733,11 +765,11 @@
           <div class="ticket-container" id="contenido-ticket">
             <div class="header-ticket">
               <p style="font-size: 11pt; font-weight: bold; margin: 0 0 2px 0;">*KMVEGETALES - NUEVO PEDIDO*</p>
-              <p style="margin: 2px 0; font-size: 10pt;">*Fecha:* ${fechaTextoWp}</p>
-              <p style="margin: 3px 0; font-size: 12pt;">*Cliente:* <strong style="font-size: 13pt;">${nombre.toUpperCase()}</strong></p>
-              ${direccion ? `<p style="margin: 2px 0; font-size: 10pt;">*Dirección:* ${direccion}</p>` : ''}
+              <p style="margin: 2px 0; font-size: 9.5pt;">*Fecha:* ${fechaTextoWp}</p>
+              <p style="margin: 3px 0; font-size: 11pt;">*Cliente:* <strong style="font-size: 13pt;">${nombre.toUpperCase()}</strong></p>
+              ${direccion ? `<p style="margin: 2px 0; font-size: 9.5pt;">*Dirección:* ${direccion}</p>` : ''}
             </div>
-            <p style="margin: 0 0 6px 0; font-weight: bold; font-size: 11pt;">*DETALLE DE PRODUCTOS:*</p>
+            <p style="margin: 0 0 6px 0; font-weight: bold; font-size: 9.5pt;">*DETALLE DE PRODUCTOS:*</p>
             <div class="flex-2-columnas">
               <div class="columna-50">${htmlColIzquierda}</div>
               <div class="columna-50">${htmlColDerecha}</div>
