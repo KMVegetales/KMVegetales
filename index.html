@@ -1,4 +1,4 @@
-f<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -29,6 +29,12 @@ f<!DOCTYPE html>
     .btn-qty-plus:hover { background-color: #047857; }
     .btn-qty-minus { background-color: #f3f4f6; color: #374151; border: 1px solid #e5e7eb; }
     .btn-qty-minus:hover { background-color: #e5e7eb; }
+
+    /* Tamaño del número en tarjetas: grande en celular (24px), compacto y acorde en PC (16px) */
+    .input-cant-card { font-size: 24px !important; }
+    @media (min-width: 1024px) {
+      .input-cant-card { font-size: 16px !important; }
+    }
 
     .card-producto { transition: transform 0.2s ease, box-shadow 0.2s ease; }
     .card-producto:hover { transform: translateY(-2px); box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.08); }
@@ -411,10 +417,10 @@ f<!DOCTYPE html>
                   </div>
                   <span class="text-[10px] text-gray-400 font-semibold">CANTIDAD:</span>
                 </div>
-                <div class="flex items-center gap-2 w-full pt-1">
-                  <button onclick="cambiarCantidad('${p.id}', -1)" class="btn-qty-minus flex-1 h-14 rounded-xl font-black text-2xl flex items-center justify-center shadow-sm">-</button>
-                  <input type="number" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" style="font-size: 24px !important;" class="w-24 h-14 text-center font-black bg-gray-50 border-2 border-emerald-500 rounded-xl shadow-inner">
-                  <button onclick="cambiarCantidad('${p.id}', 1)" class="btn-qty-plus flex-1 h-14 rounded-xl font-black text-2xl flex items-center justify-center shadow-sm">+</button>
+                <div class="flex items-center gap-2 lg:gap-1.5 w-full pt-1">
+                  <button onclick="cambiarCantidad('${p.id}', -1)" class="btn-qty-minus flex-1 h-14 lg:h-9 rounded-xl lg:rounded-lg font-black text-2xl lg:text-lg flex items-center justify-center shadow-sm">-</button>
+                  <input type="number" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" class="input-cant-card w-24 lg:w-16 h-14 lg:h-9 text-center font-black bg-gray-50 border-2 border-emerald-500 rounded-xl lg:rounded-lg shadow-inner">
+                  <button onclick="cambiarCantidad('${p.id}', 1)" class="btn-qty-plus flex-1 h-14 lg:h-9 rounded-xl lg:rounded-lg font-black text-2xl lg:text-lg flex items-center justify-center shadow-sm">+</button>
                 </div>
               </div>
             `;
