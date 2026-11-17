@@ -138,8 +138,8 @@
         <div class="flex items-center gap-2">
           <img src="logo.png" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-emerald-600 bg-white" onerror="this.onerror=null; this.src='logo.jpg';">
           <div>
-            <span class="text-sm sm:text-base font-extrabold tracking-wider text-emerald-200 uppercase">Catálogo Digital</span>
-            <h1 class="text-lg font-bold leading-tight">KMVegetales</h1>
+            <span class="text-sm sm:text-base font-extrabold tracking-wider text-emerald-200 uppercase">CATÁLOGO DIGITAL KMV</span>
+            <h1 class="text-lg font-bold leading-tight">PRODUCTOS POR CATEGORIAS</h1>
           </div>
         </div>
         <button onclick="toggleCarritoMovil()" class="md:hidden relative bg-emerald-700 hover:bg-emerald-600 active:scale-95 p-2.5 rounded-xl border border-emerald-600 transition shadow-md">
@@ -148,9 +148,8 @@
         </button>
       </div>
 
-      <div class="w-full md:w-96 relative">
-        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"><i class="fas fa-search"></i></span>
-        <input type="text" id="input-buscar" oninput="filtrarProductos()" placeholder="Buscar frutas, verduras, sacos, cajas..." class="w-full pl-10 pr-4 py-2.5 bg-emerald-900/50 border border-emerald-700/60 rounded-xl text-sm text-white placeholder-emerald-300/70 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition">
+      <div class="flex items-center">
+        <span class="bg-emerald-600/60 text-emerald-200 text-xs sm:text-sm font-bold px-3.5 py-1.5 rounded-full backdrop-blur-sm border border-emerald-500/40 shadow-sm">Frescura Garantizada</span>
       </div>
     </div>
   </header>
@@ -160,12 +159,18 @@
       <div class="relative bg-gradient-to-r from-emerald-900 to-emerald-700 rounded-3xl p-4 sm:p-6 text-white shadow-lg overflow-hidden flex flex-col justify-center space-y-3">
         <div class="absolute right-0 bottom-0 opacity-15 transform translate-x-4 translate-y-4"><i class="fas fa-seedling text-8xl"></i></div>
         <div class="text-center flex flex-col items-center">
-          <span class="bg-emerald-600/60 text-emerald-200 text-xs sm:text-sm font-bold px-3 py-1 rounded-full mb-2 backdrop-blur-sm">Frescura Garantizada</span>
-          <h2 class="text-2xl sm:text-3xl font-extrabold leading-tight mb-1">Frescura y Calidad a Domicilio</h2>
-          <p class="text-emerald-100 text-sm sm:text-base max-w-md">Selecciona las categorías y cambia el modo de visualización.</p>
+          <h2 class="text-2xl sm:text-3xl font-extrabold leading-tight mb-2">Frescura y Calidad a Domicilio</h2>
+          
+          <div class="w-full max-w-xl mx-auto space-y-1">
+            <span class="text-[11px] font-extrabold text-emerald-200 tracking-wider uppercase block text-center">BUSCAR PRODUCTO</span>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-emerald-300"><i class="fas fa-search"></i></span>
+              <input type="text" id="input-buscar" oninput="filtrarProductos()" placeholder="Buscar frutas, verduras, sacos, cajas..." class="w-full pl-10 pr-4 py-2.5 bg-emerald-950/60 border border-emerald-600/60 rounded-xl text-sm text-white placeholder-emerald-300/70 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition shadow-inner">
+            </div>
+          </div>
         </div>
 
-        <div class="flex flex-col md:flex-row justify-between items-center gap-3 pt-2 border-t border-emerald-600/40">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-3 pt-3 border-t border-emerald-600/40">
           <div class="flex flex-wrap justify-center gap-2.5 sm:gap-3">
             <button onclick="toggleFiltroCategoria('VERDURAS')" id="btn-cat-verduras" class="btn-cat btn-cat-active" title="Verduras">
               <img src="VERDURAS.png" alt="Verduras" onerror="this.onerror=null; this.src='VERDURAS.jpg';">
@@ -178,7 +183,8 @@
             </button>
           </div>
 
-          <div class="flex justify-center md:justify-end w-full md:w-auto">
+          <div class="flex flex-col items-center md:items-end w-full md:w-auto gap-1">
+            <span class="text-[11px] font-extrabold text-emerald-200 tracking-wider uppercase">VISUALIZACION</span>
             <div onclick="toggleModoVistaSwitch()" id="switch-modo-vista" class="switch-card switch-on">
               <div class="flex items-center gap-1.5 min-w-0 pr-3">
                 <i id="icono-modo-vista" class="fas fa-th-large text-emerald-300 text-sm shrink-0"></i>
