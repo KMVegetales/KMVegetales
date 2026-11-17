@@ -30,7 +30,6 @@
     .btn-qty-minus { background-color: #f3f4f6; color: #374151; border: 1px solid #e5e7eb; }
     .btn-qty-minus:hover { background-color: #e5e7eb; }
 
-    /* Tamaño del número en tarjetas: grande en celular (24px), compacto y acorde en PC (16px) */
     .input-cant-card { font-size: 24px !important; }
     @media (min-width: 1024px) {
       .input-cant-card { font-size: 16px !important; }
@@ -123,11 +122,6 @@
       width: 90px; text-align: center; font-weight: 700; background-color: #f9fafb; border: 1.5px solid #d1d5db; border-radius: 6px; padding: 6px; font-size: 16px; color: #111827;
     }
     .input-excel:focus { outline: none; border-color: #059669; background-color: #ffffff; box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.2); }
-  
-    input, select, textarea {
-      font-size: 16px !important;
-    }
-
   </style>
 </head>
 <body class="bg-gray-50 min-h-screen pb-24 lg:pb-12">
@@ -158,19 +152,14 @@
     <div class="lg:col-span-3 space-y-4">
       <div class="relative bg-gradient-to-r from-emerald-900 to-emerald-700 rounded-3xl p-4 sm:p-6 text-white shadow-lg overflow-hidden flex flex-col justify-center space-y-3">
         <div class="absolute right-0 bottom-0 opacity-15 transform translate-x-4 translate-y-4"><i class="fas fa-seedling text-8xl"></i></div>
+        
+        <!-- Título Principal del Banner -->
         <div class="text-center flex flex-col items-center">
           <h2 class="text-2xl sm:text-3xl font-extrabold leading-tight mb-2">Frescura y Calidad a Domicilio</h2>
-          
-          <div class="w-full max-w-xl mx-auto space-y-1">
-            <span class="text-[11px] font-extrabold text-emerald-200 tracking-wider uppercase block text-center">BUSCAR PRODUCTO</span>
-            <div class="relative">
-              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-emerald-300"><i class="fas fa-search"></i></span>
-              <input type="text" id="input-buscar" oninput="filtrarProductos()" placeholder="Buscar frutas, verduras, sacos, cajas..." class="w-full pl-10 pr-4 py-2.5 bg-emerald-950/60 border border-emerald-600/60 rounded-xl text-sm text-white placeholder-emerald-300/70 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition shadow-inner">
-            </div>
-          </div>
         </div>
 
-        <div class="flex flex-col md:flex-row justify-between items-center gap-3 pt-3 border-t border-emerald-600/40">
+        <!-- Fila 1 interna del Banner: Botones de Categorías arriba -->
+        <div class="flex justify-center pt-1 pb-1">
           <div class="flex flex-wrap justify-center gap-2.5 sm:gap-3">
             <button onclick="toggleFiltroCategoria('VERDURAS')" id="btn-cat-verduras" class="btn-cat btn-cat-active" title="Verduras">
               <img src="VERDURAS.png" alt="Verduras" onerror="this.onerror=null; this.src='VERDURAS.jpg';">
@@ -181,6 +170,17 @@
             <button onclick="toggleFiltroCategoria('ESPECIES')" id="btn-cat-especies" class="btn-cat btn-cat-active" title="Especies">
               <img src="ESPECIES.png" alt="Especies" onerror="this.onerror=null; this.src='ESPECIES.jpg';">
             </button>
+          </div>
+        </div>
+
+        <!-- Fila 2 interna del Banner: Buscador centrado y selector de visualización abajo -->
+        <div class="flex flex-col md:flex-row justify-between items-center gap-3 pt-3 border-t border-emerald-600/40">
+          <div class="w-full md:max-w-md space-y-1">
+            <span class="text-[11px] font-extrabold text-emerald-200 tracking-wider uppercase block text-center md:text-left">BUSCAR PRODUCTO</span>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-emerald-300"><i class="fas fa-search"></i></span>
+              <input type="text" id="input-buscar" oninput="filtrarProductos()" placeholder="Buscar frutas, verduras, sacos, cajas..." class="w-full pl-10 pr-4 py-2 bg-emerald-950/60 border border-emerald-600/60 rounded-xl text-sm text-white placeholder-emerald-300/70 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition shadow-inner">
+            </div>
           </div>
 
           <div class="flex flex-col items-center md:items-end w-full md:w-auto gap-1">
@@ -199,7 +199,7 @@
       <div id="contenedor-productos"></div>
     </div>
 
-    <!-- Panel Lateral Escritorio (Fijo: lista scrolleable flexible, footer siempre visible) -->
+    <!-- Panel Lateral Escritorio -->
     <div class="hidden lg:block">
       <div class="bg-white rounded-3xl p-4 shadow-xl border border-gray-100 sticky top-20 flex flex-col" style="max-height: calc(100vh - 100px);">
         <div class="flex items-center justify-between border-b pb-2.5 mb-2 shrink-0">
@@ -209,12 +209,10 @@
           <span id="cart-count-badge" class="bg-emerald-600 text-white font-bold text-xs px-2.5 py-0.5 rounded-full shadow-sm">0 productos</span>
         </div>
 
-        <!-- Lista de items con scroll interno automático -->
         <div id="lista-carrito-desktop" class="divide-y overflow-y-auto pr-1 space-y-2 flex-1 min-h-[100px]" style="max-height: calc(100vh - 360px);">
           <p class="text-gray-400 text-xs text-center py-6">Tu carrito está vacío</p>
         </div>
 
-        <!-- Footer fijo del carrito -->
         <div class="border-t pt-2.5 space-y-2 bg-white shrink-0 mt-2">
           <div class="flex justify-between items-center text-sm font-bold text-gray-800">
             <span>Total a Pagar:</span>
@@ -325,7 +323,6 @@
         if (!id || !nombre) continue;
 
         let rutaFoto = (fotoCol && fotoCol !== 'OK' && fotoCol !== '') ? fotoCol : `${nombre}.jpg`;
-
         const descripcion = descCol && descCol !== '' ? descCol : `${nombre} fresco de alta calidad.`;
 
         if (!mapaProductos[id]) {
@@ -768,7 +765,7 @@
             * { box-sizing: border-box; }
             html, body { height: 100%; margin: 0; padding: 0; background: #fff; font-family: 'Courier New', Courier, monospace; color: #000; display: flex; flex-direction: column; }
             .ticket-container { height: 279mm; display: flex; flex-direction: column; justify-content: flex-start; padding: 12mm 10mm 10mm 10mm; box-sizing: border-box; overflow: hidden; }
-            .header-ticket { border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 8px; }
+            .header-ticket { border-bottom: 2px solid #000; padding-bottom: 6mm; margin-bottom: 8px; }
             .flex-2-columnas { display: flex !important; flex-direction: row !important; width: 100% !important; gap: 15px !important; justify-content: space-between !important; align-items: flex-start !important; }
             .columna-50 { width: 48% !important; flex: 0 0 48% !important; display: flex; flex-direction: column; gap: 2px; }
             .columna-50:first-child { border-right: 1.5px solid #000; padding-right: 15px; }
@@ -777,12 +774,7 @@
             .footer-ticket { border-top: 2px solid #000; padding-top: 6px; margin-top: auto; display: flex; justify-content: space-between; align-items: center; }
             .acciones-flotantes { position: fixed; top: 10px; left: 10px; right: 10px; z-index: 9999; display: flex; justify-content: center; font-family: 'Plus Jakarta Sans', sans-serif; background: rgba(255, 255, 255, 0.95); padding: 10px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
             .btn-unico-envio { background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 24px; border-radius: 10px; font-weight: bold; font-size: 11pt; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; border: none; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4); }
-          
-    input, select, textarea {
-      font-size: 16px !important;
-    }
-
-  </style>
+          </style>
           <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         </head>
         <body>
