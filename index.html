@@ -560,8 +560,8 @@
       let cantidadActual = carrito[itemKey] ? carrito[itemKey].cantidad : 0;
       let nuevaCantidad = cantidadActual + cambio;
 
-      if (nuevaCantidad > 0 && Object.keys(carrito).length >= 30 && !carrito[itemKey]) {
-        alert("El límite máximo por orden es de 30 productos diferentes.");
+      if (nuevaCantidad > 0 && Object.keys(carrito).length >= 36 && !carrito[itemKey]) {
+        alert("El límite máximo por orden es de 36 productos diferentes.");
         return;
       }
 
@@ -582,8 +582,8 @@
       const itemKey = `${prod.id}_${pres.unidad}`;
       let nuevaCantidad = parseInt(valorTexto) || 0;
 
-      if (nuevaCantidad > 0 && Object.keys(carrito).length >= 30 && !carrito[itemKey]) {
-        alert("El límite máximo por orden es de 30 productos diferentes.");
+      if (nuevaCantidad > 0 && Object.keys(carrito).length >= 36 && !carrito[itemKey]) {
+        alert("El límite máximo por orden es de 36 productos diferentes.");
         return;
       }
 
@@ -648,7 +648,7 @@
       document.getElementById('lista-carrito-mobile').innerHTML = htmlItems;
       document.getElementById('total-precio-desktop').innerText = `$${totalMonto.toFixed(2)}`;
       document.getElementById('total-precio-mobile').innerText = `$${totalMonto.toFixed(2)}`;
-      document.getElementById('cart-count-badge').innerText = `${Object.keys(carrito).length}/30 productos`;
+      document.getElementById('cart-count-badge').innerText = `${Object.keys(carrito).length}/36 productos`;
       document.getElementById('cart-count-mobile').innerText = Object.keys(carrito).length;
     }
 
@@ -700,8 +700,8 @@
       const { direccion, fechaTextoWp, nombreArchivoPDF } = obtenerDatosPedido();
       const itemsArr = Object.values(carrito);
       
-      const columnaIzquierda = itemsArr.slice(0, 15);
-      const columnaDerecha = itemsArr.slice(15, 30);
+      const columnaIzquierda = itemsArr.slice(0, 18);
+      const columnaDerecha = itemsArr.slice(18, 36);
 
       let htmlColIzquierda = '';
       let htmlColDerecha = '';
@@ -711,14 +711,14 @@
         const subtotal = item.cantidad * item.precio;
         totalMonto += subtotal;
         htmlColIzquierda += `
-          <div class="item-linea" style="margin-bottom: 5px; font-size: 11pt;">
-            <div style="display: flex; gap: 8px;">
-              <span style="font-weight: bold; min-width: 32px; text-align: right; display: inline-block;">${item.cantidad}</span>
+          <div class="item-linea" style="margin-bottom: 3px; font-size: 10pt;">
+            <div style="display: flex; gap: 6px;">
+              <span style="font-weight: bold; min-width: 28px; text-align: right; display: inline-block;">${item.cantidad}</span>
               <span style="font-weight: bold; text-transform: uppercase;">${item.unidad}</span>
               <span style="font-weight: bold;">${item.nombre}</span>
             </div>
-            <div style="text-align: right; font-size: 10pt; color: #111; padding-right: 5px;">
-              ($${item.precio.toFixed(2)}) = $${subtotal.toFixed(2)}
+            <div style="text-align: right; font-size: 9pt; color: #111; padding-right: 5px;">
+              ($${item.precio.toFixed(2)}) = $${subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </div>
           </div>`;
       });
@@ -727,19 +727,21 @@
         const subtotal = item.cantidad * item.precio;
         totalMonto += subtotal;
         htmlColDerecha += `
-          <div class="item-linea" style="margin-bottom: 5px; font-size: 11pt;">
-            <div style="display: flex; gap: 8px;">
-              <span style="font-weight: bold; min-width: 32px; text-align: right; display: inline-block;">${item.cantidad}</span>
+          <div class="item-linea" style="margin-bottom: 3px; font-size: 10pt;">
+            <div style="display: flex; gap: 6px;">
+              <span style="font-weight: bold; min-width: 28px; text-align: right; display: inline-block;">${item.cantidad}</span>
               <span style="font-weight: bold; text-transform: uppercase;">${item.unidad}</span>
               <span style="font-weight: bold;">${item.nombre}</span>
             </div>
-            <div style="text-align: right; font-size: 10pt; color: #111; padding-right: 5px;">
-              ($${item.precio.toFixed(2)}) = $${subtotal.toFixed(2)}
+            <div style="text-align: right; font-size: 9pt; color: #111; padding-right: 5px;">
+              ($${item.precio.toFixed(2)}) = $${subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </div>
           </div>`;
       });
 
       const totalConIva = totalMonto * 1.13;
+      const totalMontoStr = totalMonto.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const totalConIvaStr = totalConIva.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
       const telefono1 = "50379429248";
       const telefono2 = "50374670712";
@@ -759,14 +761,14 @@
             @page { size: letter portrait; margin: 0; }
             * { box-sizing: border-box; }
             html, body { height: 100%; margin: 0; padding: 0; background: #fff; font-family: 'Courier New', Courier, monospace; color: #000; display: flex; flex-direction: column; }
-            .ticket-container { height: 279mm; display: flex; flex-direction: column; justify-content: flex-start; padding: 6mm 10mm; box-sizing: border-box; overflow: hidden; }
-            .header-ticket { border-bottom: 2px solid #000; padding-bottom: 5px; margin-bottom: 8px; }
+            .ticket-container { height: 279mm; display: flex; flex-direction: column; justify-content: flex-start; padding: 4mm 10mm; box-sizing: border-box; overflow: hidden; }
+            .header-ticket { border-bottom: 2px solid #000; padding-bottom: 4px; margin-bottom: 6px; }
             .flex-2-columnas { display: flex !important; flex-direction: row !important; width: 100% !important; gap: 15px !important; justify-content: space-between !important; align-items: flex-start !important; }
-            .columna-50 { width: 48% !important; flex: 0 0 48% !important; display: flex; flex-direction: column; gap: 4px; }
+            .columna-50 { width: 48% !important; flex: 0 0 48% !important; display: flex; flex-direction: column; gap: 2px; }
             .columna-50:first-child { border-right: 1.5px solid #000; padding-right: 15px; }
             .columna-50:last-child { padding-left: 5px; }
-            .item-linea { border-bottom: 1px dotted #bbb; padding-bottom: 3px; }
-            .footer-ticket { border-top: 2px solid #000; padding-top: 5px; margin-top: auto; display: flex; justify-content: space-between; align-items: center; }
+            .item-linea { border-bottom: 1px dotted #bbb; padding-bottom: 2px; }
+            .footer-ticket { border-top: 2px solid #000; padding-top: 4px; margin-top: auto; display: flex; justify-content: space-between; align-items: center; }
             .acciones-flotantes { position: fixed; top: 10px; left: 10px; right: 10px; z-index: 9999; display: flex; justify-content: center; font-family: 'Plus Jakarta Sans', sans-serif; background: rgba(255, 255, 255, 0.95); padding: 10px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
             .btn-unico-envio { background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 24px; border-radius: 10px; font-weight: bold; font-size: 11pt; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; border: none; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4); }
           
@@ -786,19 +788,19 @@
           <div style="height: 50px;"></div>
           <div class="ticket-container" id="contenido-ticket">
             <div class="header-ticket">
-              <p style="font-size: 12pt; font-weight: bold; margin: 0 0 2px 0;">KMVEGETALES - NUEVO PEDIDO</p>
-              <p style="margin: 2px 0; font-size: 10.5pt;">Fecha: ${fechaTextoWp}</p>
-              <p style="margin: 3px 0; font-size: 12pt;">Cliente: <strong style="font-size: 14pt;">${nombre.toUpperCase()}</strong></p>
-              ${direccion ? `<p style="margin: 2px 0; font-size: 10.5pt;">Dirección: ${direccion}</p>` : ''}
+              <p style="font-size: 11pt; font-weight: bold; margin: 0 0 2px 0;">KMVEGETALES - NUEVO PEDIDO</p>
+              <p style="margin: 2px 0; font-size: 9.5pt;">Fecha: ${fechaTextoWp}</p>
+              <p style="margin: 2px 0; font-size: 11pt;">Cliente: <strong style="font-size: 13pt;">${nombre.toUpperCase()}</strong></p>
+              ${direccion ? `<p style="margin: 2px 0; font-size: 9.5pt;">Dirección: ${direccion}</p>` : ''}
             </div>
-            <p style="margin: 0 0 6px 0; font-weight: bold; font-size: 10.5pt;">DETALLE DE PRODUCTOS:</p>
+            <p style="margin: 0 0 4px 0; font-weight: bold; font-size: 9.5pt;">DETALLE DE PRODUCTOS:</p>
             <div class="flex-2-columnas">
               <div class="columna-50">${htmlColIzquierda}</div>
               <div class="columna-50">${htmlColDerecha}</div>
             </div>
             <div class="footer-ticket">
-              <p style="font-size: 11pt; font-weight: bold; margin: 0;">TOTAL....$ ${totalMonto.toFixed(2)}</p>
-              <p style="font-size: 11pt; font-weight: bold; margin: 0;">TOTAL IVA INCLUIDO $ ${totalConIva.toFixed(2)}</p>
+              <p style="font-size: 10.5pt; font-weight: bold; margin: 0;">TOTAL....$ ${totalMontoStr}</p>
+              <p style="font-size: 10.5pt; font-weight: bold; margin: 0;">TOTAL IVA INCLUIDO $ ${totalConIvaStr}</p>
             </div>
           </div>
           <script>
