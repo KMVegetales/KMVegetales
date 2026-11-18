@@ -30,11 +30,8 @@
     .btn-qty-minus { background-color: #f3f4f6; color: #374151; border: 1px solid #e5e7eb; }
     .btn-qty-minus:hover { background-color: #e5e7eb; }
 
-    /* Caja de cantidad con número grande pero manteniendo 16px reales para bloquear el zoom */
-    .input-cant-card { font-size: 20px !important; }
-    @media (min-width: 1024px) {
-      .input-cant-card { font-size: 16px !important; }
-    }
+    /* Tamaño grande y legible sin activar zoom */
+    .input-cant-card { font-size: 24px !important; font-weight: 900 !important; }
 
     .card-producto { transition: transform 0.2s ease, box-shadow 0.2s ease; }
     .card-producto:hover { transform: translateY(-2px); box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.08); }
@@ -444,7 +441,7 @@
                 </div>
                 <div class="flex items-center justify-between gap-1.5 w-full pt-1">
                   <button onclick="cambiarCantidad('${p.id}', -1)" class="btn-qty-minus w-10 sm:flex-1 h-10 lg:h-9 rounded-xl lg:rounded-lg font-black text-xl lg:text-lg flex items-center justify-center shadow-sm shrink-0">-</button>
-                  <input type="number" inputmode="numeric" pattern="[0-9]*" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" style="font-size: 16px !important;" class="input-cant-card flex-1 min-w-0 w-14 lg:w-16 h-10 lg:h-9 text-center font-black bg-gray-50 border-2 border-emerald-500 rounded-xl lg:rounded-lg shadow-inner">
+                  <input type="text" inputmode="numeric" pattern="[0-9]*" id="cant-${p.id}" value="${cant}" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" style="font-size: 20px !important;" class="input-cant-card flex-1 min-w-0 w-14 lg:w-16 h-10 lg:h-9 text-center font-black bg-gray-50 border-2 border-emerald-500 rounded-xl lg:rounded-lg shadow-inner">
                   <button onclick="cambiarCantidad('${p.id}', 1)" class="btn-qty-plus w-10 sm:flex-1 h-10 lg:h-9 rounded-xl lg:rounded-lg font-black text-xl lg:text-lg flex items-center justify-center shadow-sm shrink-0">+</button>
                 </div>
               </div>
@@ -485,7 +482,7 @@
                 <td class="w-36"><select onchange="cambiarPresentacion('${p.id}', this.value)" class="select-custom w-full bg-gray-50 border border-gray-200 rounded p-1.5">${opcionesHTML}</select></td>
                 <td id="precio-${p.id}" class="font-bold text-gray-700 text-right text-sm">$${presActual.precio.toFixed(2)}</td>
                 <td class="text-center w-24">
-                  <input type="number" inputmode="numeric" pattern="[0-9]*" id="cant-${p.id}" value="${cant}" min="0" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" onkeydown="navegarTecladoExcel(event, ${globalIndex})" style="font-size: 16px !important;" class="input-excel input-fila-excel" data-index="${globalIndex}">
+                  <input type="text" inputmode="numeric" pattern="[0-9]*" id="cant-${p.id}" value="${cant}" onfocus="this.select()" oninput="fijarCantidadDirecta('${p.id}', this.value)" onkeydown="navegarTecladoExcel(event, ${globalIndex})" style="font-size: 16px !important;" class="input-excel input-fila-excel" data-index="${globalIndex}">
                 </td>
                 <td id="subtotal-${p.id}" class="font-bold text-emerald-700 text-right text-sm">$${subtotalLinea.toFixed(2)}</td>
               </tr>
