@@ -109,6 +109,44 @@
       width: 72px; text-align: center; font-weight: 700; background-color: #f9fafb; border: 1.5px solid #d1d5db; border-radius: 6px; padding: 6px 4px; font-size: 16px !important; color: #111827;
     }
     .input-excel:focus { outline: none; border-color: #059669; background-color: #ffffff; box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.2); }
+
+    .box-pedido-anterior {
+      background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+      border: 1.5px solid #a7f3d0;
+      border-radius: 16px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+    }
+    .btn-pedido-rep {
+      background-color: #059669;
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    .btn-pedido-rep:hover { background-color: #047857; }
+    .btn-pedido-new {
+      background-color: #ffffff;
+      color: #065f46;
+      border: 1px solid #6ee7b7;
+      font-weight: 800;
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    .btn-pedido-new:hover { background-color: #d1fae5; }
   </style>
 </head>
 <body class="bg-gray-50 min-h-screen pb-24 lg:pb-12">
@@ -196,6 +234,7 @@
           <span id="cart-count-badge" class="bg-emerald-600 text-white font-bold text-xs px-2.5 py-0.5 rounded-full shadow-sm">0 productos</span>
         </div>
 
+        <div id="aviso-pedido-anterior-desktop" class="hidden shrink-0"></div>
         <div id="lista-carrito-desktop" class="divide-y overflow-y-auto pr-1 space-y-2 flex-1 min-h-[100px]">
           <p class="text-gray-400 text-xs text-center py-6">Tu carrito está vacío</p>
         </div>
@@ -237,6 +276,7 @@
           </h3>
           <button onclick="toggleCarritoMovil()" class="text-gray-400 hover:text-gray-600 text-3xl font-bold px-2">&times;</button>
         </div>
+        <div id="aviso-pedido-anterior-mobile" class="hidden"></div>
         <div id="lista-carrito-mobile" class="divide-y my-2 max-h-[35vh] overflow-y-auto pr-1 space-y-2"></div>
       </div>
 
@@ -279,6 +319,219 @@
     };
 
     const ORDEN_CATEGORIAS = ['VERDURAS', 'FRUTAS', 'ESPECIES', 'OTROS'];
+    const STORAGE_KEY_CLIENTE = 'kmvegetales_cliente_v1';
+    const STORAGE_KEY_PEDIDO = 'kmvegetales_ultimo_pedido_v1';
+    let pedidoAnteriorDescartadoEnSesion = false;
+
+    function guardarDatosCliente() {
+      const nDesk = document.getElementById('input-nombre');
+      const dDesk = document.getElementById('input-direccion');
+      const nMob = document.getElementById('input-nombre-m');
+      const dMob = document.getElementById('input-direccion-m');
+
+      const esMovil = window.innerWidth < 1024;
+      let nombre = '';
+      let direccion = '';
+
+      if (esMovil && nMob && dMob) {
+        nombre = nMob.value;
+        direccion = dMob.value;
+        if (nDesk && nDesk.value !== nombre) nDesk.value = nombre;
+        if (dDesk && dDesk.value !== direccion) dDesk.value = direccion;
+      } else if (nDesk && dDesk) {
+        nombre = nDesk.value;
+        direccion = dDesk.value;
+        if (nMob && nMob.value !== nombre) nMob.value = nombre;
+        if (dMob && dMob.value !== direccion) dMob.value = direccion;
+      }
+
+      try {
+        localStorage.setItem(STORAGE_KEY_CLIENTE, JSON.stringify({
+          nombre: nombre.trim(),
+          direccion: direccion.trim()
+        }));
+      } catch (e) {}
+    }
+
+    function restaurarDatosCliente() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY_CLIENTE);
+        if (!raw) return;
+        const datos = JSON.parse(raw);
+        const nombre = datos.nombre || '';
+        const direccion = datos.direccion || '';
+
+        const nDesk = document.getElementById('input-nombre');
+        const dDesk = document.getElementById('input-direccion');
+        const nMob = document.getElementById('input-nombre-m');
+        const dMob = document.getElementById('input-direccion-m');
+
+        if (nDesk && !nDesk.value) nDesk.value = nombre;
+        if (dDesk && !dDesk.value) dDesk.value = direccion;
+        if (nMob && !nMob.value) nMob.value = nombre;
+        if (dMob && !dMob.value) dMob.value = direccion;
+      } catch (e) {}
+    }
+
+    function obtenerPedidoAnteriorGuardado() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY_PEDIDO);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (!parsed || !Array.isArray(parsed.items) || parsed.items.length === 0) return null;
+        return parsed;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function guardarPedidoEnHistorial(nombreCliente, direccionCliente, fechaTexto) {
+      const itemsArr = Object.values(carrito);
+      if (itemsArr.length === 0) return;
+      try {
+        const registro = {
+          fechaTexto: fechaTexto,
+          guardadoEn: new Date().toISOString(),
+          nombre: nombreCliente || '',
+          direccion: direccionCliente || '',
+          items: itemsArr.map(it => ({
+            id: it.id,
+            nombre: it.nombre,
+            unidad: it.unidad,
+            precio: it.precio,
+            cantidad: it.cantidad
+          }))
+        };
+        localStorage.setItem(STORAGE_KEY_PEDIDO, JSON.stringify(registro));
+        pedidoAnteriorDescartadoEnSesion = false;
+      } catch (e) {}
+    }
+
+    function construirHTMLAvisoPedidoAnterior(pedido) {
+      const totalItems = pedido.items.length;
+      return `
+        <div class="box-pedido-anterior">
+          <div class="flex items-start justify-between gap-2 mb-1.5">
+            <div>
+              <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 block">
+                <i class="fas fa-history mr-1"></i> Pedido anterior encontrado
+              </span>
+              <p class="text-xs font-bold text-gray-800 leading-snug">
+                Fecha: <span class="text-emerald-700">${pedido.fechaTexto}</span> · ${totalItems} producto(s)
+              </p>
+              <p class="text-[11px] text-gray-600">
+                ¿Deseas repetirlo, modificar cantidades/productos o crear uno nuevo?
+              </p>
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-1.5 mt-2">
+            <button type="button" onclick="cargarPedidoAnteriorEnCarrito()" class="btn-pedido-rep flex-1">
+              <i class="fas fa-redo-alt"></i> Repetir / Modificar
+            </button>
+            <button type="button" onclick="crearNuevoPedidoLimpio()" class="btn-pedido-new">
+              <i class="fas fa-plus"></i> Nuevo pedido
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderizarAvisoPedidoAnterior() {
+      const boxDesk = document.getElementById('aviso-pedido-anterior-desktop');
+      const boxMob = document.getElementById('aviso-pedido-anterior-mobile');
+      const pedido = obtenerPedidoAnteriorGuardado();
+      const carritoVacio = Object.keys(carrito).length === 0;
+
+      if (pedido && carritoVacio && !pedidoAnteriorDescartadoEnSesion) {
+        const html = construirHTMLAvisoPedidoAnterior(pedido);
+        if (boxDesk) {
+          boxDesk.innerHTML = html;
+          boxDesk.classList.remove('hidden');
+        }
+        if (boxMob) {
+          boxMob.innerHTML = html;
+          boxMob.classList.remove('hidden');
+        }
+      } else {
+        if (boxDesk) {
+          boxDesk.innerHTML = '';
+          boxDesk.classList.add('hidden');
+        }
+        if (boxMob) {
+          boxMob.innerHTML = '';
+          boxMob.classList.add('hidden');
+        }
+      }
+    }
+
+    function cargarPedidoAnteriorEnCarrito() {
+      const pedido = obtenerPedidoAnteriorGuardado();
+      if (!pedido) return;
+
+      carrito = {};
+      seleccionPresentacion = {};
+
+      pedido.items.slice(0, 36).forEach(savedItem => {
+        const prodCatalogo = productos.find(p => String(p.id) === String(savedItem.id))
+          || productos.find(p => p.nombre.toLowerCase() === String(savedItem.nombre).toLowerCase());
+
+        let unidadFinal = savedItem.unidad;
+        let precioFinal = parseFloat(savedItem.precio) || 0;
+        let idFinal = savedItem.id;
+        let nombreFinal = savedItem.nombre;
+
+        if (prodCatalogo) {
+          idFinal = prodCatalogo.id;
+          nombreFinal = prodCatalogo.nombre;
+          const idxPres = prodCatalogo.presentaciones.findIndex(
+            pr => String(pr.unidad).toLowerCase() === String(savedItem.unidad).toLowerCase()
+          );
+          if (idxPres !== -1) {
+            seleccionPresentacion[prodCatalogo.id] = idxPres;
+            unidadFinal = prodCatalogo.presentaciones[idxPres].unidad;
+            precioFinal = prodCatalogo.presentaciones[idxPres].precio;
+          } else if (prodCatalogo.presentaciones.length > 0) {
+            seleccionPresentacion[prodCatalogo.id] = 0;
+            unidadFinal = prodCatalogo.presentaciones[0].unidad;
+            precioFinal = prodCatalogo.presentaciones[0].precio;
+          }
+        }
+
+        const itemKey = `${idFinal}_${unidadFinal}`;
+        carrito[itemKey] = {
+          id: idFinal,
+          nombre: nombreFinal,
+          unidad: unidadFinal,
+          precio: precioFinal,
+          cantidad: parseInt(savedItem.cantidad) || 1
+        };
+      });
+
+      if (pedido.nombre) {
+        const nDesk = document.getElementById('input-nombre');
+        const nMob = document.getElementById('input-nombre-m');
+        if (nDesk && !nDesk.value) nDesk.value = pedido.nombre;
+        if (nMob && !nMob.value) nMob.value = pedido.nombre;
+      }
+      if (pedido.direccion) {
+        const dDesk = document.getElementById('input-direccion');
+        const dMob = document.getElementById('input-direccion-m');
+        if (dDesk && !dDesk.value) dDesk.value = pedido.direccion;
+        if (dMob && !dMob.value) dMob.value = pedido.direccion;
+      }
+      guardarDatosCliente();
+
+      pedidoAnteriorDescartadoEnSesion = false;
+      renderProductos(obtenerProductosFiltrados());
+      actualizarInterfazCarrito();
+    }
+
+    function crearNuevoPedidoLimpio() {
+      carrito = {};
+      pedidoAnteriorDescartadoEnSesion = true;
+      renderProductos(obtenerProductosFiltrados());
+      actualizarInterfazCarrito();
+    }
 
     async function cargarProductosDesdeSheets() {
       try {
@@ -681,6 +934,7 @@
       document.getElementById('total-precio-mobile').innerText = `$${totalMonto.toFixed(2)}`;
       document.getElementById('cart-count-badge').innerText = `${Object.keys(carrito).length}/36 productos`;
       document.getElementById('cart-count-mobile').innerText = Object.keys(carrito).length;
+      renderizarAvisoPedidoAnterior();
     }
 
     function toggleCarritoMovil() {
@@ -729,6 +983,8 @@
       }
 
       const { direccion, fechaTextoWp, nombreArchivoPDF } = obtenerDatosPedido();
+      guardarDatosCliente();
+      guardarPedidoEnHistorial(nombre, direccion, fechaTextoWp);
       const itemsArr = Object.values(carrito);
       
       const columnaIzquierda = itemsArr.slice(0, 18);
@@ -871,6 +1127,14 @@
     }
 
     window.onload = function() {
+      restaurarDatosCliente();
+      renderizarAvisoPedidoAnterior();
+
+      ['input-nombre', 'input-direccion', 'input-nombre-m', 'input-direccion-m'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', guardarDatosCliente);
+      });
+
       cargarProductosDesdeSheets();
     };
   </script>
