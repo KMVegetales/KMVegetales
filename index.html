@@ -327,7 +327,44 @@
         mapaProductos[id].presentaciones.push({ unidad: unidad, precio: precioLimpio });
       }
 
-      return Object.values(mapaProductos);
+      const listaOrdenadaAZ = Object.values(mapaProductos).sort((a, b) =>
+        a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' })
+      );
+
+      // Precarga escalonada en orden alfabético (A -> Z) desde arriba hacia abajo
+      precargarImagenesOrdenadas(listaOrdenadaAZ);
+
+      return listaOrdenadaAZ;
+    }
+
+    function precargarImagenesOrdenadas(listaOrdenada) {
+      if (!Array.isArray(listaOrdenada) || listaOrdenada.length === 0) return;
+
+      const batchSize = 4;
+      let idx = 0;
+
+      function cargarSiguienteLote() {
+        const fin = Math.min(idx + batchSize, listaOrdenada.length);
+        for (let i = idx; i < fin; i++) {
+          const prod = listaOrdenada[i];
+          if (prod && prod.foto) {
+            const imgPre = new Image();
+            imgPre.decoding = 'async';
+            imgPre.fetchPriority = i < 8 ? 'high' : 'auto';
+            imgPre.src = prod.foto;
+          }
+        }
+        idx = fin;
+        if (idx < listaOrdenada.length) {
+          if (typeof requestAnimationFrame === 'function') {
+            requestAnimationFrame(() => setTimeout(cargarSiguienteLote, 35));
+          } else {
+            setTimeout(cargarSiguienteLote, 35);
+          }
+        }
+      }
+
+      cargarSiguienteLote();
     }
 
     function toggleModoVistaSwitch() {
@@ -394,6 +431,10 @@
         return (idxA === -1 ? 99 : idxA) - (idxB === -1 ? 99 : idxB);
       });
 
+      categoriasOrdenadas.forEach(cat => {
+        grupos[cat].sort((a, b) => a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' }));
+      });
+
       if (modoFotosActivo) {
         categoriasOrdenadas.forEach(cat => {
           const prodsCat = grupos[cat];
@@ -422,7 +463,7 @@
             card.innerHTML = `
               <div>
                 <div class="relative h-28 sm:h-32 rounded-xl overflow-hidden mb-2 bg-gray-100">
-                  <img src="${p.foto}" alt="${p.nombre}" loading="eager" class="w-full h-full object-cover" onerror="intentarFormatosAlternativos(this, '${p.nombre}')">
+                  <img src="${p.foto}" alt="${p.nombre}" loading="eager" decoding="async" fetchpriority="high" class="w-full h-full object-cover" onerror="intentarFormatosAlternativos(this, '${p.nombre}')">
                   <span class="absolute top-2 left-2 bg-white/90 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">${p.categoria}</span>
                 </div>
                 <h3 class="font-extrabold text-gray-900 text-sm sm:text-base mb-1 truncate">${p.nombre}</h3>
